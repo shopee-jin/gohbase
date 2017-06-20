@@ -308,7 +308,10 @@ func (c *client) metaLookup(ctx context.Context,
 	table, key []byte) (hrpc.RegionInfo, string, uint16, error) {
 
 	metaKey := createRegionSearchKey(table, key)
-	rpc, err := hrpc.NewGetBefore(ctx, metaTableName, metaKey, hrpc.Families(infoFamily))
+
+	log.Printf("%s %s %s", metaKey, table, key)
+
+	rpc, err := hrpc.NewGet(ctx, metaTableName, metaKey, hrpc.Families(infoFamily))
 	if err != nil {
 		return nil, "", 0, err
 	}
@@ -317,6 +320,7 @@ func (c *client) metaLookup(ctx context.Context,
 	if err != nil {
 		return nil, "", 0, err
 	}
+
 	if len(resp.Cells) == 0 {
 		return nil, "", 0, TableNotFound
 	}

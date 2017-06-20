@@ -39,6 +39,8 @@ type Client interface {
 	CheckAndPut(p *hrpc.Mutate, family string, qualifier string,
 		expectedValue []byte) (bool, error)
 	Close()
+
+	CompactRegion(t *hrpc.CompactRegion) error
 }
 
 // RPCClient is core client of gohbase. It's exposed for testing.
@@ -155,6 +157,21 @@ func (c *client) Close() {
 		}
 	}
 	c.clients.closeAll()
+}
+
+func (c *client) CompactRegion(cr *hrpc.CompactRegion) error {
+
+	reply, err := c.SendRPC(cr)
+	if err != nil {
+		return err
+	}
+
+	_, ok := reply.(*pb.CompactRegionResponse)
+	if !ok {
+		return fmt.Errorf("SendRPC returned %T not CompactRegionResponse", reply)
+	}
+
+	return nil
 }
 
 func (c *client) Scan(s *hrpc.Scan) hrpc.Scanner {

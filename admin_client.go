@@ -24,7 +24,6 @@ type AdminClient interface {
 	DisableTable(t *hrpc.DisableTable) error
 
 	ClusterStatus() (*pb.ClusterStatus, error)
-	CompactRegion(t *hrpc.CompactRegion) error
 }
 
 // NewAdminClient creates an admin HBase client.
@@ -64,21 +63,6 @@ func (c *client) ClusterStatus() (*pb.ClusterStatus, error) {
 	}
 
 	return r.GetClusterStatus(), nil
-}
-
-func (c *client) CompactRegion(cr *hrpc.CompactRegion) error {
-
-	reply, err := c.SendRPC(cr)
-	if err != nil {
-		return err
-	}
-
-	_, ok := reply.(*pb.CompactRegionResponse)
-	if !ok {
-		return fmt.Errorf("SendRPC returned %T not CompactRegionResponse", reply)
-	}
-
-	return nil
 }
 
 func (c *client) CreateTable(t *hrpc.CreateTable) error {

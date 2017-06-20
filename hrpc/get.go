@@ -64,17 +64,6 @@ func NewGetStr(ctx context.Context, table, key string,
 	return NewGet(ctx, []byte(table), []byte(key), options...)
 }
 
-// NewGetBefore creates a new Get request for the row with a key equal to or
-// immediately less than the given key, in the given table.
-func NewGetBefore(ctx context.Context, table, key []byte,
-	options ...func(Call) error) (*Get, error) {
-	g, err := baseGet(ctx, table, key, options...)
-	if err != nil {
-		return nil, err
-	}
-	return g, nil
-}
-
 // Name returns the name of this RPC call.
 func (g *Get) Name() string {
 	return "Get"
