@@ -5,10 +5,12 @@
 package pb
 
 import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
 import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
+var _ = fmt.Errorf
 var _ = math.Inf
 
 // *
@@ -45,6 +47,7 @@ func (x *Consistency) UnmarshalJSON(data []byte) error {
 	*x = Consistency(value)
 	return nil
 }
+func (Consistency) EnumDescriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
 
 type MutationProto_Durability int32
 
@@ -87,6 +90,7 @@ func (x *MutationProto_Durability) UnmarshalJSON(data []byte) error {
 	*x = MutationProto_Durability(value)
 	return nil
 }
+func (MutationProto_Durability) EnumDescriptor() ([]byte, []int) { return fileDescriptor4, []int{8, 0} }
 
 type MutationProto_MutationType int32
 
@@ -125,6 +129,9 @@ func (x *MutationProto_MutationType) UnmarshalJSON(data []byte) error {
 	}
 	*x = MutationProto_MutationType(value)
 	return nil
+}
+func (MutationProto_MutationType) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor4, []int{8, 1}
 }
 
 type MutationProto_DeleteType int32
@@ -165,6 +172,44 @@ func (x *MutationProto_DeleteType) UnmarshalJSON(data []byte) error {
 	*x = MutationProto_DeleteType(value)
 	return nil
 }
+func (MutationProto_DeleteType) EnumDescriptor() ([]byte, []int) { return fileDescriptor4, []int{8, 2} }
+
+type Scan_ReadType int32
+
+const (
+	Scan_DEFAULT Scan_ReadType = 0
+	Scan_STREAM  Scan_ReadType = 1
+	Scan_PREAD   Scan_ReadType = 2
+)
+
+var Scan_ReadType_name = map[int32]string{
+	0: "DEFAULT",
+	1: "STREAM",
+	2: "PREAD",
+}
+var Scan_ReadType_value = map[string]int32{
+	"DEFAULT": 0,
+	"STREAM":  1,
+	"PREAD":   2,
+}
+
+func (x Scan_ReadType) Enum() *Scan_ReadType {
+	p := new(Scan_ReadType)
+	*p = x
+	return p
+}
+func (x Scan_ReadType) String() string {
+	return proto.EnumName(Scan_ReadType_name, int32(x))
+}
+func (x *Scan_ReadType) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(Scan_ReadType_value, data, "Scan_ReadType")
+	if err != nil {
+		return err
+	}
+	*x = Scan_ReadType(value)
+	return nil
+}
+func (Scan_ReadType) EnumDescriptor() ([]byte, []int) { return fileDescriptor4, []int{11, 0} }
 
 // *
 // The protocol buffer version of Authorizations.
@@ -173,9 +218,10 @@ type Authorizations struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *Authorizations) Reset()         { *m = Authorizations{} }
-func (m *Authorizations) String() string { return proto.CompactTextString(m) }
-func (*Authorizations) ProtoMessage()    {}
+func (m *Authorizations) Reset()                    { *m = Authorizations{} }
+func (m *Authorizations) String() string            { return proto.CompactTextString(m) }
+func (*Authorizations) ProtoMessage()               {}
+func (*Authorizations) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
 
 func (m *Authorizations) GetLabel() []string {
 	if m != nil {
@@ -191,9 +237,10 @@ type CellVisibility struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *CellVisibility) Reset()         { *m = CellVisibility{} }
-func (m *CellVisibility) String() string { return proto.CompactTextString(m) }
-func (*CellVisibility) ProtoMessage()    {}
+func (m *CellVisibility) Reset()                    { *m = CellVisibility{} }
+func (m *CellVisibility) String() string            { return proto.CompactTextString(m) }
+func (*CellVisibility) ProtoMessage()               {}
+func (*CellVisibility) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
 
 func (m *CellVisibility) GetExpression() string {
 	if m != nil && m.Expression != nil {
@@ -210,9 +257,10 @@ type Column struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *Column) Reset()         { *m = Column{} }
-func (m *Column) String() string { return proto.CompactTextString(m) }
-func (*Column) ProtoMessage()    {}
+func (m *Column) Reset()                    { *m = Column{} }
+func (m *Column) String() string            { return proto.CompactTextString(m) }
+func (*Column) ProtoMessage()               {}
+func (*Column) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{2} }
 
 func (m *Column) GetFamily() []byte {
 	if m != nil {
@@ -231,36 +279,34 @@ func (m *Column) GetQualifier() [][]byte {
 // *
 // The protocol buffer version of Get.
 // Unless existence_only is specified, return all the requested data
-// for the row that matches exactly, or the one that immediately
-// precedes it if closest_row_before is specified.
+// for the row that matches exactly.
 type Get struct {
 	Row         []byte           `protobuf:"bytes,1,req,name=row" json:"row,omitempty"`
 	Column      []*Column        `protobuf:"bytes,2,rep,name=column" json:"column,omitempty"`
 	Attribute   []*NameBytesPair `protobuf:"bytes,3,rep,name=attribute" json:"attribute,omitempty"`
 	Filter      *Filter          `protobuf:"bytes,4,opt,name=filter" json:"filter,omitempty"`
-	TimeRange   *TimeRange       `protobuf:"bytes,5,opt,name=time_range" json:"time_range,omitempty"`
-	MaxVersions *uint32          `protobuf:"varint,6,opt,name=max_versions,def=1" json:"max_versions,omitempty"`
-	CacheBlocks *bool            `protobuf:"varint,7,opt,name=cache_blocks,def=1" json:"cache_blocks,omitempty"`
-	StoreLimit  *uint32          `protobuf:"varint,8,opt,name=store_limit" json:"store_limit,omitempty"`
-	StoreOffset *uint32          `protobuf:"varint,9,opt,name=store_offset" json:"store_offset,omitempty"`
+	TimeRange   *TimeRange       `protobuf:"bytes,5,opt,name=time_range,json=timeRange" json:"time_range,omitempty"`
+	MaxVersions *uint32          `protobuf:"varint,6,opt,name=max_versions,json=maxVersions,def=1" json:"max_versions,omitempty"`
+	CacheBlocks *bool            `protobuf:"varint,7,opt,name=cache_blocks,json=cacheBlocks,def=1" json:"cache_blocks,omitempty"`
+	StoreLimit  *uint32          `protobuf:"varint,8,opt,name=store_limit,json=storeLimit" json:"store_limit,omitempty"`
+	StoreOffset *uint32          `protobuf:"varint,9,opt,name=store_offset,json=storeOffset" json:"store_offset,omitempty"`
 	// The result isn't asked for, just check for
 	// the existence.
-	ExistenceOnly *bool `protobuf:"varint,10,opt,name=existence_only,def=0" json:"existence_only,omitempty"`
-	// If the row to get doesn't exist, return the
-	// closest row before.
-	ClosestRowBefore *bool        `protobuf:"varint,11,opt,name=closest_row_before,def=0" json:"closest_row_before,omitempty"`
-	Consistency      *Consistency `protobuf:"varint,12,opt,name=consistency,enum=pb.Consistency,def=0" json:"consistency,omitempty"`
-	XXX_unrecognized []byte       `json:"-"`
+	ExistenceOnly              *bool                    `protobuf:"varint,10,opt,name=existence_only,json=existenceOnly,def=0" json:"existence_only,omitempty"`
+	Consistency                *Consistency             `protobuf:"varint,12,opt,name=consistency,enum=pb.Consistency,def=0" json:"consistency,omitempty"`
+	CfTimeRange                []*ColumnFamilyTimeRange `protobuf:"bytes,13,rep,name=cf_time_range,json=cfTimeRange" json:"cf_time_range,omitempty"`
+	LoadColumnFamiliesOnDemand *bool                    `protobuf:"varint,14,opt,name=load_column_families_on_demand,json=loadColumnFamiliesOnDemand" json:"load_column_families_on_demand,omitempty"`
+	XXX_unrecognized           []byte                   `json:"-"`
 }
 
-func (m *Get) Reset()         { *m = Get{} }
-func (m *Get) String() string { return proto.CompactTextString(m) }
-func (*Get) ProtoMessage()    {}
+func (m *Get) Reset()                    { *m = Get{} }
+func (m *Get) String() string            { return proto.CompactTextString(m) }
+func (*Get) ProtoMessage()               {}
+func (*Get) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{3} }
 
 const Default_Get_MaxVersions uint32 = 1
 const Default_Get_CacheBlocks bool = true
 const Default_Get_ExistenceOnly bool = false
-const Default_Get_ClosestRowBefore bool = false
 const Default_Get_Consistency Consistency = Consistency_STRONG
 
 func (m *Get) GetRow() []byte {
@@ -333,18 +379,25 @@ func (m *Get) GetExistenceOnly() bool {
 	return Default_Get_ExistenceOnly
 }
 
-func (m *Get) GetClosestRowBefore() bool {
-	if m != nil && m.ClosestRowBefore != nil {
-		return *m.ClosestRowBefore
-	}
-	return Default_Get_ClosestRowBefore
-}
-
 func (m *Get) GetConsistency() Consistency {
 	if m != nil && m.Consistency != nil {
 		return *m.Consistency
 	}
 	return Default_Get_Consistency
+}
+
+func (m *Get) GetCfTimeRange() []*ColumnFamilyTimeRange {
+	if m != nil {
+		return m.CfTimeRange
+	}
+	return nil
+}
+
+func (m *Get) GetLoadColumnFamiliesOnDemand() bool {
+	if m != nil && m.LoadColumnFamiliesOnDemand != nil {
+		return *m.LoadColumnFamiliesOnDemand
+	}
+	return false
 }
 
 type Result struct {
@@ -357,7 +410,7 @@ type Result struct {
 	// The count is needed to know how many to peel off the block of Cells as
 	// ours.  NOTE: This is different from the pb managed cell_count of the
 	// 'cell' field above which is non-null when the cells are pb'd.
-	AssociatedCellCount *int32 `protobuf:"varint,2,opt,name=associated_cell_count" json:"associated_cell_count,omitempty"`
+	AssociatedCellCount *int32 `protobuf:"varint,2,opt,name=associated_cell_count,json=associatedCellCount" json:"associated_cell_count,omitempty"`
 	// used for Get to check existence only. Not set if existence_only was not set to true
 	//  in the query.
 	Exists *bool `protobuf:"varint,3,opt,name=exists" json:"exists,omitempty"`
@@ -366,14 +419,16 @@ type Result struct {
 	// Whether or not the entire result could be returned. Results will be split when
 	// the RPC chunk size limit is reached. Partial results contain only a subset of the
 	// cells for a row and must be combined with a result containing the remaining cells
-	// to form a complete result
+	// to form a complete result. The equivalent flag in o.a.h.h.client.Result is
+	// mayHaveMoreCellsInRow.
 	Partial          *bool  `protobuf:"varint,5,opt,name=partial,def=0" json:"partial,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *Result) Reset()         { *m = Result{} }
-func (m *Result) String() string { return proto.CompactTextString(m) }
-func (*Result) ProtoMessage()    {}
+func (m *Result) Reset()                    { *m = Result{} }
+func (m *Result) String() string            { return proto.CompactTextString(m) }
+func (*Result) ProtoMessage()               {}
+func (*Result) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{4} }
 
 const Default_Result_Stale bool = false
 const Default_Result_Partial bool = false
@@ -421,9 +476,10 @@ type GetRequest struct {
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *GetRequest) Reset()         { *m = GetRequest{} }
-func (m *GetRequest) String() string { return proto.CompactTextString(m) }
-func (*GetRequest) ProtoMessage()    {}
+func (m *GetRequest) Reset()                    { *m = GetRequest{} }
+func (m *GetRequest) String() string            { return proto.CompactTextString(m) }
+func (*GetRequest) ProtoMessage()               {}
+func (*GetRequest) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{5} }
 
 func (m *GetRequest) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -444,9 +500,10 @@ type GetResponse struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetResponse) Reset()         { *m = GetResponse{} }
-func (m *GetResponse) String() string { return proto.CompactTextString(m) }
-func (*GetResponse) ProtoMessage()    {}
+func (m *GetResponse) Reset()                    { *m = GetResponse{} }
+func (m *GetResponse) String() string            { return proto.CompactTextString(m) }
+func (*GetResponse) ProtoMessage()               {}
+func (*GetResponse) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{6} }
 
 func (m *GetResponse) GetResult() *Result {
 	if m != nil {
@@ -464,14 +521,15 @@ type Condition struct {
 	Row              []byte       `protobuf:"bytes,1,req,name=row" json:"row,omitempty"`
 	Family           []byte       `protobuf:"bytes,2,req,name=family" json:"family,omitempty"`
 	Qualifier        []byte       `protobuf:"bytes,3,req,name=qualifier" json:"qualifier,omitempty"`
-	CompareType      *CompareType `protobuf:"varint,4,req,name=compare_type,enum=pb.CompareType" json:"compare_type,omitempty"`
+	CompareType      *CompareType `protobuf:"varint,4,req,name=compare_type,json=compareType,enum=pb.CompareType" json:"compare_type,omitempty"`
 	Comparator       *Comparator  `protobuf:"bytes,5,req,name=comparator" json:"comparator,omitempty"`
 	XXX_unrecognized []byte       `json:"-"`
 }
 
-func (m *Condition) Reset()         { *m = Condition{} }
-func (m *Condition) String() string { return proto.CompactTextString(m) }
-func (*Condition) ProtoMessage()    {}
+func (m *Condition) Reset()                    { *m = Condition{} }
+func (m *Condition) String() string            { return proto.CompactTextString(m) }
+func (*Condition) ProtoMessage()               {}
+func (*Condition) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{7} }
 
 func (m *Condition) GetRow() []byte {
 	if m != nil {
@@ -516,28 +574,29 @@ func (m *Condition) GetComparator() *Comparator {
 // elsewhere outside of pb.
 type MutationProto struct {
 	Row         []byte                       `protobuf:"bytes,1,opt,name=row" json:"row,omitempty"`
-	MutateType  *MutationProto_MutationType  `protobuf:"varint,2,opt,name=mutate_type,enum=pb.MutationProto_MutationType" json:"mutate_type,omitempty"`
-	ColumnValue []*MutationProto_ColumnValue `protobuf:"bytes,3,rep,name=column_value" json:"column_value,omitempty"`
+	MutateType  *MutationProto_MutationType  `protobuf:"varint,2,opt,name=mutate_type,json=mutateType,enum=pb.MutationProto_MutationType" json:"mutate_type,omitempty"`
+	ColumnValue []*MutationProto_ColumnValue `protobuf:"bytes,3,rep,name=column_value,json=columnValue" json:"column_value,omitempty"`
 	Timestamp   *uint64                      `protobuf:"varint,4,opt,name=timestamp" json:"timestamp,omitempty"`
 	Attribute   []*NameBytesPair             `protobuf:"bytes,5,rep,name=attribute" json:"attribute,omitempty"`
 	Durability  *MutationProto_Durability    `protobuf:"varint,6,opt,name=durability,enum=pb.MutationProto_Durability,def=0" json:"durability,omitempty"`
 	// For some mutations, a result may be returned, in which case,
 	// time range can be specified for potential performance gain
-	TimeRange *TimeRange `protobuf:"bytes,7,opt,name=time_range" json:"time_range,omitempty"`
+	TimeRange *TimeRange `protobuf:"bytes,7,opt,name=time_range,json=timeRange" json:"time_range,omitempty"`
 	// The below count is set when the associated cells are NOT
 	// part of this protobuf message; they are passed alongside
 	// and then this Message is a placeholder with metadata.  The
 	// count is needed to know how many to peel off the block of Cells as
 	// ours.  NOTE: This is different from the pb managed cell_count of the
 	// 'cell' field above which is non-null when the cells are pb'd.
-	AssociatedCellCount *int32  `protobuf:"varint,8,opt,name=associated_cell_count" json:"associated_cell_count,omitempty"`
+	AssociatedCellCount *int32  `protobuf:"varint,8,opt,name=associated_cell_count,json=associatedCellCount" json:"associated_cell_count,omitempty"`
 	Nonce               *uint64 `protobuf:"varint,9,opt,name=nonce" json:"nonce,omitempty"`
 	XXX_unrecognized    []byte  `json:"-"`
 }
 
-func (m *MutationProto) Reset()         { *m = MutationProto{} }
-func (m *MutationProto) String() string { return proto.CompactTextString(m) }
-func (*MutationProto) ProtoMessage()    {}
+func (m *MutationProto) Reset()                    { *m = MutationProto{} }
+func (m *MutationProto) String() string            { return proto.CompactTextString(m) }
+func (*MutationProto) ProtoMessage()               {}
+func (*MutationProto) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{8} }
 
 const Default_MutationProto_Durability MutationProto_Durability = MutationProto_USE_DEFAULT
 
@@ -606,13 +665,14 @@ func (m *MutationProto) GetNonce() uint64 {
 
 type MutationProto_ColumnValue struct {
 	Family           []byte                                      `protobuf:"bytes,1,req,name=family" json:"family,omitempty"`
-	QualifierValue   []*MutationProto_ColumnValue_QualifierValue `protobuf:"bytes,2,rep,name=qualifier_value" json:"qualifier_value,omitempty"`
+	QualifierValue   []*MutationProto_ColumnValue_QualifierValue `protobuf:"bytes,2,rep,name=qualifier_value,json=qualifierValue" json:"qualifier_value,omitempty"`
 	XXX_unrecognized []byte                                      `json:"-"`
 }
 
-func (m *MutationProto_ColumnValue) Reset()         { *m = MutationProto_ColumnValue{} }
-func (m *MutationProto_ColumnValue) String() string { return proto.CompactTextString(m) }
-func (*MutationProto_ColumnValue) ProtoMessage()    {}
+func (m *MutationProto_ColumnValue) Reset()                    { *m = MutationProto_ColumnValue{} }
+func (m *MutationProto_ColumnValue) String() string            { return proto.CompactTextString(m) }
+func (*MutationProto_ColumnValue) ProtoMessage()               {}
+func (*MutationProto_ColumnValue) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{8, 0} }
 
 func (m *MutationProto_ColumnValue) GetFamily() []byte {
 	if m != nil {
@@ -632,7 +692,7 @@ type MutationProto_ColumnValue_QualifierValue struct {
 	Qualifier        []byte                    `protobuf:"bytes,1,opt,name=qualifier" json:"qualifier,omitempty"`
 	Value            []byte                    `protobuf:"bytes,2,opt,name=value" json:"value,omitempty"`
 	Timestamp        *uint64                   `protobuf:"varint,3,opt,name=timestamp" json:"timestamp,omitempty"`
-	DeleteType       *MutationProto_DeleteType `protobuf:"varint,4,opt,name=delete_type,enum=pb.MutationProto_DeleteType" json:"delete_type,omitempty"`
+	DeleteType       *MutationProto_DeleteType `protobuf:"varint,4,opt,name=delete_type,json=deleteType,enum=pb.MutationProto_DeleteType" json:"delete_type,omitempty"`
 	Tags             []byte                    `protobuf:"bytes,5,opt,name=tags" json:"tags,omitempty"`
 	XXX_unrecognized []byte                    `json:"-"`
 }
@@ -642,6 +702,9 @@ func (m *MutationProto_ColumnValue_QualifierValue) Reset() {
 }
 func (m *MutationProto_ColumnValue_QualifierValue) String() string { return proto.CompactTextString(m) }
 func (*MutationProto_ColumnValue_QualifierValue) ProtoMessage()    {}
+func (*MutationProto_ColumnValue_QualifierValue) Descriptor() ([]byte, []int) {
+	return fileDescriptor4, []int{8, 0, 0}
+}
 
 func (m *MutationProto_ColumnValue_QualifierValue) GetQualifier() []byte {
 	if m != nil {
@@ -690,13 +753,14 @@ type MutateRequest struct {
 	Region           *RegionSpecifier `protobuf:"bytes,1,req,name=region" json:"region,omitempty"`
 	Mutation         *MutationProto   `protobuf:"bytes,2,req,name=mutation" json:"mutation,omitempty"`
 	Condition        *Condition       `protobuf:"bytes,3,opt,name=condition" json:"condition,omitempty"`
-	NonceGroup       *uint64          `protobuf:"varint,4,opt,name=nonce_group" json:"nonce_group,omitempty"`
+	NonceGroup       *uint64          `protobuf:"varint,4,opt,name=nonce_group,json=nonceGroup" json:"nonce_group,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *MutateRequest) Reset()         { *m = MutateRequest{} }
-func (m *MutateRequest) String() string { return proto.CompactTextString(m) }
-func (*MutateRequest) ProtoMessage()    {}
+func (m *MutateRequest) Reset()                    { *m = MutateRequest{} }
+func (m *MutateRequest) String() string            { return proto.CompactTextString(m) }
+func (*MutateRequest) ProtoMessage()               {}
+func (*MutateRequest) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{9} }
 
 func (m *MutateRequest) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -733,9 +797,10 @@ type MutateResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *MutateResponse) Reset()         { *m = MutateResponse{} }
-func (m *MutateResponse) String() string { return proto.CompactTextString(m) }
-func (*MutateResponse) ProtoMessage()    {}
+func (m *MutateResponse) Reset()                    { *m = MutateResponse{} }
+func (m *MutateResponse) String() string            { return proto.CompactTextString(m) }
+func (*MutateResponse) ProtoMessage()               {}
+func (*MutateResponse) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{10} }
 
 func (m *MutateResponse) GetResult() *Result {
 	if m != nil {
@@ -760,34 +825,47 @@ func (m *MutateResponse) GetProcessed() bool {
 // the initial scan will return a scanner id, which should be used to
 // fetch result batches later on before it is closed.
 type Scan struct {
-	Column                     []*Column        `protobuf:"bytes,1,rep,name=column" json:"column,omitempty"`
-	Attribute                  []*NameBytesPair `protobuf:"bytes,2,rep,name=attribute" json:"attribute,omitempty"`
-	StartRow                   []byte           `protobuf:"bytes,3,opt,name=start_row" json:"start_row,omitempty"`
-	StopRow                    []byte           `protobuf:"bytes,4,opt,name=stop_row" json:"stop_row,omitempty"`
-	Filter                     *Filter          `protobuf:"bytes,5,opt,name=filter" json:"filter,omitempty"`
-	TimeRange                  *TimeRange       `protobuf:"bytes,6,opt,name=time_range" json:"time_range,omitempty"`
-	MaxVersions                *uint32          `protobuf:"varint,7,opt,name=max_versions,def=1" json:"max_versions,omitempty"`
-	CacheBlocks                *bool            `protobuf:"varint,8,opt,name=cache_blocks,def=1" json:"cache_blocks,omitempty"`
-	BatchSize                  *uint32          `protobuf:"varint,9,opt,name=batch_size" json:"batch_size,omitempty"`
-	MaxResultSize              *uint64          `protobuf:"varint,10,opt,name=max_result_size" json:"max_result_size,omitempty"`
-	StoreLimit                 *uint32          `protobuf:"varint,11,opt,name=store_limit" json:"store_limit,omitempty"`
-	StoreOffset                *uint32          `protobuf:"varint,12,opt,name=store_offset" json:"store_offset,omitempty"`
-	LoadColumnFamiliesOnDemand *bool            `protobuf:"varint,13,opt,name=load_column_families_on_demand" json:"load_column_families_on_demand,omitempty"`
-	Small                      *bool            `protobuf:"varint,14,opt,name=small" json:"small,omitempty"`
-	Reversed                   *bool            `protobuf:"varint,15,opt,name=reversed,def=0" json:"reversed,omitempty"`
-	Consistency                *Consistency     `protobuf:"varint,16,opt,name=consistency,enum=pb.Consistency,def=0" json:"consistency,omitempty"`
-	Caching                    *uint32          `protobuf:"varint,17,opt,name=caching" json:"caching,omitempty"`
-	XXX_unrecognized           []byte           `json:"-"`
+	Column                     []*Column                `protobuf:"bytes,1,rep,name=column" json:"column,omitempty"`
+	Attribute                  []*NameBytesPair         `protobuf:"bytes,2,rep,name=attribute" json:"attribute,omitempty"`
+	StartRow                   []byte                   `protobuf:"bytes,3,opt,name=start_row,json=startRow" json:"start_row,omitempty"`
+	StopRow                    []byte                   `protobuf:"bytes,4,opt,name=stop_row,json=stopRow" json:"stop_row,omitempty"`
+	Filter                     *Filter                  `protobuf:"bytes,5,opt,name=filter" json:"filter,omitempty"`
+	TimeRange                  *TimeRange               `protobuf:"bytes,6,opt,name=time_range,json=timeRange" json:"time_range,omitempty"`
+	MaxVersions                *uint32                  `protobuf:"varint,7,opt,name=max_versions,json=maxVersions,def=1" json:"max_versions,omitempty"`
+	CacheBlocks                *bool                    `protobuf:"varint,8,opt,name=cache_blocks,json=cacheBlocks,def=1" json:"cache_blocks,omitempty"`
+	BatchSize                  *uint32                  `protobuf:"varint,9,opt,name=batch_size,json=batchSize" json:"batch_size,omitempty"`
+	MaxResultSize              *uint64                  `protobuf:"varint,10,opt,name=max_result_size,json=maxResultSize" json:"max_result_size,omitempty"`
+	StoreLimit                 *uint32                  `protobuf:"varint,11,opt,name=store_limit,json=storeLimit" json:"store_limit,omitempty"`
+	StoreOffset                *uint32                  `protobuf:"varint,12,opt,name=store_offset,json=storeOffset" json:"store_offset,omitempty"`
+	LoadColumnFamiliesOnDemand *bool                    `protobuf:"varint,13,opt,name=load_column_families_on_demand,json=loadColumnFamiliesOnDemand" json:"load_column_families_on_demand,omitempty"`
+	Small                      *bool                    `protobuf:"varint,14,opt,name=small" json:"small,omitempty"`
+	Reversed                   *bool                    `protobuf:"varint,15,opt,name=reversed,def=0" json:"reversed,omitempty"`
+	Consistency                *Consistency             `protobuf:"varint,16,opt,name=consistency,enum=pb.Consistency,def=0" json:"consistency,omitempty"`
+	Caching                    *uint32                  `protobuf:"varint,17,opt,name=caching" json:"caching,omitempty"`
+	AllowPartialResults        *bool                    `protobuf:"varint,18,opt,name=allow_partial_results,json=allowPartialResults" json:"allow_partial_results,omitempty"`
+	CfTimeRange                []*ColumnFamilyTimeRange `protobuf:"bytes,19,rep,name=cf_time_range,json=cfTimeRange" json:"cf_time_range,omitempty"`
+	MvccReadPoint              *uint64                  `protobuf:"varint,20,opt,name=mvcc_read_point,json=mvccReadPoint,def=0" json:"mvcc_read_point,omitempty"`
+	IncludeStartRow            *bool                    `protobuf:"varint,21,opt,name=include_start_row,json=includeStartRow,def=1" json:"include_start_row,omitempty"`
+	IncludeStopRow             *bool                    `protobuf:"varint,22,opt,name=include_stop_row,json=includeStopRow,def=0" json:"include_stop_row,omitempty"`
+	ReadType                   *Scan_ReadType           `protobuf:"varint,23,opt,name=readType,enum=pb.Scan_ReadType,def=0" json:"readType,omitempty"`
+	NeedCursorResult           *bool                    `protobuf:"varint,24,opt,name=need_cursor_result,json=needCursorResult,def=0" json:"need_cursor_result,omitempty"`
+	XXX_unrecognized           []byte                   `json:"-"`
 }
 
-func (m *Scan) Reset()         { *m = Scan{} }
-func (m *Scan) String() string { return proto.CompactTextString(m) }
-func (*Scan) ProtoMessage()    {}
+func (m *Scan) Reset()                    { *m = Scan{} }
+func (m *Scan) String() string            { return proto.CompactTextString(m) }
+func (*Scan) ProtoMessage()               {}
+func (*Scan) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{11} }
 
 const Default_Scan_MaxVersions uint32 = 1
 const Default_Scan_CacheBlocks bool = true
 const Default_Scan_Reversed bool = false
 const Default_Scan_Consistency Consistency = Consistency_STRONG
+const Default_Scan_MvccReadPoint uint64 = 0
+const Default_Scan_IncludeStartRow bool = true
+const Default_Scan_IncludeStopRow bool = false
+const Default_Scan_ReadType Scan_ReadType = Scan_DEFAULT
+const Default_Scan_NeedCursorResult bool = false
 
 func (m *Scan) GetColumn() []*Column {
 	if m != nil {
@@ -908,6 +986,55 @@ func (m *Scan) GetCaching() uint32 {
 	return 0
 }
 
+func (m *Scan) GetAllowPartialResults() bool {
+	if m != nil && m.AllowPartialResults != nil {
+		return *m.AllowPartialResults
+	}
+	return false
+}
+
+func (m *Scan) GetCfTimeRange() []*ColumnFamilyTimeRange {
+	if m != nil {
+		return m.CfTimeRange
+	}
+	return nil
+}
+
+func (m *Scan) GetMvccReadPoint() uint64 {
+	if m != nil && m.MvccReadPoint != nil {
+		return *m.MvccReadPoint
+	}
+	return Default_Scan_MvccReadPoint
+}
+
+func (m *Scan) GetIncludeStartRow() bool {
+	if m != nil && m.IncludeStartRow != nil {
+		return *m.IncludeStartRow
+	}
+	return Default_Scan_IncludeStartRow
+}
+
+func (m *Scan) GetIncludeStopRow() bool {
+	if m != nil && m.IncludeStopRow != nil {
+		return *m.IncludeStopRow
+	}
+	return Default_Scan_IncludeStopRow
+}
+
+func (m *Scan) GetReadType() Scan_ReadType {
+	if m != nil && m.ReadType != nil {
+		return *m.ReadType
+	}
+	return Default_Scan_ReadType
+}
+
+func (m *Scan) GetNeedCursorResult() bool {
+	if m != nil && m.NeedCursorResult != nil {
+		return *m.NeedCursorResult
+	}
+	return Default_Scan_NeedCursorResult
+}
+
 // *
 // A scan request. Initially, it should specify a scan. Later on, you
 // can use the scanner id returned to fetch result batches with a different
@@ -921,18 +1048,26 @@ func (m *Scan) GetCaching() uint32 {
 type ScanRequest struct {
 	Region                  *RegionSpecifier `protobuf:"bytes,1,opt,name=region" json:"region,omitempty"`
 	Scan                    *Scan            `protobuf:"bytes,2,opt,name=scan" json:"scan,omitempty"`
-	ScannerId               *uint64          `protobuf:"varint,3,opt,name=scanner_id" json:"scanner_id,omitempty"`
-	NumberOfRows            *uint32          `protobuf:"varint,4,opt,name=number_of_rows" json:"number_of_rows,omitempty"`
-	CloseScanner            *bool            `protobuf:"varint,5,opt,name=close_scanner" json:"close_scanner,omitempty"`
-	NextCallSeq             *uint64          `protobuf:"varint,6,opt,name=next_call_seq" json:"next_call_seq,omitempty"`
-	ClientHandlesPartials   *bool            `protobuf:"varint,7,opt,name=client_handles_partials" json:"client_handles_partials,omitempty"`
-	ClientHandlesHeartbeats *bool            `protobuf:"varint,8,opt,name=client_handles_heartbeats" json:"client_handles_heartbeats,omitempty"`
-	XXX_unrecognized        []byte           `json:"-"`
+	ScannerId               *uint64          `protobuf:"varint,3,opt,name=scanner_id,json=scannerId" json:"scanner_id,omitempty"`
+	NumberOfRows            *uint32          `protobuf:"varint,4,opt,name=number_of_rows,json=numberOfRows" json:"number_of_rows,omitempty"`
+	CloseScanner            *bool            `protobuf:"varint,5,opt,name=close_scanner,json=closeScanner" json:"close_scanner,omitempty"`
+	NextCallSeq             *uint64          `protobuf:"varint,6,opt,name=next_call_seq,json=nextCallSeq" json:"next_call_seq,omitempty"`
+	ClientHandlesPartials   *bool            `protobuf:"varint,7,opt,name=client_handles_partials,json=clientHandlesPartials" json:"client_handles_partials,omitempty"`
+	ClientHandlesHeartbeats *bool            `protobuf:"varint,8,opt,name=client_handles_heartbeats,json=clientHandlesHeartbeats" json:"client_handles_heartbeats,omitempty"`
+	TrackScanMetrics        *bool            `protobuf:"varint,9,opt,name=track_scan_metrics,json=trackScanMetrics" json:"track_scan_metrics,omitempty"`
+	Renew                   *bool            `protobuf:"varint,10,opt,name=renew,def=0" json:"renew,omitempty"`
+	// if we have returned limit_of_rows rows to client, then close the scanner.
+	LimitOfRows      *uint32 `protobuf:"varint,11,opt,name=limit_of_rows,json=limitOfRows,def=0" json:"limit_of_rows,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *ScanRequest) Reset()         { *m = ScanRequest{} }
-func (m *ScanRequest) String() string { return proto.CompactTextString(m) }
-func (*ScanRequest) ProtoMessage()    {}
+func (m *ScanRequest) Reset()                    { *m = ScanRequest{} }
+func (m *ScanRequest) String() string            { return proto.CompactTextString(m) }
+func (*ScanRequest) ProtoMessage()               {}
+func (*ScanRequest) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{12} }
+
+const Default_ScanRequest_Renew bool = false
+const Default_ScanRequest_LimitOfRows uint32 = 0
 
 func (m *ScanRequest) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -990,6 +1125,47 @@ func (m *ScanRequest) GetClientHandlesHeartbeats() bool {
 	return false
 }
 
+func (m *ScanRequest) GetTrackScanMetrics() bool {
+	if m != nil && m.TrackScanMetrics != nil {
+		return *m.TrackScanMetrics
+	}
+	return false
+}
+
+func (m *ScanRequest) GetRenew() bool {
+	if m != nil && m.Renew != nil {
+		return *m.Renew
+	}
+	return Default_ScanRequest_Renew
+}
+
+func (m *ScanRequest) GetLimitOfRows() uint32 {
+	if m != nil && m.LimitOfRows != nil {
+		return *m.LimitOfRows
+	}
+	return Default_ScanRequest_LimitOfRows
+}
+
+// *
+// Scan cursor to tell client where we are scanning.
+//
+type Cursor struct {
+	Row              []byte `protobuf:"bytes,1,opt,name=row" json:"row,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *Cursor) Reset()                    { *m = Cursor{} }
+func (m *Cursor) String() string            { return proto.CompactTextString(m) }
+func (*Cursor) ProtoMessage()               {}
+func (*Cursor) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{13} }
+
+func (m *Cursor) GetRow() []byte {
+	if m != nil {
+		return m.Row
+	}
+	return nil
+}
+
 // *
 // The scan response. If there are no more results, more_results will
 // be false.  If it is not specified, it means there are more.
@@ -1001,9 +1177,9 @@ type ScanResponse struct {
 	// in each Result that makes up the response.  For example, if this field
 	// has 3, 3, 3 in it, then we know that on the client, we are to make
 	// three Results each of three Cells each.
-	CellsPerResult []uint32 `protobuf:"varint,1,rep,name=cells_per_result" json:"cells_per_result,omitempty"`
-	ScannerId      *uint64  `protobuf:"varint,2,opt,name=scanner_id" json:"scanner_id,omitempty"`
-	MoreResults    *bool    `protobuf:"varint,3,opt,name=more_results" json:"more_results,omitempty"`
+	CellsPerResult []uint32 `protobuf:"varint,1,rep,name=cells_per_result,json=cellsPerResult" json:"cells_per_result,omitempty"`
+	ScannerId      *uint64  `protobuf:"varint,2,opt,name=scanner_id,json=scannerId" json:"scanner_id,omitempty"`
+	MoreResults    *bool    `protobuf:"varint,3,opt,name=more_results,json=moreResults" json:"more_results,omitempty"`
 	Ttl            *uint32  `protobuf:"varint,4,opt,name=ttl" json:"ttl,omitempty"`
 	// If cells are not carried in an accompanying cellblock, then they are pb'd here.
 	// This field is mutually exclusive with cells_per_result (since the Cells will
@@ -1017,22 +1193,36 @@ type ScanResponse struct {
 	// that the cells belong to is a partial result. For example, if this field
 	// has false, false, true in it, then we know that on the client side, we need to
 	// make another RPC request since the last result was only a partial.
-	PartialFlagPerResult []bool `protobuf:"varint,7,rep,name=partial_flag_per_result" json:"partial_flag_per_result,omitempty"`
+	PartialFlagPerResult []bool `protobuf:"varint,7,rep,name=partial_flag_per_result,json=partialFlagPerResult" json:"partial_flag_per_result,omitempty"`
 	// A server may choose to limit the number of results returned to the client for
 	// reasons such as the size in bytes or quantity of results accumulated. This field
 	// will true when more results exist in the current region.
-	MoreResultsInRegion *bool `protobuf:"varint,8,opt,name=more_results_in_region" json:"more_results_in_region,omitempty"`
+	MoreResultsInRegion *bool `protobuf:"varint,8,opt,name=more_results_in_region,json=moreResultsInRegion" json:"more_results_in_region,omitempty"`
 	// This field is filled in if the server is sending back a heartbeat message.
 	// Heartbeat messages are sent back to the client to prevent the scanner from
 	// timing out. Seeing a heartbeat message communicates to the Client that the
 	// server would have continued to scan had the time limit not been reached.
-	HeartbeatMessage *bool  `protobuf:"varint,9,opt,name=heartbeat_message" json:"heartbeat_message,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	HeartbeatMessage *bool `protobuf:"varint,9,opt,name=heartbeat_message,json=heartbeatMessage" json:"heartbeat_message,omitempty"`
+	// This field is filled in if the client has requested that scan metrics be tracked.
+	// The metrics tracked here are sent back to the client to be tracked together with
+	// the existing client side metrics.
+	ScanMetrics *ScanMetrics `protobuf:"bytes,10,opt,name=scan_metrics,json=scanMetrics" json:"scan_metrics,omitempty"`
+	// The mvcc read point which is used to open the scanner at server side. Client can
+	// make use of this mvcc_read_point when restarting a scanner to get a consistent view
+	// of a row.
+	MvccReadPoint *uint64 `protobuf:"varint,11,opt,name=mvcc_read_point,json=mvccReadPoint,def=0" json:"mvcc_read_point,omitempty"`
+	// If the Scan need cursor, return the row key we are scanning in heartbeat message.
+	// If the Scan doesn't need a cursor, don't set this field to reduce network IO.
+	Cursor           *Cursor `protobuf:"bytes,12,opt,name=cursor" json:"cursor,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *ScanResponse) Reset()         { *m = ScanResponse{} }
-func (m *ScanResponse) String() string { return proto.CompactTextString(m) }
-func (*ScanResponse) ProtoMessage()    {}
+func (m *ScanResponse) Reset()                    { *m = ScanResponse{} }
+func (m *ScanResponse) String() string            { return proto.CompactTextString(m) }
+func (*ScanResponse) ProtoMessage()               {}
+func (*ScanResponse) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{14} }
+
+const Default_ScanResponse_MvccReadPoint uint64 = 0
 
 func (m *ScanResponse) GetCellsPerResult() []uint32 {
 	if m != nil {
@@ -1097,19 +1287,46 @@ func (m *ScanResponse) GetHeartbeatMessage() bool {
 	return false
 }
 
+func (m *ScanResponse) GetScanMetrics() *ScanMetrics {
+	if m != nil {
+		return m.ScanMetrics
+	}
+	return nil
+}
+
+func (m *ScanResponse) GetMvccReadPoint() uint64 {
+	if m != nil && m.MvccReadPoint != nil {
+		return *m.MvccReadPoint
+	}
+	return Default_ScanResponse_MvccReadPoint
+}
+
+func (m *ScanResponse) GetCursor() *Cursor {
+	if m != nil {
+		return m.Cursor
+	}
+	return nil
+}
+
 // *
 // Atomically bulk load multiple HFiles (say from different column families)
 // into an open region.
 type BulkLoadHFileRequest struct {
 	Region           *RegionSpecifier                   `protobuf:"bytes,1,req,name=region" json:"region,omitempty"`
-	FamilyPath       []*BulkLoadHFileRequest_FamilyPath `protobuf:"bytes,2,rep,name=family_path" json:"family_path,omitempty"`
-	AssignSeqNum     *bool                              `protobuf:"varint,3,opt,name=assign_seq_num" json:"assign_seq_num,omitempty"`
+	FamilyPath       []*BulkLoadHFileRequest_FamilyPath `protobuf:"bytes,2,rep,name=family_path,json=familyPath" json:"family_path,omitempty"`
+	AssignSeqNum     *bool                              `protobuf:"varint,3,opt,name=assign_seq_num,json=assignSeqNum" json:"assign_seq_num,omitempty"`
+	FsToken          *DelegationToken                   `protobuf:"bytes,4,opt,name=fs_token,json=fsToken" json:"fs_token,omitempty"`
+	BulkToken        *string                            `protobuf:"bytes,5,opt,name=bulk_token,json=bulkToken" json:"bulk_token,omitempty"`
+	CopyFile         *bool                              `protobuf:"varint,6,opt,name=copy_file,json=copyFile,def=0" json:"copy_file,omitempty"`
 	XXX_unrecognized []byte                             `json:"-"`
 }
 
-func (m *BulkLoadHFileRequest) Reset()         { *m = BulkLoadHFileRequest{} }
-func (m *BulkLoadHFileRequest) String() string { return proto.CompactTextString(m) }
-func (*BulkLoadHFileRequest) ProtoMessage()    {}
+func (m *BulkLoadHFileRequest) Reset()                    { *m = BulkLoadHFileRequest{} }
+func (m *BulkLoadHFileRequest) String() string            { return proto.CompactTextString(m) }
+func (*BulkLoadHFileRequest) ProtoMessage()               {}
+func (*BulkLoadHFileRequest) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{15} }
+
+const Default_BulkLoadHFileRequest_CopyFile bool = false
 
 func (m *BulkLoadHFileRequest) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -1132,6 +1349,27 @@ func (m *BulkLoadHFileRequest) GetAssignSeqNum() bool {
 	return false
 }
 
+func (m *BulkLoadHFileRequest) GetFsToken() *DelegationToken {
+	if m != nil {
+		return m.FsToken
+	}
+	return nil
+}
+
+func (m *BulkLoadHFileRequest) GetBulkToken() string {
+	if m != nil && m.BulkToken != nil {
+		return *m.BulkToken
+	}
+	return ""
+}
+
+func (m *BulkLoadHFileRequest) GetCopyFile() bool {
+	if m != nil && m.CopyFile != nil {
+		return *m.CopyFile
+	}
+	return Default_BulkLoadHFileRequest_CopyFile
+}
+
 type BulkLoadHFileRequest_FamilyPath struct {
 	Family           []byte  `protobuf:"bytes,1,req,name=family" json:"family,omitempty"`
 	Path             *string `protobuf:"bytes,2,req,name=path" json:"path,omitempty"`
@@ -1141,6 +1379,9 @@ type BulkLoadHFileRequest_FamilyPath struct {
 func (m *BulkLoadHFileRequest_FamilyPath) Reset()         { *m = BulkLoadHFileRequest_FamilyPath{} }
 func (m *BulkLoadHFileRequest_FamilyPath) String() string { return proto.CompactTextString(m) }
 func (*BulkLoadHFileRequest_FamilyPath) ProtoMessage()    {}
+func (*BulkLoadHFileRequest_FamilyPath) Descriptor() ([]byte, []int) {
+	return fileDescriptor4, []int{15, 0}
+}
 
 func (m *BulkLoadHFileRequest_FamilyPath) GetFamily() []byte {
 	if m != nil {
@@ -1161,9 +1402,10 @@ type BulkLoadHFileResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *BulkLoadHFileResponse) Reset()         { *m = BulkLoadHFileResponse{} }
-func (m *BulkLoadHFileResponse) String() string { return proto.CompactTextString(m) }
-func (*BulkLoadHFileResponse) ProtoMessage()    {}
+func (m *BulkLoadHFileResponse) Reset()                    { *m = BulkLoadHFileResponse{} }
+func (m *BulkLoadHFileResponse) String() string            { return proto.CompactTextString(m) }
+func (*BulkLoadHFileResponse) ProtoMessage()               {}
+func (*BulkLoadHFileResponse) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{16} }
 
 func (m *BulkLoadHFileResponse) GetLoaded() bool {
 	if m != nil && m.Loaded != nil {
@@ -1172,17 +1414,135 @@ func (m *BulkLoadHFileResponse) GetLoaded() bool {
 	return false
 }
 
+type DelegationToken struct {
+	Identifier       []byte  `protobuf:"bytes,1,opt,name=identifier" json:"identifier,omitempty"`
+	Password         []byte  `protobuf:"bytes,2,opt,name=password" json:"password,omitempty"`
+	Kind             *string `protobuf:"bytes,3,opt,name=kind" json:"kind,omitempty"`
+	Service          *string `protobuf:"bytes,4,opt,name=service" json:"service,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *DelegationToken) Reset()                    { *m = DelegationToken{} }
+func (m *DelegationToken) String() string            { return proto.CompactTextString(m) }
+func (*DelegationToken) ProtoMessage()               {}
+func (*DelegationToken) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{17} }
+
+func (m *DelegationToken) GetIdentifier() []byte {
+	if m != nil {
+		return m.Identifier
+	}
+	return nil
+}
+
+func (m *DelegationToken) GetPassword() []byte {
+	if m != nil {
+		return m.Password
+	}
+	return nil
+}
+
+func (m *DelegationToken) GetKind() string {
+	if m != nil && m.Kind != nil {
+		return *m.Kind
+	}
+	return ""
+}
+
+func (m *DelegationToken) GetService() string {
+	if m != nil && m.Service != nil {
+		return *m.Service
+	}
+	return ""
+}
+
+type PrepareBulkLoadRequest struct {
+	TableName        *TableName       `protobuf:"bytes,1,req,name=table_name,json=tableName" json:"table_name,omitempty"`
+	Region           *RegionSpecifier `protobuf:"bytes,2,opt,name=region" json:"region,omitempty"`
+	XXX_unrecognized []byte           `json:"-"`
+}
+
+func (m *PrepareBulkLoadRequest) Reset()                    { *m = PrepareBulkLoadRequest{} }
+func (m *PrepareBulkLoadRequest) String() string            { return proto.CompactTextString(m) }
+func (*PrepareBulkLoadRequest) ProtoMessage()               {}
+func (*PrepareBulkLoadRequest) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{18} }
+
+func (m *PrepareBulkLoadRequest) GetTableName() *TableName {
+	if m != nil {
+		return m.TableName
+	}
+	return nil
+}
+
+func (m *PrepareBulkLoadRequest) GetRegion() *RegionSpecifier {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+type PrepareBulkLoadResponse struct {
+	BulkToken        *string `protobuf:"bytes,1,req,name=bulk_token,json=bulkToken" json:"bulk_token,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (m *PrepareBulkLoadResponse) Reset()                    { *m = PrepareBulkLoadResponse{} }
+func (m *PrepareBulkLoadResponse) String() string            { return proto.CompactTextString(m) }
+func (*PrepareBulkLoadResponse) ProtoMessage()               {}
+func (*PrepareBulkLoadResponse) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{19} }
+
+func (m *PrepareBulkLoadResponse) GetBulkToken() string {
+	if m != nil && m.BulkToken != nil {
+		return *m.BulkToken
+	}
+	return ""
+}
+
+type CleanupBulkLoadRequest struct {
+	BulkToken        *string          `protobuf:"bytes,1,req,name=bulk_token,json=bulkToken" json:"bulk_token,omitempty"`
+	Region           *RegionSpecifier `protobuf:"bytes,2,opt,name=region" json:"region,omitempty"`
+	XXX_unrecognized []byte           `json:"-"`
+}
+
+func (m *CleanupBulkLoadRequest) Reset()                    { *m = CleanupBulkLoadRequest{} }
+func (m *CleanupBulkLoadRequest) String() string            { return proto.CompactTextString(m) }
+func (*CleanupBulkLoadRequest) ProtoMessage()               {}
+func (*CleanupBulkLoadRequest) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{20} }
+
+func (m *CleanupBulkLoadRequest) GetBulkToken() string {
+	if m != nil && m.BulkToken != nil {
+		return *m.BulkToken
+	}
+	return ""
+}
+
+func (m *CleanupBulkLoadRequest) GetRegion() *RegionSpecifier {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+type CleanupBulkLoadResponse struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *CleanupBulkLoadResponse) Reset()                    { *m = CleanupBulkLoadResponse{} }
+func (m *CleanupBulkLoadResponse) String() string            { return proto.CompactTextString(m) }
+func (*CleanupBulkLoadResponse) ProtoMessage()               {}
+func (*CleanupBulkLoadResponse) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{21} }
+
 type CoprocessorServiceCall struct {
 	Row              []byte  `protobuf:"bytes,1,req,name=row" json:"row,omitempty"`
-	ServiceName      *string `protobuf:"bytes,2,req,name=service_name" json:"service_name,omitempty"`
-	MethodName       *string `protobuf:"bytes,3,req,name=method_name" json:"method_name,omitempty"`
+	ServiceName      *string `protobuf:"bytes,2,req,name=service_name,json=serviceName" json:"service_name,omitempty"`
+	MethodName       *string `protobuf:"bytes,3,req,name=method_name,json=methodName" json:"method_name,omitempty"`
 	Request          []byte  `protobuf:"bytes,4,req,name=request" json:"request,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *CoprocessorServiceCall) Reset()         { *m = CoprocessorServiceCall{} }
-func (m *CoprocessorServiceCall) String() string { return proto.CompactTextString(m) }
-func (*CoprocessorServiceCall) ProtoMessage()    {}
+func (m *CoprocessorServiceCall) Reset()                    { *m = CoprocessorServiceCall{} }
+func (m *CoprocessorServiceCall) String() string            { return proto.CompactTextString(m) }
+func (*CoprocessorServiceCall) ProtoMessage()               {}
+func (*CoprocessorServiceCall) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{22} }
 
 func (m *CoprocessorServiceCall) GetRow() []byte {
 	if m != nil {
@@ -1217,9 +1577,10 @@ type CoprocessorServiceResult struct {
 	XXX_unrecognized []byte         `json:"-"`
 }
 
-func (m *CoprocessorServiceResult) Reset()         { *m = CoprocessorServiceResult{} }
-func (m *CoprocessorServiceResult) String() string { return proto.CompactTextString(m) }
-func (*CoprocessorServiceResult) ProtoMessage()    {}
+func (m *CoprocessorServiceResult) Reset()                    { *m = CoprocessorServiceResult{} }
+func (m *CoprocessorServiceResult) String() string            { return proto.CompactTextString(m) }
+func (*CoprocessorServiceResult) ProtoMessage()               {}
+func (*CoprocessorServiceResult) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{23} }
 
 func (m *CoprocessorServiceResult) GetValue() *NameBytesPair {
 	if m != nil {
@@ -1234,9 +1595,10 @@ type CoprocessorServiceRequest struct {
 	XXX_unrecognized []byte                  `json:"-"`
 }
 
-func (m *CoprocessorServiceRequest) Reset()         { *m = CoprocessorServiceRequest{} }
-func (m *CoprocessorServiceRequest) String() string { return proto.CompactTextString(m) }
-func (*CoprocessorServiceRequest) ProtoMessage()    {}
+func (m *CoprocessorServiceRequest) Reset()                    { *m = CoprocessorServiceRequest{} }
+func (m *CoprocessorServiceRequest) String() string            { return proto.CompactTextString(m) }
+func (*CoprocessorServiceRequest) ProtoMessage()               {}
+func (*CoprocessorServiceRequest) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{24} }
 
 func (m *CoprocessorServiceRequest) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -1258,9 +1620,10 @@ type CoprocessorServiceResponse struct {
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *CoprocessorServiceResponse) Reset()         { *m = CoprocessorServiceResponse{} }
-func (m *CoprocessorServiceResponse) String() string { return proto.CompactTextString(m) }
-func (*CoprocessorServiceResponse) ProtoMessage()    {}
+func (m *CoprocessorServiceResponse) Reset()                    { *m = CoprocessorServiceResponse{} }
+func (m *CoprocessorServiceResponse) String() string            { return proto.CompactTextString(m) }
+func (*CoprocessorServiceResponse) ProtoMessage()               {}
+func (*CoprocessorServiceResponse) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{25} }
 
 func (m *CoprocessorServiceResponse) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -1283,13 +1646,14 @@ type Action struct {
 	Index            *uint32                 `protobuf:"varint,1,opt,name=index" json:"index,omitempty"`
 	Mutation         *MutationProto          `protobuf:"bytes,2,opt,name=mutation" json:"mutation,omitempty"`
 	Get              *Get                    `protobuf:"bytes,3,opt,name=get" json:"get,omitempty"`
-	ServiceCall      *CoprocessorServiceCall `protobuf:"bytes,4,opt,name=service_call" json:"service_call,omitempty"`
+	ServiceCall      *CoprocessorServiceCall `protobuf:"bytes,4,opt,name=service_call,json=serviceCall" json:"service_call,omitempty"`
 	XXX_unrecognized []byte                  `json:"-"`
 }
 
-func (m *Action) Reset()         { *m = Action{} }
-func (m *Action) String() string { return proto.CompactTextString(m) }
-func (*Action) ProtoMessage()    {}
+func (m *Action) Reset()                    { *m = Action{} }
+func (m *Action) String() string            { return proto.CompactTextString(m) }
+func (*Action) ProtoMessage()               {}
+func (*Action) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{26} }
 
 func (m *Action) GetIndex() uint32 {
 	if m != nil && m.Index != nil {
@@ -1329,9 +1693,10 @@ type RegionAction struct {
 	XXX_unrecognized []byte    `json:"-"`
 }
 
-func (m *RegionAction) Reset()         { *m = RegionAction{} }
-func (m *RegionAction) String() string { return proto.CompactTextString(m) }
-func (*RegionAction) ProtoMessage()    {}
+func (m *RegionAction) Reset()                    { *m = RegionAction{} }
+func (m *RegionAction) String() string            { return proto.CompactTextString(m) }
+func (*RegionAction) ProtoMessage()               {}
+func (*RegionAction) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{27} }
 
 func (m *RegionAction) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -1361,16 +1726,20 @@ type RegionLoadStats struct {
 	MemstoreLoad *int32 `protobuf:"varint,1,opt,name=memstoreLoad,def=0" json:"memstoreLoad,omitempty"`
 	// Percent JVM heap occupancy. Guaranteed to be positive, between 0 and 100.
 	// We can move this to "ServerLoadStats" should we develop them.
-	HeapOccupancy    *int32 `protobuf:"varint,2,opt,name=heapOccupancy,def=0" json:"heapOccupancy,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	HeapOccupancy *int32 `protobuf:"varint,2,opt,name=heapOccupancy,def=0" json:"heapOccupancy,omitempty"`
+	// Compaction pressure. Guaranteed to be positive, between 0 and 100.
+	CompactionPressure *int32 `protobuf:"varint,3,opt,name=compactionPressure,def=0" json:"compactionPressure,omitempty"`
+	XXX_unrecognized   []byte `json:"-"`
 }
 
-func (m *RegionLoadStats) Reset()         { *m = RegionLoadStats{} }
-func (m *RegionLoadStats) String() string { return proto.CompactTextString(m) }
-func (*RegionLoadStats) ProtoMessage()    {}
+func (m *RegionLoadStats) Reset()                    { *m = RegionLoadStats{} }
+func (m *RegionLoadStats) String() string            { return proto.CompactTextString(m) }
+func (*RegionLoadStats) ProtoMessage()               {}
+func (*RegionLoadStats) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{28} }
 
 const Default_RegionLoadStats_MemstoreLoad int32 = 0
 const Default_RegionLoadStats_HeapOccupancy int32 = 0
+const Default_RegionLoadStats_CompactionPressure int32 = 0
 
 func (m *RegionLoadStats) GetMemstoreLoad() int32 {
 	if m != nil && m.MemstoreLoad != nil {
@@ -1386,6 +1755,38 @@ func (m *RegionLoadStats) GetHeapOccupancy() int32 {
 	return Default_RegionLoadStats_HeapOccupancy
 }
 
+func (m *RegionLoadStats) GetCompactionPressure() int32 {
+	if m != nil && m.CompactionPressure != nil {
+		return *m.CompactionPressure
+	}
+	return Default_RegionLoadStats_CompactionPressure
+}
+
+type MultiRegionLoadStats struct {
+	Region           []*RegionSpecifier `protobuf:"bytes,1,rep,name=region" json:"region,omitempty"`
+	Stat             []*RegionLoadStats `protobuf:"bytes,2,rep,name=stat" json:"stat,omitempty"`
+	XXX_unrecognized []byte             `json:"-"`
+}
+
+func (m *MultiRegionLoadStats) Reset()                    { *m = MultiRegionLoadStats{} }
+func (m *MultiRegionLoadStats) String() string            { return proto.CompactTextString(m) }
+func (*MultiRegionLoadStats) ProtoMessage()               {}
+func (*MultiRegionLoadStats) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{29} }
+
+func (m *MultiRegionLoadStats) GetRegion() []*RegionSpecifier {
+	if m != nil {
+		return m.Region
+	}
+	return nil
+}
+
+func (m *MultiRegionLoadStats) GetStat() []*RegionLoadStats {
+	if m != nil {
+		return m.Stat
+	}
+	return nil
+}
+
 // *
 // Either a Result or an Exception NameBytesPair (keyed by
 // exception name whose value is the exception stringified)
@@ -1397,15 +1798,16 @@ type ResultOrException struct {
 	Result    *Result        `protobuf:"bytes,2,opt,name=result" json:"result,omitempty"`
 	Exception *NameBytesPair `protobuf:"bytes,3,opt,name=exception" json:"exception,omitempty"`
 	// result if this was a coprocessor service call
-	ServiceResult *CoprocessorServiceResult `protobuf:"bytes,4,opt,name=service_result" json:"service_result,omitempty"`
+	ServiceResult *CoprocessorServiceResult `protobuf:"bytes,4,opt,name=service_result,json=serviceResult" json:"service_result,omitempty"`
 	// current load on the region
 	LoadStats        *RegionLoadStats `protobuf:"bytes,5,opt,name=loadStats" json:"loadStats,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *ResultOrException) Reset()         { *m = ResultOrException{} }
-func (m *ResultOrException) String() string { return proto.CompactTextString(m) }
-func (*ResultOrException) ProtoMessage()    {}
+func (m *ResultOrException) Reset()                    { *m = ResultOrException{} }
+func (m *ResultOrException) String() string            { return proto.CompactTextString(m) }
+func (*ResultOrException) ProtoMessage()               {}
+func (*ResultOrException) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{30} }
 
 func (m *ResultOrException) GetIndex() uint32 {
 	if m != nil && m.Index != nil {
@@ -1451,9 +1853,10 @@ type RegionActionResult struct {
 	XXX_unrecognized []byte         `json:"-"`
 }
 
-func (m *RegionActionResult) Reset()         { *m = RegionActionResult{} }
-func (m *RegionActionResult) String() string { return proto.CompactTextString(m) }
-func (*RegionActionResult) ProtoMessage()    {}
+func (m *RegionActionResult) Reset()                    { *m = RegionActionResult{} }
+func (m *RegionActionResult) String() string            { return proto.CompactTextString(m) }
+func (*RegionActionResult) ProtoMessage()               {}
+func (*RegionActionResult) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{31} }
 
 func (m *RegionActionResult) GetResultOrException() []*ResultOrException {
 	if m != nil {
@@ -1482,9 +1885,10 @@ type MultiRequest struct {
 	XXX_unrecognized []byte          `json:"-"`
 }
 
-func (m *MultiRequest) Reset()         { *m = MultiRequest{} }
-func (m *MultiRequest) String() string { return proto.CompactTextString(m) }
-func (*MultiRequest) ProtoMessage()    {}
+func (m *MultiRequest) Reset()                    { *m = MultiRequest{} }
+func (m *MultiRequest) String() string            { return proto.CompactTextString(m) }
+func (*MultiRequest) ProtoMessage()               {}
+func (*MultiRequest) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{32} }
 
 func (m *MultiRequest) GetRegionAction() []*RegionAction {
 	if m != nil {
@@ -1510,13 +1914,15 @@ func (m *MultiRequest) GetCondition() *Condition {
 type MultiResponse struct {
 	RegionActionResult []*RegionActionResult `protobuf:"bytes,1,rep,name=regionActionResult" json:"regionActionResult,omitempty"`
 	// used for mutate to indicate processed only
-	Processed        *bool  `protobuf:"varint,2,opt,name=processed" json:"processed,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Processed        *bool                 `protobuf:"varint,2,opt,name=processed" json:"processed,omitempty"`
+	RegionStatistics *MultiRegionLoadStats `protobuf:"bytes,3,opt,name=regionStatistics" json:"regionStatistics,omitempty"`
+	XXX_unrecognized []byte                `json:"-"`
 }
 
-func (m *MultiResponse) Reset()         { *m = MultiResponse{} }
-func (m *MultiResponse) String() string { return proto.CompactTextString(m) }
-func (*MultiResponse) ProtoMessage()    {}
+func (m *MultiResponse) Reset()                    { *m = MultiResponse{} }
+func (m *MultiResponse) String() string            { return proto.CompactTextString(m) }
+func (*MultiResponse) ProtoMessage()               {}
+func (*MultiResponse) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{33} }
 
 func (m *MultiResponse) GetRegionActionResult() []*RegionActionResult {
 	if m != nil {
@@ -1532,9 +1938,241 @@ func (m *MultiResponse) GetProcessed() bool {
 	return false
 }
 
+func (m *MultiResponse) GetRegionStatistics() *MultiRegionLoadStats {
+	if m != nil {
+		return m.RegionStatistics
+	}
+	return nil
+}
+
 func init() {
+	proto.RegisterType((*Authorizations)(nil), "pb.Authorizations")
+	proto.RegisterType((*CellVisibility)(nil), "pb.CellVisibility")
+	proto.RegisterType((*Column)(nil), "pb.Column")
+	proto.RegisterType((*Get)(nil), "pb.Get")
+	proto.RegisterType((*Result)(nil), "pb.Result")
+	proto.RegisterType((*GetRequest)(nil), "pb.GetRequest")
+	proto.RegisterType((*GetResponse)(nil), "pb.GetResponse")
+	proto.RegisterType((*Condition)(nil), "pb.Condition")
+	proto.RegisterType((*MutationProto)(nil), "pb.MutationProto")
+	proto.RegisterType((*MutationProto_ColumnValue)(nil), "pb.MutationProto.ColumnValue")
+	proto.RegisterType((*MutationProto_ColumnValue_QualifierValue)(nil), "pb.MutationProto.ColumnValue.QualifierValue")
+	proto.RegisterType((*MutateRequest)(nil), "pb.MutateRequest")
+	proto.RegisterType((*MutateResponse)(nil), "pb.MutateResponse")
+	proto.RegisterType((*Scan)(nil), "pb.Scan")
+	proto.RegisterType((*ScanRequest)(nil), "pb.ScanRequest")
+	proto.RegisterType((*Cursor)(nil), "pb.Cursor")
+	proto.RegisterType((*ScanResponse)(nil), "pb.ScanResponse")
+	proto.RegisterType((*BulkLoadHFileRequest)(nil), "pb.BulkLoadHFileRequest")
+	proto.RegisterType((*BulkLoadHFileRequest_FamilyPath)(nil), "pb.BulkLoadHFileRequest.FamilyPath")
+	proto.RegisterType((*BulkLoadHFileResponse)(nil), "pb.BulkLoadHFileResponse")
+	proto.RegisterType((*DelegationToken)(nil), "pb.DelegationToken")
+	proto.RegisterType((*PrepareBulkLoadRequest)(nil), "pb.PrepareBulkLoadRequest")
+	proto.RegisterType((*PrepareBulkLoadResponse)(nil), "pb.PrepareBulkLoadResponse")
+	proto.RegisterType((*CleanupBulkLoadRequest)(nil), "pb.CleanupBulkLoadRequest")
+	proto.RegisterType((*CleanupBulkLoadResponse)(nil), "pb.CleanupBulkLoadResponse")
+	proto.RegisterType((*CoprocessorServiceCall)(nil), "pb.CoprocessorServiceCall")
+	proto.RegisterType((*CoprocessorServiceResult)(nil), "pb.CoprocessorServiceResult")
+	proto.RegisterType((*CoprocessorServiceRequest)(nil), "pb.CoprocessorServiceRequest")
+	proto.RegisterType((*CoprocessorServiceResponse)(nil), "pb.CoprocessorServiceResponse")
+	proto.RegisterType((*Action)(nil), "pb.Action")
+	proto.RegisterType((*RegionAction)(nil), "pb.RegionAction")
+	proto.RegisterType((*RegionLoadStats)(nil), "pb.RegionLoadStats")
+	proto.RegisterType((*MultiRegionLoadStats)(nil), "pb.MultiRegionLoadStats")
+	proto.RegisterType((*ResultOrException)(nil), "pb.ResultOrException")
+	proto.RegisterType((*RegionActionResult)(nil), "pb.RegionActionResult")
+	proto.RegisterType((*MultiRequest)(nil), "pb.MultiRequest")
+	proto.RegisterType((*MultiResponse)(nil), "pb.MultiResponse")
 	proto.RegisterEnum("pb.Consistency", Consistency_name, Consistency_value)
 	proto.RegisterEnum("pb.MutationProto_Durability", MutationProto_Durability_name, MutationProto_Durability_value)
 	proto.RegisterEnum("pb.MutationProto_MutationType", MutationProto_MutationType_name, MutationProto_MutationType_value)
 	proto.RegisterEnum("pb.MutationProto_DeleteType", MutationProto_DeleteType_name, MutationProto_DeleteType_value)
+	proto.RegisterEnum("pb.Scan_ReadType", Scan_ReadType_name, Scan_ReadType_value)
+}
+
+var fileDescriptor4 = []byte{
+	// 2915 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xac, 0x19, 0x5d, 0x73, 0x23, 0x47,
+	0x91, 0x95, 0x64, 0x4b, 0x6a, 0x7d, 0x58, 0x9e, 0xbb, 0xb3, 0x65, 0xe5, 0x72, 0x84, 0x0d, 0xc9,
+	0x25, 0x21, 0xf8, 0x2e, 0x0e, 0xa1, 0x82, 0xab, 0x02, 0xf8, 0x43, 0xce, 0x19, 0xfc, 0x21, 0x46,
+	0xbe, 0x0b, 0x79, 0xda, 0x5a, 0xaf, 0x46, 0xf6, 0xd6, 0xad, 0xb4, 0xba, 0xdd, 0xd5, 0x9d, 0x2f,
+	0xfc, 0x81, 0x14, 0x6f, 0x54, 0xf1, 0x03, 0x78, 0xe3, 0x95, 0x2a, 0xa0, 0x28, 0x8a, 0xe2, 0x99,
+	0x17, 0x7e, 0x02, 0x8f, 0xfc, 0x08, 0x8a, 0x27, 0x7a, 0x7a, 0x66, 0x3f, 0xf4, 0x75, 0x3e, 0xa7,
+	0x78, 0xd2, 0x4e, 0x77, 0x4f, 0x4f, 0x4f, 0x7f, 0xf7, 0x08, 0xaa, 0x7b, 0x9e, 0x2b, 0x86, 0xd1,
+	0xe6, 0x28, 0xf0, 0x23, 0x9f, 0xe5, 0x46, 0xe7, 0xad, 0xca, 0xa3, 0x5d, 0x3b, 0x14, 0x0a, 0xd0,
+	0xaa, 0x1e, 0xb8, 0x5e, 0x24, 0x02, 0xbd, 0x82, 0x3d, 0xe1, 0x79, 0xfa, 0xbb, 0xb1, 0xe7, 0x0f,
+	0x46, 0x76, 0x60, 0x47, 0x7e, 0x8c, 0x5d, 0x39, 0xb6, 0x47, 0x5c, 0xf4, 0xc6, 0x8e, 0xde, 0x6c,
+	0xbe, 0x0b, 0xf5, 0x9d, 0x71, 0x74, 0xe9, 0x07, 0xee, 0x57, 0x76, 0xe4, 0xfa, 0xc3, 0x90, 0xdd,
+	0x86, 0x25, 0xcf, 0x3e, 0x17, 0x5e, 0xd3, 0x78, 0x2b, 0xff, 0x5e, 0x99, 0xab, 0x85, 0xf9, 0x10,
+	0xea, 0x92, 0xf1, 0x13, 0x37, 0x74, 0xcf, 0x5d, 0xcf, 0x8d, 0x5e, 0xb2, 0x7b, 0x00, 0xe2, 0x6a,
+	0x14, 0x88, 0x30, 0xc4, 0x6d, 0x48, 0x9c, 0x43, 0xe2, 0x0c, 0xc4, 0xfc, 0x31, 0x2c, 0xef, 0xf9,
+	0xde, 0x78, 0x30, 0x64, 0x6b, 0xb0, 0xdc, 0xb7, 0x07, 0xae, 0xf7, 0x92, 0xa8, 0xaa, 0x5c, 0xaf,
+	0xd8, 0x5d, 0x28, 0x3f, 0x1b, 0xdb, 0x9e, 0xdb, 0x77, 0x45, 0xd0, 0xcc, 0xe1, 0x69, 0x55, 0x9e,
+	0x02, 0xcc, 0xbf, 0x17, 0x20, 0xff, 0xb9, 0x88, 0x58, 0x03, 0xf2, 0x81, 0xff, 0x42, 0x6f, 0x95,
+	0x9f, 0xcc, 0x84, 0x65, 0x87, 0x38, 0xd3, 0xa6, 0xca, 0x16, 0x6c, 0x8e, 0xce, 0x37, 0xd5, 0x59,
+	0x5c, 0x63, 0xd8, 0x03, 0x28, 0xdb, 0x51, 0x14, 0xb8, 0xe7, 0xe3, 0x48, 0x34, 0xf3, 0x44, 0xb6,
+	0x2a, 0xc9, 0x4e, 0xec, 0x81, 0xd8, 0x7d, 0x19, 0x89, 0xb0, 0x63, 0xbb, 0x01, 0x4f, 0x69, 0x24,
+	0xd3, 0x3e, 0xe9, 0xb1, 0x59, 0x78, 0xcb, 0x88, 0x99, 0x2a, 0xcd, 0x72, 0x8d, 0x61, 0x1f, 0x02,
+	0x44, 0xee, 0x40, 0x58, 0x81, 0x3d, 0xbc, 0x10, 0xcd, 0x25, 0xa2, 0xab, 0x49, 0xba, 0x33, 0x84,
+	0x72, 0x09, 0xe4, 0xe5, 0x28, 0xfe, 0x64, 0xdf, 0x85, 0xea, 0xc0, 0xbe, 0xb2, 0x9e, 0x8b, 0x40,
+	0xea, 0x23, 0x6c, 0x2e, 0x23, 0x7d, 0x6d, 0xdb, 0xf8, 0x88, 0x57, 0x10, 0xfc, 0x44, 0x43, 0xd9,
+	0x7d, 0xa8, 0x3a, 0xb6, 0x73, 0x29, 0xac, 0x73, 0xcf, 0x77, 0x9e, 0x86, 0xcd, 0x22, 0x52, 0x95,
+	0xb6, 0x0b, 0x51, 0x30, 0x16, 0xbc, 0x42, 0x98, 0x5d, 0x42, 0xb0, 0x6f, 0x43, 0x25, 0x44, 0x43,
+	0x0a, 0xcb, 0x73, 0x07, 0x6e, 0xd4, 0x2c, 0x49, 0x6e, 0x1c, 0x08, 0x74, 0x24, 0x21, 0xec, 0x3b,
+	0x50, 0x55, 0x04, 0x7e, 0xbf, 0x1f, 0x8a, 0xa8, 0x59, 0x26, 0x0a, 0xb5, 0xe9, 0x94, 0x40, 0x78,
+	0x81, 0xba, 0xb8, 0x72, 0xc3, 0x48, 0x0c, 0x1d, 0x24, 0x1b, 0xa2, 0x45, 0x80, 0x8e, 0x5b, 0xea,
+	0xdb, 0x5e, 0x28, 0x78, 0x2d, 0x41, 0x9e, 0x22, 0x8e, 0xfd, 0x08, 0x2a, 0x0e, 0x8a, 0xa8, 0x40,
+	0x2f, 0x9b, 0x55, 0x24, 0xad, 0x6f, 0xad, 0x28, 0x65, 0x27, 0xe0, 0xed, 0xe5, 0xee, 0x19, 0x3f,
+	0x3d, 0xf9, 0x9c, 0x67, 0x69, 0xd9, 0x67, 0x50, 0x73, 0xfa, 0x56, 0x46, 0x59, 0x35, 0x32, 0xc1,
+	0x46, 0x6a, 0xa9, 0x03, 0xf2, 0x81, 0x54, 0x71, 0x15, 0xa7, 0x9f, 0x2c, 0xd8, 0x2e, 0xdc, 0xf3,
+	0x7c, 0xbb, 0x67, 0x29, 0x63, 0x5a, 0xe4, 0x2f, 0xae, 0x08, 0x51, 0x64, 0xab, 0x27, 0x06, 0xf6,
+	0xb0, 0xd7, 0xac, 0x4b, 0xb9, 0x79, 0x4b, 0x52, 0x65, 0xf8, 0x21, 0xcd, 0xe9, 0x70, 0x9f, 0x28,
+	0xcc, 0x3f, 0x18, 0xb0, 0xcc, 0x45, 0x38, 0xf6, 0x22, 0x74, 0xb4, 0x82, 0x83, 0xce, 0x4b, 0x1e,
+	0x5d, 0xd9, 0x2a, 0x91, 0x10, 0xb8, 0xe6, 0x04, 0x65, 0x5b, 0x70, 0xc7, 0x0e, 0x43, 0xdf, 0x71,
+	0xed, 0x48, 0xe0, 0x91, 0x08, 0xc2, 0x73, 0xc7, 0xc3, 0x08, 0xbd, 0xcb, 0x78, 0x6f, 0x89, 0xdf,
+	0x4a, 0x91, 0x72, 0xd3, 0x9e, 0x44, 0x49, 0x97, 0x26, 0x5d, 0x85, 0xe8, 0x5b, 0x52, 0x10, 0xbd,
+	0x62, 0x6f, 0xc0, 0x52, 0x18, 0xd9, 0x9e, 0x20, 0x27, 0x4a, 0xf4, 0xaa, 0x60, 0x68, 0xc1, 0x22,
+	0x46, 0x63, 0xe4, 0xda, 0x1e, 0xf9, 0x4e, 0x82, 0x8e, 0xa1, 0xe6, 0x19, 0x00, 0x7a, 0x3c, 0x17,
+	0xcf, 0xc6, 0x22, 0x8c, 0xd8, 0xf7, 0x60, 0x39, 0x10, 0x17, 0x71, 0x70, 0x55, 0xb6, 0x6e, 0x49,
+	0xb9, 0x39, 0x41, 0xba, 0x23, 0xe1, 0x50, 0x94, 0x70, 0x4d, 0xc2, 0x36, 0x20, 0x7f, 0x21, 0xa4,
+	0xc8, 0x92, 0xb2, 0x28, 0x29, 0x25, 0x27, 0x09, 0x33, 0x3f, 0x82, 0x0a, 0x71, 0x0d, 0x47, 0x68,
+	0x20, 0x72, 0xf4, 0x80, 0xd4, 0x82, 0x6c, 0x13, 0x47, 0x57, 0x8a, 0xe2, 0x1a, 0x63, 0xfe, 0xc5,
+	0x80, 0x32, 0xda, 0xb8, 0xe7, 0xca, 0x94, 0x30, 0x27, 0x02, 0xd3, 0x88, 0xce, 0x2d, 0x8e, 0xe8,
+	0x3c, 0xa1, 0x52, 0x00, 0x2a, 0xba, 0xea, 0x50, 0x42, 0x12, 0x56, 0xf4, 0x72, 0x24, 0x75, 0x94,
+	0x4b, 0x1d, 0x8a, 0xe0, 0x67, 0x08, 0x96, 0x8e, 0x94, 0x2c, 0xd8, 0x26, 0x80, 0x93, 0x24, 0x31,
+	0x54, 0x9b, 0xbc, 0x5e, 0x3d, 0xdd, 0x21, 0xa1, 0x3c, 0x43, 0x61, 0xfe, 0xa7, 0x08, 0xb5, 0xe3,
+	0x71, 0x44, 0xb9, 0xac, 0x43, 0xf9, 0x32, 0x91, 0xde, 0x88, 0xa5, 0xff, 0x09, 0x54, 0x06, 0x92,
+	0x44, 0x8b, 0x91, 0x23, 0xbf, 0xbe, 0x27, 0x99, 0x4e, 0xec, 0x4c, 0x56, 0x24, 0x15, 0xa8, 0x2d,
+	0x24, 0xd4, 0x4f, 0xe5, 0x45, 0xc8, 0x33, 0x9f, 0xdb, 0xde, 0x38, 0xce, 0x2f, 0x6f, 0xce, 0x72,
+	0x50, 0xae, 0xf9, 0x44, 0x12, 0xc9, 0x6b, 0x25, 0x0b, 0xa9, 0x28, 0x19, 0x1c, 0xe8, 0x17, 0x83,
+	0x11, 0xf9, 0x4a, 0x81, 0xa7, 0x80, 0xc9, 0xe4, 0xb5, 0xf4, 0x1a, 0xc9, 0xeb, 0x10, 0xa0, 0x37,
+	0x0e, 0x6c, 0x95, 0x99, 0x29, 0xd1, 0xd4, 0xb7, 0xee, 0xce, 0x8a, 0xb3, 0x9f, 0xd0, 0x6c, 0x57,
+	0x1e, 0x77, 0xdb, 0xd6, 0x7e, 0xfb, 0x60, 0xe7, 0xf1, 0xd1, 0x19, 0xcf, 0x6c, 0x9e, 0xca, 0x71,
+	0xc5, 0x6b, 0x72, 0xdc, 0xc2, 0xd8, 0x29, 0x2d, 0x8e, 0x1d, 0x2c, 0x30, 0x43, 0x1f, 0x73, 0x0c,
+	0x25, 0xa8, 0x02, 0x57, 0x8b, 0xd6, 0x9f, 0x72, 0x50, 0xc9, 0xa8, 0x6b, 0x61, 0xd1, 0x78, 0x0c,
+	0x2b, 0x89, 0x47, 0x69, 0xf5, 0xab, 0x2a, 0xf0, 0xe1, 0x2b, 0xd5, 0xbf, 0xf9, 0x8b, 0x78, 0x93,
+	0xb2, 0x46, 0xfd, 0xd9, 0xc4, 0xba, 0xf5, 0x67, 0x03, 0xea, 0x93, 0x24, 0x93, 0xce, 0xac, 0xdc,
+	0x27, 0xe3, 0xcc, 0x78, 0x8b, 0xf8, 0x74, 0x89, 0x51, 0x8b, 0x49, 0xbb, 0xe6, 0xa7, 0xed, 0xfa,
+	0x19, 0x54, 0x7a, 0xc2, 0x13, 0x51, 0xe2, 0xff, 0x8b, 0xec, 0x44, 0x44, 0xca, 0xed, 0x7a, 0xc9,
+	0x37, 0x63, 0x50, 0x88, 0xec, 0x8b, 0x90, 0x92, 0x47, 0x95, 0xd3, 0xb7, 0xf9, 0x05, 0x40, 0x6a,
+	0x55, 0xb6, 0x02, 0x59, 0xbb, 0x36, 0xbe, 0xc5, 0xaa, 0x50, 0xea, 0xfe, 0xfc, 0xb0, 0x63, 0x7d,
+	0xb1, 0x73, 0xd4, 0x30, 0x58, 0x0d, 0xca, 0x3b, 0xdd, 0x2f, 0x4f, 0xf6, 0x68, 0x99, 0x23, 0x64,
+	0xbc, 0xca, 0x4b, 0xe4, 0x41, 0xb2, 0x2c, 0x60, 0xf9, 0xae, 0x66, 0xfd, 0x9f, 0x01, 0x2c, 0xef,
+	0x74, 0x3a, 0xed, 0x93, 0x7d, 0xe4, 0x8a, 0xa4, 0x87, 0x27, 0x7b, 0xbc, 0x7d, 0xdc, 0x3e, 0x39,
+	0x43, 0xb6, 0x45, 0xc8, 0x77, 0x1e, 0x9f, 0x21, 0x43, 0xa4, 0xd9, 0x6f, 0x1f, 0xb5, 0xcf, 0xda,
+	0x8d, 0xbc, 0x39, 0x42, 0xc1, 0x52, 0xd1, 0xd7, 0x80, 0x29, 0x8c, 0x75, 0x7a, 0xd2, 0xb6, 0x9e,
+	0xb4, 0x79, 0xf7, 0xf0, 0xf4, 0x04, 0x39, 0xdd, 0x85, 0xa6, 0x86, 0x1f, 0xa3, 0xc0, 0x87, 0x9d,
+	0xa3, 0x04, 0xd9, 0x45, 0xc6, 0xab, 0x50, 0xd3, 0xd8, 0x83, 0x9d, 0xe3, 0xc3, 0xa3, 0x2f, 0xf1,
+	0x88, 0x0d, 0xb8, 0x33, 0x01, 0x4a, 0x78, 0xe5, 0xcd, 0xbf, 0x1a, 0x3a, 0xf4, 0xc5, 0x37, 0xca,
+	0xa0, 0xdf, 0x87, 0xd2, 0x40, 0x5f, 0x58, 0xa7, 0xd1, 0xd5, 0x19, 0xcb, 0xf0, 0x84, 0x04, 0x79,
+	0x97, 0x9d, 0x38, 0x43, 0x92, 0xa5, 0x75, 0x98, 0x24, 0x69, 0x93, 0xa7, 0x78, 0x59, 0xbb, 0xc9,
+	0xcb, 0xad, 0x8b, 0xc0, 0x1f, 0xc7, 0x01, 0x0f, 0x04, 0xfa, 0x5c, 0x42, 0x4c, 0x0e, 0xf5, 0x58,
+	0xf4, 0xd7, 0x4f, 0xd3, 0xd2, 0xdb, 0xb0, 0x8b, 0x73, 0xb0, 0xe1, 0x12, 0x3d, 0xf2, 0xc3, 0x12,
+	0x4f, 0x01, 0xe6, 0x1f, 0x4b, 0x50, 0xe8, 0x3a, 0xf6, 0x30, 0xd3, 0x2f, 0x19, 0xaf, 0xd7, 0x2f,
+	0xe5, 0x5e, 0x23, 0xe5, 0xbc, 0x01, 0x65, 0x74, 0xea, 0x20, 0xb2, 0x64, 0x72, 0xcd, 0x93, 0x47,
+	0x96, 0x08, 0xc0, 0x31, 0xc3, 0x6e, 0x00, 0x7e, 0xfb, 0x23, 0xc2, 0x15, 0x08, 0x57, 0x94, 0x6b,
+	0xae, 0x9a, 0x37, 0xdd, 0x67, 0x2d, 0xbd, 0x66, 0x9f, 0xb5, 0x7c, 0xc3, 0x3e, 0xab, 0xf8, 0x5a,
+	0x7d, 0x56, 0x69, 0x51, 0x9f, 0xf5, 0x26, 0xc0, 0xb9, 0x1d, 0x39, 0x97, 0x56, 0xe8, 0x7e, 0x25,
+	0x74, 0x13, 0x55, 0x26, 0x48, 0x17, 0x01, 0xec, 0x5d, 0x58, 0x91, 0xa7, 0x29, 0x0b, 0x28, 0x1a,
+	0x20, 0x73, 0xd6, 0x10, 0xac, 0xec, 0x43, 0x74, 0x53, 0xed, 0x5a, 0xe5, 0xda, 0x76, 0xad, 0x3a,
+	0xdb, 0xae, 0x5d, 0xdf, 0x06, 0xd5, 0xae, 0x6b, 0x83, 0x58, 0x13, 0x3b, 0x92, 0x81, 0x8d, 0xcd,
+	0x0f, 0x75, 0x4c, 0xbb, 0xb9, 0xa6, 0xc1, 0x15, 0x00, 0x05, 0x28, 0x05, 0x42, 0x6a, 0x0d, 0x9d,
+	0x67, 0x25, 0xdb, 0x8f, 0x24, 0xe0, 0xe9, 0x0e, 0xb0, 0x71, 0x83, 0x0e, 0xb0, 0x09, 0x45, 0xa9,
+	0x55, 0x77, 0x78, 0xd1, 0x5c, 0xa5, 0x9b, 0xc5, 0x4b, 0xaa, 0x19, 0x9e, 0xe7, 0xbf, 0xb0, 0x74,
+	0xdb, 0xa3, 0x75, 0x19, 0x36, 0x19, 0x5d, 0xe6, 0x16, 0x21, 0x3b, 0x0a, 0xa7, 0x14, 0x1a, 0xce,
+	0xf6, 0x93, 0xb7, 0x6e, 0xd4, 0x4f, 0xbe, 0x8f, 0x46, 0x7b, 0xee, 0x38, 0x78, 0x12, 0x6a, 0x73,
+	0xe4, 0xbb, 0x58, 0xa0, 0x6e, 0x4b, 0xa3, 0x6d, 0x1b, 0x0f, 0xd1, 0x6e, 0x88, 0xe1, 0x88, 0xe8,
+	0x48, 0x38, 0x7b, 0x08, 0xab, 0xee, 0xd0, 0xf1, 0xc6, 0x3d, 0x61, 0xa5, 0xfe, 0x7d, 0x27, 0xe3,
+	0x2c, 0x2b, 0x1a, 0xdd, 0x8d, 0x9d, 0xfd, 0x01, 0x34, 0xd2, 0x1d, 0xda, 0xe9, 0xd7, 0xb2, 0xfa,
+	0xac, 0x27, 0x3b, 0x54, 0x08, 0xfc, 0x50, 0x2a, 0xde, 0xee, 0xc9, 0xc4, 0xd8, 0x5c, 0x27, 0x95,
+	0x52, 0xa8, 0xc9, 0x58, 0xdd, 0xe4, 0x1a, 0xb1, 0x5d, 0x8c, 0x8b, 0x73, 0x42, 0xcb, 0x3e, 0x06,
+	0x36, 0x14, 0xb2, 0xcc, 0x8e, 0x83, 0xd0, 0x0f, 0xb4, 0xda, 0x9a, 0xcd, 0xec, 0x51, 0x0d, 0x49,
+	0xb0, 0x47, 0x78, 0xa5, 0x3a, 0x73, 0x13, 0x4a, 0x31, 0x4f, 0x56, 0x81, 0x62, 0x5a, 0x1a, 0x30,
+	0x59, 0xa3, 0xdd, 0xda, 0x3b, 0xc7, 0x98, 0x68, 0xcb, 0xb0, 0xd4, 0xc1, 0xcf, 0xfd, 0x46, 0xce,
+	0xfc, 0x67, 0x1e, 0x2a, 0x52, 0x92, 0x79, 0x39, 0xd4, 0xb8, 0x2e, 0x87, 0x62, 0xa3, 0x1d, 0xe2,
+	0x5e, 0xca, 0x45, 0xba, 0xd1, 0x26, 0x5e, 0x04, 0x95, 0x91, 0x25, 0x7f, 0x87, 0x58, 0xb8, 0xdd,
+	0x5e, 0x5c, 0x1d, 0x35, 0xe4, 0xb0, 0x87, 0x71, 0x5c, 0x1f, 0x8e, 0x07, 0xe7, 0x88, 0xf5, 0xfb,
+	0x52, 0x89, 0x21, 0xa5, 0x8e, 0x1a, 0xaf, 0x2a, 0xe8, 0x69, 0x1f, 0x75, 0x17, 0xb2, 0xb7, 0xd1,
+	0x13, 0x3c, 0x3f, 0x44, 0x5d, 0xab, 0x8d, 0xaa, 0x95, 0xe6, 0x55, 0x02, 0x76, 0x15, 0x0c, 0x93,
+	0x4c, 0x6d, 0x28, 0xae, 0x22, 0xcb, 0x41, 0x5f, 0xb2, 0x42, 0xf1, 0x8c, 0x72, 0x48, 0x81, 0x57,
+	0x24, 0x70, 0x0f, 0x61, 0x5d, 0xf1, 0x0c, 0xad, 0xb0, 0xee, 0xd0, 0x5c, 0x6d, 0x5d, 0x62, 0x9c,
+	0x78, 0x18, 0x56, 0xda, 0x1f, 0xf5, 0x0c, 0xc6, 0xef, 0x28, 0xf4, 0x23, 0x85, 0xd5, 0x0e, 0x19,
+	0xb2, 0x6d, 0xd8, 0x98, 0xda, 0x77, 0x29, 0x10, 0x77, 0x2e, 0xec, 0x48, 0x67, 0x15, 0xbe, 0x3e,
+	0xb1, 0xf3, 0x51, 0x82, 0xc6, 0xc4, 0xc6, 0xa2, 0xc0, 0x76, 0x9e, 0x92, 0xf0, 0xd6, 0x40, 0x60,
+	0x32, 0x75, 0x42, 0xca, 0x31, 0x25, 0xde, 0x20, 0x8c, 0xbc, 0xc1, 0xb1, 0x82, 0xcb, 0x61, 0x22,
+	0x10, 0x43, 0xf1, 0x62, 0x72, 0x48, 0x53, 0x30, 0xf6, 0x0e, 0xd4, 0x28, 0xb3, 0x24, 0xca, 0xaa,
+	0xa8, 0xb4, 0xf7, 0x90, 0x57, 0x08, 0xae, 0xd4, 0x65, 0xb6, 0x70, 0x0a, 0x27, 0x77, 0x98, 0xed,
+	0x83, 0xcd, 0x7f, 0xe7, 0xa1, 0xaa, 0x4c, 0xad, 0x6b, 0xce, 0x7b, 0xd0, 0x90, 0x2d, 0x1c, 0x6a,
+	0x42, 0x24, 0xee, 0x25, 0x4b, 0x46, 0x8d, 0xd7, 0x09, 0xde, 0x11, 0xda, 0xab, 0xa6, 0x4c, 0x99,
+	0x9b, 0x36, 0x25, 0xe6, 0xb6, 0x81, 0x4c, 0x6d, 0x71, 0x64, 0xab, 0x21, 0xa9, 0x22, 0x61, 0x71,
+	0x44, 0xa3, 0x38, 0x51, 0xe4, 0x69, 0x13, 0xcb, 0x4f, 0xb4, 0x7f, 0x31, 0xa6, 0x5f, 0x4a, 0xeb,
+	0x94, 0x2e, 0x79, 0x31, 0x4a, 0xf6, 0x5d, 0x6a, 0xc2, 0x5a, 0x26, 0x9e, 0x7a, 0xb4, 0xfa, 0x04,
+	0xd6, 0xe3, 0x6c, 0xd2, 0xf7, 0xec, 0x8b, 0xec, 0x05, 0x8a, 0xc8, 0xab, 0xc4, 0x6f, 0x6b, 0xf4,
+	0x01, 0x62, 0xd3, 0x6b, 0x7c, 0x0c, 0x6b, 0x59, 0x39, 0x2d, 0x77, 0x68, 0x69, 0x67, 0x57, 0x86,
+	0xbc, 0x95, 0x91, 0xf8, 0x70, 0xa8, 0xbc, 0x1e, 0x23, 0x62, 0x35, 0xb1, 0x38, 0xda, 0x30, 0x0c,
+	0xed, 0x0b, 0x11, 0xdb, 0x30, 0x41, 0x1c, 0x2b, 0xb8, 0x9c, 0x79, 0x26, 0x6c, 0x0d, 0x14, 0x19,
+	0x2b, 0x71, 0x64, 0x68, 0x53, 0x63, 0xda, 0xcf, 0xd8, 0x7d, 0x4e, 0xb6, 0xaa, 0x2c, 0xc8, 0x56,
+	0xb2, 0xb4, 0x93, 0x79, 0xa9, 0x7c, 0xc4, 0xa5, 0x5d, 0xc5, 0xbf, 0xc6, 0x98, 0xff, 0xca, 0xc1,
+	0xed, 0xdd, 0xb1, 0xf7, 0xf4, 0x08, 0x8b, 0xc4, 0x23, 0xac, 0xb4, 0xdf, 0xac, 0x3d, 0xda, 0x87,
+	0x8a, 0xea, 0xc0, 0x31, 0x4c, 0xa2, 0x4b, 0xdd, 0x22, 0xbc, 0x2d, 0x77, 0xcc, 0xe3, 0xbd, 0xa9,
+	0xd2, 0x71, 0x07, 0x49, 0x39, 0xf4, 0x93, 0x6f, 0x19, 0xe3, 0x38, 0x12, 0xb8, 0x17, 0x43, 0x19,
+	0x95, 0x16, 0x06, 0xb6, 0x76, 0x8d, 0xaa, 0x82, 0x62, 0x5c, 0x9e, 0x8c, 0x07, 0x38, 0xf4, 0x95,
+	0xfa, 0xa1, 0x15, 0xf9, 0x4f, 0xc5, 0x50, 0xbf, 0xc6, 0x90, 0x68, 0xb2, 0x9f, 0xbc, 0x50, 0x1d,
+	0xa9, 0x44, 0xf1, 0x62, 0x3f, 0xa4, 0x0f, 0x2a, 0xd9, 0x28, 0x84, 0xde, 0x21, 0x13, 0x42, 0x19,
+	0x4b, 0x36, 0x42, 0x14, 0xda, 0x94, 0xad, 0xda, 0xe8, 0xa5, 0x85, 0xdd, 0x85, 0x76, 0x9b, 0xa4,
+	0xd2, 0x49, 0xb8, 0x14, 0xbb, 0xf5, 0x29, 0x40, 0x2a, 0xf2, 0xc2, 0xe1, 0x03, 0x3b, 0x70, 0x7d,
+	0x7b, 0xf9, 0xda, 0x45, 0xdf, 0xe6, 0x03, 0xb8, 0x33, 0xa5, 0x01, 0x1d, 0x4d, 0xc8, 0x44, 0xd6,
+	0x65, 0xac, 0xae, 0x92, 0x49, 0x89, 0xeb, 0x95, 0xf9, 0x2b, 0x58, 0x99, 0xba, 0x89, 0x7c, 0x4b,
+	0x73, 0x7b, 0x98, 0x31, 0xb2, 0xb3, 0x46, 0x06, 0xc2, 0x5a, 0x50, 0x1a, 0xa1, 0x86, 0x5e, 0xf8,
+	0x41, 0x4f, 0xcf, 0x1b, 0xc9, 0x5a, 0xca, 0xf4, 0xd4, 0x1d, 0xaa, 0x7c, 0x8a, 0x32, 0xc9, 0x6f,
+	0x59, 0x7c, 0x43, 0x11, 0x3c, 0x77, 0x1d, 0x35, 0x64, 0x94, 0x79, 0xbc, 0x34, 0x43, 0x58, 0xeb,
+	0x04, 0x42, 0x8e, 0xd7, 0xb1, 0xd0, 0xb1, 0x37, 0xc8, 0xa6, 0xcb, 0x3e, 0xf7, 0x84, 0x35, 0xc4,
+	0x96, 0x4f, 0x7b, 0x84, 0x6a, 0xba, 0x24, 0x54, 0xf6, 0x81, 0xd8, 0x74, 0xc5, 0x9f, 0x19, 0xdf,
+	0xc9, 0x5d, 0x5b, 0x16, 0xcc, 0x4f, 0x61, 0x7d, 0xe6, 0x50, 0xad, 0xa4, 0x49, 0xd3, 0xa9, 0x57,
+	0xc4, 0xd4, 0x74, 0x66, 0x0f, 0xd6, 0xf6, 0x3c, 0x61, 0x0f, 0xc7, 0xa3, 0x69, 0x71, 0x5f, 0xbd,
+	0xf1, 0x66, 0xf2, 0x6d, 0xc0, 0xfa, 0xcc, 0x29, 0x4a, 0x3e, 0xf3, 0x6b, 0x03, 0x25, 0xf0, 0x75,
+	0x53, 0xed, 0x07, 0x5d, 0xa5, 0x46, 0x59, 0x43, 0xe6, 0x3c, 0x8b, 0xc8, 0x96, 0x4e, 0x11, 0x28,
+	0x25, 0x2a, 0x37, 0xa9, 0x68, 0x18, 0xe9, 0x0d, 0xdb, 0x42, 0x4c, 0x05, 0x97, 0x7e, 0x4f, 0x51,
+	0xe4, 0xd5, 0xb3, 0xa9, 0x02, 0x11, 0x41, 0x53, 0x66, 0x41, 0xba, 0x22, 0xbd, 0x8f, 0x54, 0x79,
+	0xbc, 0x34, 0xf7, 0xa0, 0x39, 0x2b, 0x89, 0x4e, 0x64, 0xf7, 0xe3, 0x69, 0x54, 0x15, 0xe9, 0x39,
+	0xad, 0xbb, 0xc2, 0x9b, 0x57, 0xb0, 0x31, 0x8f, 0xc9, 0x37, 0x48, 0x08, 0x9b, 0x50, 0x90, 0xe5,
+	0x55, 0xcf, 0x4a, 0x2d, 0xd5, 0x89, 0xcd, 0x53, 0x14, 0x27, 0x3a, 0x33, 0x80, 0xd6, 0x5c, 0xf1,
+	0x95, 0x1f, 0xdc, 0xe8, 0xe8, 0xfb, 0xe9, 0xec, 0x9d, 0x7b, 0xe5, 0x6d, 0x7f, 0x6f, 0xe0, 0xd4,
+	0xea, 0xd0, 0x08, 0x86, 0x75, 0x03, 0x23, 0x43, 0x5c, 0x91, 0x86, 0x6a, 0x5c, 0x2d, 0xa6, 0x86,
+	0x3e, 0xe3, 0xba, 0xa1, 0x4f, 0xbf, 0xb2, 0xa9, 0x71, 0x6f, 0xe2, 0x95, 0x0d, 0x3b, 0xd4, 0xc4,
+	0xf6, 0xa4, 0x16, 0x95, 0xb7, 0x5e, 0xa5, 0x96, 0xd8, 0x2f, 0xe4, 0xc2, 0x7c, 0x01, 0x55, 0x75,
+	0x5b, 0x2d, 0xee, 0x8d, 0xf4, 0x81, 0x99, 0xc6, 0x8e, 0xfc, 0x81, 0xeb, 0xe8, 0x21, 0x50, 0xaf,
+	0x64, 0x75, 0xb0, 0x1d, 0x3d, 0xa0, 0x26, 0x05, 0x55, 0x1d, 0xc0, 0x35, 0xc6, 0xfc, 0xad, 0x01,
+	0x2b, 0x8a, 0xaf, 0xf4, 0x7b, 0x6c, 0x6a, 0xb1, 0xc6, 0xbe, 0x83, 0xe5, 0x5b, 0x0c, 0xd4, 0xac,
+	0x82, 0x40, 0x52, 0xd9, 0x92, 0xac, 0x3e, 0x13, 0x60, 0x34, 0x43, 0x0d, 0xeb, 0xdd, 0xe8, 0xd4,
+	0x71, 0xc6, 0x23, 0x5b, 0xce, 0x07, 0xb9, 0x98, 0x6e, 0x12, 0xce, 0x3e, 0x02, 0x46, 0x4f, 0x74,
+	0x8e, 0xd2, 0x29, 0x6a, 0x62, 0x1c, 0x08, 0xd2, 0x22, 0x51, 0xcf, 0x41, 0x9a, 0x1e, 0xdc, 0x3e,
+	0x46, 0xc7, 0x76, 0xa7, 0x45, 0xcb, 0xea, 0x25, 0x7f, 0xbd, 0x9f, 0x14, 0xb0, 0x3d, 0x88, 0x74,
+	0xb1, 0xca, 0x90, 0x26, 0xfc, 0x38, 0x11, 0x98, 0xff, 0x35, 0x60, 0x55, 0x45, 0xd2, 0x69, 0xd0,
+	0xbe, 0x72, 0xc4, 0xe8, 0x15, 0x2e, 0x93, 0x0e, 0xe6, 0xb9, 0x85, 0x83, 0x39, 0x4e, 0xd3, 0x22,
+	0x66, 0xa3, 0xbd, 0x65, 0xde, 0x34, 0x9d, 0xd0, 0xb0, 0x3d, 0xa8, 0xc7, 0xde, 0xa3, 0x99, 0x2b,
+	0xff, 0xb9, 0x3b, 0xdf, 0x7f, 0xf4, 0x71, 0xb5, 0x70, 0x22, 0x09, 0x7c, 0x02, 0x65, 0x2f, 0xbe,
+	0x98, 0x9e, 0xae, 0xe7, 0xdd, 0x99, 0x66, 0xc0, 0x94, 0xd2, 0xfc, 0xb5, 0x01, 0x2c, 0xeb, 0x7b,
+	0x9a, 0xdb, 0x1e, 0xac, 0x06, 0xd3, 0x2a, 0xd1, 0x4a, 0xbf, 0x93, 0x5e, 0x39, 0x83, 0xe4, 0xb3,
+	0xf4, 0x93, 0x8a, 0xc8, 0x5d, 0xaf, 0x08, 0xf3, 0x37, 0x86, 0x7c, 0x77, 0x22, 0xc3, 0xab, 0x9c,
+	0xf4, 0x03, 0xa8, 0x06, 0x19, 0xe1, 0xb4, 0x04, 0x8d, 0xf4, 0x5e, 0x5a, 0xe8, 0x09, 0x2a, 0x59,
+	0x50, 0xd3, 0xd7, 0x15, 0xdd, 0x9f, 0x66, 0x20, 0x37, 0x7a, 0xbd, 0x31, 0xff, 0x46, 0x0f, 0x4b,
+	0x24, 0x93, 0xce, 0x56, 0x07, 0xc0, 0x82, 0x19, 0x8d, 0x69, 0xd1, 0xd6, 0x66, 0x44, 0x53, 0xc6,
+	0x9a, 0xb3, 0xe3, 0xd5, 0x0f, 0x38, 0xd8, 0x72, 0x35, 0xd4, 0x1e, 0x69, 0x27, 0x9c, 0xab, 0x65,
+	0xff, 0xa8, 0x64, 0x6d, 0xaa, 0x24, 0x35, 0x1b, 0x1f, 0x7c, 0x66, 0xc7, 0x07, 0xf7, 0xe5, 0xbb,
+	0x6a, 0x3a, 0x97, 0xab, 0xb1, 0x0f, 0xc7, 0x75, 0xf5, 0x3a, 0x78, 0x76, 0x78, 0xdc, 0x3e, 0x3a,
+	0x3c, 0x69, 0x37, 0x8c, 0xad, 0x7f, 0x14, 0xa0, 0xa6, 0xfe, 0x69, 0xd4, 0x5e, 0xc6, 0xde, 0x55,
+	0xff, 0xc0, 0xd5, 0xe3, 0x44, 0xa7, 0x4c, 0xd2, 0x5a, 0x49, 0xd6, 0x5a, 0x1d, 0x0f, 0x60, 0x59,
+	0xbd, 0x5e, 0xb1, 0x34, 0x7b, 0xc6, 0x45, 0xa5, 0xc5, 0xb2, 0x20, 0xbd, 0xe1, 0x7d, 0xfd, 0x32,
+	0x95, 0xf4, 0xc1, 0x31, 0x71, 0x23, 0x05, 0x68, 0xd2, 0x7d, 0xa8, 0x4d, 0xb4, 0x57, 0xac, 0xb9,
+	0xa8, 0xe7, 0x6c, 0x6d, 0xcc, 0xc1, 0x68, 0x2e, 0x3f, 0x83, 0x95, 0xa9, 0x0e, 0x84, 0x51, 0x6a,
+	0x9e, 0xdf, 0x0b, 0xb5, 0xde, 0x98, 0x8b, 0x4b, 0x79, 0x4d, 0x75, 0x0b, 0x8a, 0xd7, 0xfc, 0x46,
+	0x45, 0xf1, 0x5a, 0xd0, 0x5e, 0xb0, 0x23, 0xa8, 0xb4, 0xaf, 0x84, 0x13, 0x2b, 0xfc, 0xcd, 0x45,
+	0xe1, 0xae, 0x58, 0xdd, 0x5b, 0x98, 0x0d, 0x14, 0xb7, 0x5f, 0xc2, 0xba, 0xe4, 0xa6, 0xd3, 0x21,
+	0x22, 0x45, 0xf0, 0x7f, 0xe2, 0xfc, 0x21, 0x2c, 0x91, 0xbb, 0xb1, 0x46, 0xc6, 0xf3, 0xd4, 0xd6,
+	0xd5, 0x0c, 0x44, 0x51, 0xef, 0xee, 0xc2, 0x07, 0x7e, 0x70, 0xb1, 0x69, 0x8f, 0xe4, 0xb3, 0xda,
+	0xe6, 0xa5, 0xdd, 0xf3, 0xfd, 0xd1, 0xe6, 0xe5, 0x79, 0xf2, 0x97, 0xf5, 0xf9, 0xb8, 0xbf, 0x79,
+	0x81, 0x53, 0x6c, 0x20, 0xff, 0x18, 0xd8, 0xd5, 0x7f, 0x6f, 0x53, 0xad, 0x0d, 0x1f, 0x19, 0x5f,
+	0x1b, 0xc6, 0xef, 0x0c, 0xe3, 0x7f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x13, 0xd5, 0x18, 0xc5, 0xf5,
+	0x1e, 0x00, 0x00,
 }

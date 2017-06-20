@@ -17,8 +17,8 @@
  */
 
 // This file contains protocol buffers that are used for ClustStatus
-
 package pb;
+
 option java_package = "org.apache.hadoop.hbase.protobuf.generated";
 option java_outer_classname = "ClusterStatusProtos";
 option java_generate_equals_and_hash = true;
@@ -136,6 +136,9 @@ message RegionLoad {
 
   /** the most recent sequence Id of store from cache flush */
   repeated StoreSequenceId store_complete_sequence_id = 18;
+
+  /** the current total filtered read requests made to region */
+  optional uint64 filtered_read_requests_count = 19;
 }
 
 /* Server-level protobufs */

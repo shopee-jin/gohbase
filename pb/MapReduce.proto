@@ -16,19 +16,22 @@
  * limitations under the License.
  */
 
-// This file contains protocol buffers that are shared throughout HBase
+ //This file includes protocol buffers used in MapReduce only.
 package pb;
 
 option java_package = "org.apache.hadoop.hbase.protobuf.generated";
-option java_outer_classname = "ClusterIdProtos";
+option java_outer_classname = "MapReduceProtos";
 option java_generate_equals_and_hash = true;
 option optimize_for = SPEED;
 
-/**
- * Content of the '/hbase/hbaseid', cluster id, znode.
- * Also cluster of the ${HBASE_ROOTDIR}/hbase.id file.
- */
-message ClusterId {
-  // This is the cluster id, a uuid as a String
-  required string cluster_id = 1;
+import "HBase.proto";
+
+message ScanMetrics {
+  repeated NameInt64Pair metrics = 1;
+}
+
+message TableSnapshotRegionSplit {
+  repeated string locations = 2;
+  optional TableSchema table = 3;
+  optional RegionInfo region = 4;
 }

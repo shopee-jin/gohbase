@@ -16,19 +16,18 @@
  * limitations under the License.
  */
 
-// This file contains protocol buffers that are shared throughout HBase
+// This file contains protocol buffers used for encryption
 package pb;
 
 option java_package = "org.apache.hadoop.hbase.protobuf.generated";
-option java_outer_classname = "ClusterIdProtos";
+option java_outer_classname = "EncryptionProtos";
 option java_generate_equals_and_hash = true;
 option optimize_for = SPEED;
 
-/**
- * Content of the '/hbase/hbaseid', cluster id, znode.
- * Also cluster of the ${HBASE_ROOTDIR}/hbase.id file.
- */
-message ClusterId {
-  // This is the cluster id, a uuid as a String
-  required string cluster_id = 1;
+message WrappedKey {
+  required string algorithm = 1;
+  required uint32 length = 2;
+  required bytes data = 3;
+  optional bytes iv = 4;
+  optional bytes hash = 5;
 }

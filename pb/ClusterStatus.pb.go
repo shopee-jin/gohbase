@@ -5,10 +5,12 @@
 package pb
 
 import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
 import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
+var _ = fmt.Errorf
 var _ = math.Inf
 
 type RegionState_State int32
@@ -84,17 +86,19 @@ func (x *RegionState_State) UnmarshalJSON(data []byte) error {
 	*x = RegionState_State(value)
 	return nil
 }
+func (RegionState_State) EnumDescriptor() ([]byte, []int) { return fileDescriptor6, []int{0, 0} }
 
 type RegionState struct {
-	RegionInfo       *RegionInfo        `protobuf:"bytes,1,req,name=region_info" json:"region_info,omitempty"`
+	RegionInfo       *RegionInfo        `protobuf:"bytes,1,req,name=region_info,json=regionInfo" json:"region_info,omitempty"`
 	State            *RegionState_State `protobuf:"varint,2,req,name=state,enum=pb.RegionState_State" json:"state,omitempty"`
 	Stamp            *uint64            `protobuf:"varint,3,opt,name=stamp" json:"stamp,omitempty"`
 	XXX_unrecognized []byte             `json:"-"`
 }
 
-func (m *RegionState) Reset()         { *m = RegionState{} }
-func (m *RegionState) String() string { return proto.CompactTextString(m) }
-func (*RegionState) ProtoMessage()    {}
+func (m *RegionState) Reset()                    { *m = RegionState{} }
+func (m *RegionState) String() string            { return proto.CompactTextString(m) }
+func (*RegionState) ProtoMessage()               {}
+func (*RegionState) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{0} }
 
 func (m *RegionState) GetRegionInfo() *RegionInfo {
 	if m != nil {
@@ -119,13 +123,14 @@ func (m *RegionState) GetStamp() uint64 {
 
 type RegionInTransition struct {
 	Spec             *RegionSpecifier `protobuf:"bytes,1,req,name=spec" json:"spec,omitempty"`
-	RegionState      *RegionState     `protobuf:"bytes,2,req,name=region_state" json:"region_state,omitempty"`
+	RegionState      *RegionState     `protobuf:"bytes,2,req,name=region_state,json=regionState" json:"region_state,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *RegionInTransition) Reset()         { *m = RegionInTransition{} }
-func (m *RegionInTransition) String() string { return proto.CompactTextString(m) }
-func (*RegionInTransition) ProtoMessage()    {}
+func (m *RegionInTransition) Reset()                    { *m = RegionInTransition{} }
+func (m *RegionInTransition) String() string            { return proto.CompactTextString(m) }
+func (*RegionInTransition) ProtoMessage()               {}
+func (*RegionInTransition) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{1} }
 
 func (m *RegionInTransition) GetSpec() *RegionSpecifier {
 	if m != nil {
@@ -144,14 +149,15 @@ func (m *RegionInTransition) GetRegionState() *RegionState {
 // *
 // sequence Id of a store
 type StoreSequenceId struct {
-	FamilyName       []byte  `protobuf:"bytes,1,req,name=family_name" json:"family_name,omitempty"`
-	SequenceId       *uint64 `protobuf:"varint,2,req,name=sequence_id" json:"sequence_id,omitempty"`
+	FamilyName       []byte  `protobuf:"bytes,1,req,name=family_name,json=familyName" json:"family_name,omitempty"`
+	SequenceId       *uint64 `protobuf:"varint,2,req,name=sequence_id,json=sequenceId" json:"sequence_id,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *StoreSequenceId) Reset()         { *m = StoreSequenceId{} }
-func (m *StoreSequenceId) String() string { return proto.CompactTextString(m) }
-func (*StoreSequenceId) ProtoMessage()    {}
+func (m *StoreSequenceId) Reset()                    { *m = StoreSequenceId{} }
+func (m *StoreSequenceId) String() string            { return proto.CompactTextString(m) }
+func (*StoreSequenceId) ProtoMessage()               {}
+func (*StoreSequenceId) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{2} }
 
 func (m *StoreSequenceId) GetFamilyName() []byte {
 	if m != nil {
@@ -171,14 +177,15 @@ func (m *StoreSequenceId) GetSequenceId() uint64 {
 // contains a sequence id of a region which should be the minimum of its store sequence ids and
 // list of sequence ids of the region's stores
 type RegionStoreSequenceIds struct {
-	LastFlushedSequenceId *uint64            `protobuf:"varint,1,req,name=last_flushed_sequence_id" json:"last_flushed_sequence_id,omitempty"`
-	StoreSequenceId       []*StoreSequenceId `protobuf:"bytes,2,rep,name=store_sequence_id" json:"store_sequence_id,omitempty"`
+	LastFlushedSequenceId *uint64            `protobuf:"varint,1,req,name=last_flushed_sequence_id,json=lastFlushedSequenceId" json:"last_flushed_sequence_id,omitempty"`
+	StoreSequenceId       []*StoreSequenceId `protobuf:"bytes,2,rep,name=store_sequence_id,json=storeSequenceId" json:"store_sequence_id,omitempty"`
 	XXX_unrecognized      []byte             `json:"-"`
 }
 
-func (m *RegionStoreSequenceIds) Reset()         { *m = RegionStoreSequenceIds{} }
-func (m *RegionStoreSequenceIds) String() string { return proto.CompactTextString(m) }
-func (*RegionStoreSequenceIds) ProtoMessage()    {}
+func (m *RegionStoreSequenceIds) Reset()                    { *m = RegionStoreSequenceIds{} }
+func (m *RegionStoreSequenceIds) String() string            { return proto.CompactTextString(m) }
+func (*RegionStoreSequenceIds) ProtoMessage()               {}
+func (*RegionStoreSequenceIds) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{3} }
 
 func (m *RegionStoreSequenceIds) GetLastFlushedSequenceId() uint64 {
 	if m != nil && m.LastFlushedSequenceId != nil {
@@ -196,50 +203,53 @@ func (m *RegionStoreSequenceIds) GetStoreSequenceId() []*StoreSequenceId {
 
 type RegionLoad struct {
 	// * the region specifier
-	RegionSpecifier *RegionSpecifier `protobuf:"bytes,1,req,name=region_specifier" json:"region_specifier,omitempty"`
+	RegionSpecifier *RegionSpecifier `protobuf:"bytes,1,req,name=region_specifier,json=regionSpecifier" json:"region_specifier,omitempty"`
 	// * the number of stores for the region
 	Stores *uint32 `protobuf:"varint,2,opt,name=stores" json:"stores,omitempty"`
 	// * the number of storefiles for the region
 	Storefiles *uint32 `protobuf:"varint,3,opt,name=storefiles" json:"storefiles,omitempty"`
 	// * the total size of the store files for the region, uncompressed, in MB
-	StoreUncompressedSize_MB *uint32 `protobuf:"varint,4,opt,name=store_uncompressed_size_MB" json:"store_uncompressed_size_MB,omitempty"`
+	StoreUncompressedSize_MB *uint32 `protobuf:"varint,4,opt,name=store_uncompressed_size_MB,json=storeUncompressedSizeMB" json:"store_uncompressed_size_MB,omitempty"`
 	// * the current total size of the store files for the region, in MB
-	StorefileSize_MB *uint32 `protobuf:"varint,5,opt,name=storefile_size_MB" json:"storefile_size_MB,omitempty"`
+	StorefileSize_MB *uint32 `protobuf:"varint,5,opt,name=storefile_size_MB,json=storefileSizeMB" json:"storefile_size_MB,omitempty"`
 	// * the current size of the memstore for the region, in MB
-	MemstoreSize_MB *uint32 `protobuf:"varint,6,opt,name=memstore_size_MB" json:"memstore_size_MB,omitempty"`
+	MemstoreSize_MB *uint32 `protobuf:"varint,6,opt,name=memstore_size_MB,json=memstoreSizeMB" json:"memstore_size_MB,omitempty"`
 	// *
 	// The current total size of root-level store file indexes for the region,
 	// in MB. The same as {@link #rootIndexSizeKB} but in MB.
-	StorefileIndexSize_MB *uint32 `protobuf:"varint,7,opt,name=storefile_index_size_MB" json:"storefile_index_size_MB,omitempty"`
+	StorefileIndexSize_MB *uint32 `protobuf:"varint,7,opt,name=storefile_index_size_MB,json=storefileIndexSizeMB" json:"storefile_index_size_MB,omitempty"`
 	// * the current total read requests made to region
-	ReadRequestsCount *uint64 `protobuf:"varint,8,opt,name=read_requests_count" json:"read_requests_count,omitempty"`
+	ReadRequestsCount *uint64 `protobuf:"varint,8,opt,name=read_requests_count,json=readRequestsCount" json:"read_requests_count,omitempty"`
 	// * the current total write requests made to region
-	WriteRequestsCount *uint64 `protobuf:"varint,9,opt,name=write_requests_count" json:"write_requests_count,omitempty"`
+	WriteRequestsCount *uint64 `protobuf:"varint,9,opt,name=write_requests_count,json=writeRequestsCount" json:"write_requests_count,omitempty"`
 	// * the total compacting key values in currently running compaction
-	TotalCompacting_KVs *uint64 `protobuf:"varint,10,opt,name=total_compacting_KVs" json:"total_compacting_KVs,omitempty"`
+	TotalCompacting_KVs *uint64 `protobuf:"varint,10,opt,name=total_compacting_KVs,json=totalCompactingKVs" json:"total_compacting_KVs,omitempty"`
 	// * the completed count of key values in currently running compaction
-	CurrentCompacted_KVs *uint64 `protobuf:"varint,11,opt,name=current_compacted_KVs" json:"current_compacted_KVs,omitempty"`
+	CurrentCompacted_KVs *uint64 `protobuf:"varint,11,opt,name=current_compacted_KVs,json=currentCompactedKVs" json:"current_compacted_KVs,omitempty"`
 	// * The current total size of root-level indexes for the region, in KB.
-	RootIndexSize_KB *uint32 `protobuf:"varint,12,opt,name=root_index_size_KB" json:"root_index_size_KB,omitempty"`
+	RootIndexSize_KB *uint32 `protobuf:"varint,12,opt,name=root_index_size_KB,json=rootIndexSizeKB" json:"root_index_size_KB,omitempty"`
 	// * The total size of all index blocks, not just the root level, in KB.
-	TotalStaticIndexSize_KB *uint32 `protobuf:"varint,13,opt,name=total_static_index_size_KB" json:"total_static_index_size_KB,omitempty"`
+	TotalStaticIndexSize_KB *uint32 `protobuf:"varint,13,opt,name=total_static_index_size_KB,json=totalStaticIndexSizeKB" json:"total_static_index_size_KB,omitempty"`
 	// *
 	// The total size of all Bloom filter blocks, not just loaded into the
 	// block cache, in KB.
-	TotalStaticBloomSize_KB *uint32 `protobuf:"varint,14,opt,name=total_static_bloom_size_KB" json:"total_static_bloom_size_KB,omitempty"`
+	TotalStaticBloomSize_KB *uint32 `protobuf:"varint,14,opt,name=total_static_bloom_size_KB,json=totalStaticBloomSizeKB" json:"total_static_bloom_size_KB,omitempty"`
 	// * the most recent sequence Id from cache flush
-	CompleteSequenceId *uint64 `protobuf:"varint,15,opt,name=complete_sequence_id" json:"complete_sequence_id,omitempty"`
+	CompleteSequenceId *uint64 `protobuf:"varint,15,opt,name=complete_sequence_id,json=completeSequenceId" json:"complete_sequence_id,omitempty"`
 	// * The current data locality for region in the regionserver
-	DataLocality          *float32 `protobuf:"fixed32,16,opt,name=data_locality" json:"data_locality,omitempty"`
-	LastMajorCompactionTs *uint64  `protobuf:"varint,17,opt,name=last_major_compaction_ts,def=0" json:"last_major_compaction_ts,omitempty"`
+	DataLocality          *float32 `protobuf:"fixed32,16,opt,name=data_locality,json=dataLocality" json:"data_locality,omitempty"`
+	LastMajorCompactionTs *uint64  `protobuf:"varint,17,opt,name=last_major_compaction_ts,json=lastMajorCompactionTs,def=0" json:"last_major_compaction_ts,omitempty"`
 	// * the most recent sequence Id of store from cache flush
-	StoreCompleteSequenceId []*StoreSequenceId `protobuf:"bytes,18,rep,name=store_complete_sequence_id" json:"store_complete_sequence_id,omitempty"`
-	XXX_unrecognized        []byte             `json:"-"`
+	StoreCompleteSequenceId []*StoreSequenceId `protobuf:"bytes,18,rep,name=store_complete_sequence_id,json=storeCompleteSequenceId" json:"store_complete_sequence_id,omitempty"`
+	// * the current total filtered read requests made to region
+	FilteredReadRequestsCount *uint64 `protobuf:"varint,19,opt,name=filtered_read_requests_count,json=filteredReadRequestsCount" json:"filtered_read_requests_count,omitempty"`
+	XXX_unrecognized          []byte  `json:"-"`
 }
 
-func (m *RegionLoad) Reset()         { *m = RegionLoad{} }
-func (m *RegionLoad) String() string { return proto.CompactTextString(m) }
-func (*RegionLoad) ProtoMessage()    {}
+func (m *RegionLoad) Reset()                    { *m = RegionLoad{} }
+func (m *RegionLoad) String() string            { return proto.CompactTextString(m) }
+func (*RegionLoad) ProtoMessage()               {}
+func (*RegionLoad) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{4} }
 
 const Default_RegionLoad_LastMajorCompactionTs uint64 = 0
 
@@ -369,15 +379,23 @@ func (m *RegionLoad) GetStoreCompleteSequenceId() []*StoreSequenceId {
 	return nil
 }
 
+func (m *RegionLoad) GetFilteredReadRequestsCount() uint64 {
+	if m != nil && m.FilteredReadRequestsCount != nil {
+		return *m.FilteredReadRequestsCount
+	}
+	return 0
+}
+
 type ReplicationLoadSink struct {
 	AgeOfLastAppliedOp        *uint64 `protobuf:"varint,1,req,name=ageOfLastAppliedOp" json:"ageOfLastAppliedOp,omitempty"`
 	TimeStampsOfLastAppliedOp *uint64 `protobuf:"varint,2,req,name=timeStampsOfLastAppliedOp" json:"timeStampsOfLastAppliedOp,omitempty"`
 	XXX_unrecognized          []byte  `json:"-"`
 }
 
-func (m *ReplicationLoadSink) Reset()         { *m = ReplicationLoadSink{} }
-func (m *ReplicationLoadSink) String() string { return proto.CompactTextString(m) }
-func (*ReplicationLoadSink) ProtoMessage()    {}
+func (m *ReplicationLoadSink) Reset()                    { *m = ReplicationLoadSink{} }
+func (m *ReplicationLoadSink) String() string            { return proto.CompactTextString(m) }
+func (*ReplicationLoadSink) ProtoMessage()               {}
+func (*ReplicationLoadSink) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{5} }
 
 func (m *ReplicationLoadSink) GetAgeOfLastAppliedOp() uint64 {
 	if m != nil && m.AgeOfLastAppliedOp != nil {
@@ -402,9 +420,10 @@ type ReplicationLoadSource struct {
 	XXX_unrecognized         []byte  `json:"-"`
 }
 
-func (m *ReplicationLoadSource) Reset()         { *m = ReplicationLoadSource{} }
-func (m *ReplicationLoadSource) String() string { return proto.CompactTextString(m) }
-func (*ReplicationLoadSource) ProtoMessage()    {}
+func (m *ReplicationLoadSource) Reset()                    { *m = ReplicationLoadSource{} }
+func (m *ReplicationLoadSource) String() string            { return proto.CompactTextString(m) }
+func (*ReplicationLoadSource) ProtoMessage()               {}
+func (*ReplicationLoadSource) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{6} }
 
 func (m *ReplicationLoadSource) GetPeerID() string {
 	if m != nil && m.PeerID != nil {
@@ -443,15 +462,15 @@ func (m *ReplicationLoadSource) GetReplicationLag() uint64 {
 
 type ServerLoad struct {
 	// * Number of requests since last report.
-	NumberOfRequests *uint64 `protobuf:"varint,1,opt,name=number_of_requests" json:"number_of_requests,omitempty"`
+	NumberOfRequests *uint64 `protobuf:"varint,1,opt,name=number_of_requests,json=numberOfRequests" json:"number_of_requests,omitempty"`
 	// * Total Number of requests from the start of the region server.
-	TotalNumberOfRequests *uint64 `protobuf:"varint,2,opt,name=total_number_of_requests" json:"total_number_of_requests,omitempty"`
+	TotalNumberOfRequests *uint64 `protobuf:"varint,2,opt,name=total_number_of_requests,json=totalNumberOfRequests" json:"total_number_of_requests,omitempty"`
 	// * the amount of used heap, in MB.
-	UsedHeap_MB *uint32 `protobuf:"varint,3,opt,name=used_heap_MB" json:"used_heap_MB,omitempty"`
+	UsedHeap_MB *uint32 `protobuf:"varint,3,opt,name=used_heap_MB,json=usedHeapMB" json:"used_heap_MB,omitempty"`
 	// * the maximum allowable size of the heap, in MB.
-	MaxHeap_MB *uint32 `protobuf:"varint,4,opt,name=max_heap_MB" json:"max_heap_MB,omitempty"`
+	MaxHeap_MB *uint32 `protobuf:"varint,4,opt,name=max_heap_MB,json=maxHeapMB" json:"max_heap_MB,omitempty"`
 	// * Information on the load of individual regions.
-	RegionLoads []*RegionLoad `protobuf:"bytes,5,rep,name=region_loads" json:"region_loads,omitempty"`
+	RegionLoads []*RegionLoad `protobuf:"bytes,5,rep,name=region_loads,json=regionLoads" json:"region_loads,omitempty"`
 	// *
 	// Regionserver-level coprocessors, e.g., WALObserver implementations.
 	// Region-level coprocessors, on the other hand, are stored inside RegionLoad
@@ -461,15 +480,15 @@ type ServerLoad struct {
 	// Time when incremental (non-total) counts began being calculated (e.g. number_of_requests)
 	// time is measured as the difference, measured in milliseconds, between the current time
 	// and midnight, January 1, 1970 UTC.
-	ReportStartTime *uint64 `protobuf:"varint,7,opt,name=report_start_time" json:"report_start_time,omitempty"`
+	ReportStartTime *uint64 `protobuf:"varint,7,opt,name=report_start_time,json=reportStartTime" json:"report_start_time,omitempty"`
 	// *
 	// Time when report was generated.
 	// time is measured as the difference, measured in milliseconds, between the current time
 	// and midnight, January 1, 1970 UTC.
-	ReportEndTime *uint64 `protobuf:"varint,8,opt,name=report_end_time" json:"report_end_time,omitempty"`
+	ReportEndTime *uint64 `protobuf:"varint,8,opt,name=report_end_time,json=reportEndTime" json:"report_end_time,omitempty"`
 	// *
 	// The port number that this region server is hosing an info server on.
-	InfoServerPort *uint32 `protobuf:"varint,9,opt,name=info_server_port" json:"info_server_port,omitempty"`
+	InfoServerPort *uint32 `protobuf:"varint,9,opt,name=info_server_port,json=infoServerPort" json:"info_server_port,omitempty"`
 	// *
 	// The replicationLoadSource for the replication Source status of this region server.
 	ReplLoadSource []*ReplicationLoadSource `protobuf:"bytes,10,rep,name=replLoadSource" json:"replLoadSource,omitempty"`
@@ -479,9 +498,10 @@ type ServerLoad struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *ServerLoad) Reset()         { *m = ServerLoad{} }
-func (m *ServerLoad) String() string { return proto.CompactTextString(m) }
-func (*ServerLoad) ProtoMessage()    {}
+func (m *ServerLoad) Reset()                    { *m = ServerLoad{} }
+func (m *ServerLoad) String() string            { return proto.CompactTextString(m) }
+func (*ServerLoad) ProtoMessage()               {}
+func (*ServerLoad) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{7} }
 
 func (m *ServerLoad) GetNumberOfRequests() uint64 {
 	if m != nil && m.NumberOfRequests != nil {
@@ -562,13 +582,14 @@ func (m *ServerLoad) GetReplLoadSink() *ReplicationLoadSink {
 
 type LiveServerInfo struct {
 	Server           *ServerName `protobuf:"bytes,1,req,name=server" json:"server,omitempty"`
-	ServerLoad       *ServerLoad `protobuf:"bytes,2,req,name=server_load" json:"server_load,omitempty"`
+	ServerLoad       *ServerLoad `protobuf:"bytes,2,req,name=server_load,json=serverLoad" json:"server_load,omitempty"`
 	XXX_unrecognized []byte      `json:"-"`
 }
 
-func (m *LiveServerInfo) Reset()         { *m = LiveServerInfo{} }
-func (m *LiveServerInfo) String() string { return proto.CompactTextString(m) }
-func (*LiveServerInfo) ProtoMessage()    {}
+func (m *LiveServerInfo) Reset()                    { *m = LiveServerInfo{} }
+func (m *LiveServerInfo) String() string            { return proto.CompactTextString(m) }
+func (*LiveServerInfo) ProtoMessage()               {}
+func (*LiveServerInfo) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{8} }
 
 func (m *LiveServerInfo) GetServer() *ServerName {
 	if m != nil {
@@ -585,21 +606,22 @@ func (m *LiveServerInfo) GetServerLoad() *ServerLoad {
 }
 
 type ClusterStatus struct {
-	HbaseVersion        *HBaseVersionFileContent `protobuf:"bytes,1,opt,name=hbase_version" json:"hbase_version,omitempty"`
-	LiveServers         []*LiveServerInfo        `protobuf:"bytes,2,rep,name=live_servers" json:"live_servers,omitempty"`
-	DeadServers         []*ServerName            `protobuf:"bytes,3,rep,name=dead_servers" json:"dead_servers,omitempty"`
-	RegionsInTransition []*RegionInTransition    `protobuf:"bytes,4,rep,name=regions_in_transition" json:"regions_in_transition,omitempty"`
-	ClusterId           *ClusterId               `protobuf:"bytes,5,opt,name=cluster_id" json:"cluster_id,omitempty"`
-	MasterCoprocessors  []*Coprocessor           `protobuf:"bytes,6,rep,name=master_coprocessors" json:"master_coprocessors,omitempty"`
+	HbaseVersion        *HBaseVersionFileContent `protobuf:"bytes,1,opt,name=hbase_version,json=hbaseVersion" json:"hbase_version,omitempty"`
+	LiveServers         []*LiveServerInfo        `protobuf:"bytes,2,rep,name=live_servers,json=liveServers" json:"live_servers,omitempty"`
+	DeadServers         []*ServerName            `protobuf:"bytes,3,rep,name=dead_servers,json=deadServers" json:"dead_servers,omitempty"`
+	RegionsInTransition []*RegionInTransition    `protobuf:"bytes,4,rep,name=regions_in_transition,json=regionsInTransition" json:"regions_in_transition,omitempty"`
+	ClusterId           *ClusterId               `protobuf:"bytes,5,opt,name=cluster_id,json=clusterId" json:"cluster_id,omitempty"`
+	MasterCoprocessors  []*Coprocessor           `protobuf:"bytes,6,rep,name=master_coprocessors,json=masterCoprocessors" json:"master_coprocessors,omitempty"`
 	Master              *ServerName              `protobuf:"bytes,7,opt,name=master" json:"master,omitempty"`
-	BackupMasters       []*ServerName            `protobuf:"bytes,8,rep,name=backup_masters" json:"backup_masters,omitempty"`
-	BalancerOn          *bool                    `protobuf:"varint,9,opt,name=balancer_on" json:"balancer_on,omitempty"`
+	BackupMasters       []*ServerName            `protobuf:"bytes,8,rep,name=backup_masters,json=backupMasters" json:"backup_masters,omitempty"`
+	BalancerOn          *bool                    `protobuf:"varint,9,opt,name=balancer_on,json=balancerOn" json:"balancer_on,omitempty"`
 	XXX_unrecognized    []byte                   `json:"-"`
 }
 
-func (m *ClusterStatus) Reset()         { *m = ClusterStatus{} }
-func (m *ClusterStatus) String() string { return proto.CompactTextString(m) }
-func (*ClusterStatus) ProtoMessage()    {}
+func (m *ClusterStatus) Reset()                    { *m = ClusterStatus{} }
+func (m *ClusterStatus) String() string            { return proto.CompactTextString(m) }
+func (*ClusterStatus) ProtoMessage()               {}
+func (*ClusterStatus) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{9} }
 
 func (m *ClusterStatus) GetHbaseVersion() *HBaseVersionFileContent {
 	if m != nil {
@@ -665,5 +687,112 @@ func (m *ClusterStatus) GetBalancerOn() bool {
 }
 
 func init() {
+	proto.RegisterType((*RegionState)(nil), "pb.RegionState")
+	proto.RegisterType((*RegionInTransition)(nil), "pb.RegionInTransition")
+	proto.RegisterType((*StoreSequenceId)(nil), "pb.StoreSequenceId")
+	proto.RegisterType((*RegionStoreSequenceIds)(nil), "pb.RegionStoreSequenceIds")
+	proto.RegisterType((*RegionLoad)(nil), "pb.RegionLoad")
+	proto.RegisterType((*ReplicationLoadSink)(nil), "pb.ReplicationLoadSink")
+	proto.RegisterType((*ReplicationLoadSource)(nil), "pb.ReplicationLoadSource")
+	proto.RegisterType((*ServerLoad)(nil), "pb.ServerLoad")
+	proto.RegisterType((*LiveServerInfo)(nil), "pb.LiveServerInfo")
+	proto.RegisterType((*ClusterStatus)(nil), "pb.ClusterStatus")
 	proto.RegisterEnum("pb.RegionState_State", RegionState_State_name, RegionState_State_value)
+}
+
+var fileDescriptor6 = []byte{
+	// 1475 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x8c, 0x57, 0x4d, 0x93, 0xdb, 0x44,
+	0x13, 0x7e, 0xfd, 0xb1, 0x5f, 0x2d, 0x7f, 0xed, 0x38, 0xbb, 0x71, 0xf6, 0xa5, 0x42, 0xca, 0x54,
+	0x85, 0xad, 0x24, 0x65, 0xc2, 0x52, 0x14, 0x55, 0x81, 0x22, 0xc4, 0xde, 0xdd, 0xc4, 0xc4, 0xfb,
+	0x81, 0xbc, 0x84, 0xa3, 0x4a, 0x96, 0xc6, 0xbb, 0x22, 0xb2, 0xa4, 0x68, 0xe4, 0x90, 0x70, 0xe5,
+	0x1f, 0x70, 0xe5, 0xc2, 0x5f, 0xa3, 0x38, 0x70, 0xe0, 0x07, 0x70, 0xa5, 0x7b, 0x66, 0x24, 0x4b,
+	0x5e, 0x27, 0xc5, 0xc5, 0x35, 0x7a, 0x9e, 0xa7, 0x7b, 0x66, 0x7a, 0x7a, 0x7a, 0xda, 0xd0, 0x1e,
+	0xf8, 0x73, 0x91, 0xf0, 0x78, 0x9c, 0xd8, 0xc9, 0x5c, 0xf4, 0xa2, 0x38, 0x4c, 0x42, 0x56, 0x8e,
+	0x26, 0x7b, 0xc6, 0xb3, 0xbe, 0x2d, 0xb8, 0x02, 0xf6, 0x9a, 0x5a, 0x35, 0x74, 0x35, 0xb0, 0x79,
+	0x3c, 0x56, 0xa3, 0xee, 0x5f, 0x65, 0x30, 0x4c, 0x7e, 0xe9, 0x85, 0x01, 0xb9, 0xe0, 0xec, 0x13,
+	0x30, 0x62, 0xf9, 0x69, 0x79, 0xc1, 0x34, 0xec, 0x94, 0xee, 0x94, 0xf7, 0x8d, 0x83, 0x46, 0x2f,
+	0x9a, 0xf4, 0x94, 0x6a, 0x88, 0xa8, 0x09, 0x71, 0x36, 0x66, 0xf7, 0x61, 0x4d, 0x90, 0x65, 0xa7,
+	0x8c, 0xd2, 0xc6, 0xc1, 0xce, 0x42, 0x2a, 0x1d, 0xf6, 0xe4, 0xaf, 0xa9, 0x34, 0xec, 0x86, 0x14,
+	0xcf, 0xa2, 0x4e, 0xe5, 0x4e, 0x69, 0xbf, 0x6a, 0xaa, 0x8f, 0xee, 0x9f, 0x25, 0x58, 0x53, 0xb3,
+	0x1b, 0xb0, 0x71, 0x76, 0x7c, 0x3c, 0x1a, 0x9e, 0x1e, 0xb5, 0xfe, 0xc7, 0x5a, 0x50, 0x3b, 0x3f,
+	0x3a, 0x3d, 0x1c, 0x9e, 0x3e, 0xb5, 0xce, 0x70, 0xd0, 0x2a, 0x49, 0x1a, 0x47, 0x88, 0xb4, 0xca,
+	0x6c, 0x13, 0xaa, 0x12, 0xae, 0xb0, 0x6d, 0xa8, 0xa7, 0xc2, 0xc1, 0xe8, 0x6c, 0x7c, 0xd4, 0xaa,
+	0x92, 0x92, 0x86, 0xa4, 0x5c, 0x63, 0x00, 0xeb, 0x12, 0x3f, 0x6c, 0xad, 0xb3, 0x3a, 0x6c, 0x8d,
+	0xcf, 0x47, 0xc3, 0x8b, 0x0b, 0xa2, 0x36, 0xd8, 0x16, 0xce, 0x4c, 0x9f, 0xad, 0x4d, 0xd6, 0x04,
+	0xe3, 0xf8, 0xc9, 0x70, 0x74, 0x74, 0xa8, 0x66, 0xdb, 0xa2, 0xf9, 0x35, 0xa0, 0xbc, 0x02, 0x79,
+	0x3d, 0x39, 0x32, 0x9f, 0x92, 0xa9, 0x41, 0x5e, 0xe9, 0x03, 0xbd, 0xd6, 0x68, 0x05, 0x99, 0x57,
+	0xeb, 0xf4, 0xe8, 0x87, 0x56, 0x9d, 0xdc, 0x69, 0xad, 0x04, 0x1a, 0xdd, 0x57, 0xc0, 0xd2, 0x10,
+	0x5e, 0xc4, 0x76, 0x20, 0xbc, 0x04, 0xc7, 0xec, 0x63, 0xa8, 0x8a, 0x88, 0x3b, 0x3a, 0xd0, 0xed,
+	0x5c, 0xf4, 0x10, 0xf5, 0xa6, 0x1e, 0x8f, 0x4d, 0x29, 0x60, 0x07, 0x50, 0xd3, 0x07, 0xb3, 0x08,
+	0xb7, 0x71, 0xd0, 0x5c, 0x0a, 0xb7, 0xa9, 0x4f, 0x4f, 0x7e, 0x74, 0xc7, 0xd0, 0x1c, 0x27, 0x61,
+	0xcc, 0xc7, 0xfc, 0xd5, 0x9c, 0x07, 0x0e, 0x1f, 0xba, 0xec, 0x43, 0x30, 0xa6, 0xf6, 0xcc, 0xf3,
+	0xdf, 0x5a, 0x81, 0x3d, 0xe3, 0x72, 0xda, 0x9a, 0x09, 0x0a, 0x3a, 0x45, 0x84, 0x04, 0x42, 0xcb,
+	0x2d, 0xcf, 0x95, 0xd3, 0x54, 0x4d, 0x10, 0x99, 0x87, 0xee, 0xaf, 0x25, 0xd8, 0x4d, 0x67, 0x2c,
+	0xf8, 0x16, 0xec, 0x0b, 0xe8, 0xf8, 0xb6, 0x48, 0xac, 0x29, 0xa6, 0xdb, 0x15, 0x77, 0xad, 0xbc,
+	0xa3, 0x92, 0x74, 0xb4, 0x43, 0xfc, 0xb1, 0xa2, 0x73, 0xab, 0x7a, 0x0c, 0xdb, 0x82, 0x9c, 0x59,
+	0xc5, 0xa9, 0x2b, 0x69, 0x48, 0x96, 0x66, 0x32, 0x9b, 0xa2, 0x08, 0x74, 0xff, 0xd8, 0x00, 0x50,
+	0x8b, 0x1a, 0x85, 0xb6, 0xcb, 0xbe, 0x86, 0x56, 0x1a, 0xac, 0x34, 0x8c, 0xef, 0x8b, 0x70, 0x33,
+	0x2e, 0x02, 0x6c, 0x17, 0xd6, 0xe5, 0x0c, 0x02, 0x17, 0x51, 0xda, 0xaf, 0x9b, 0xfa, 0x8b, 0xdd,
+	0x06, 0x90, 0xa3, 0xa9, 0xe7, 0x23, 0x57, 0x91, 0x5c, 0x0e, 0x61, 0x5f, 0xc2, 0x9e, 0xda, 0xc7,
+	0x3c, 0x70, 0xc2, 0x59, 0x84, 0x26, 0x82, 0xc2, 0xe0, 0xfd, 0xcc, 0xad, 0x93, 0x7e, 0xa7, 0x2a,
+	0xf5, 0x37, 0xa5, 0xe2, 0xfb, 0x9c, 0x60, 0x8c, 0xfc, 0x49, 0x9f, 0xdd, 0xd3, 0x41, 0x20, 0x57,
+	0x99, 0xcd, 0x9a, 0xb4, 0x69, 0x66, 0x84, 0xd6, 0xee, 0x43, 0x6b, 0xc6, 0x67, 0x3a, 0x66, 0x5a,
+	0xba, 0x2e, 0xa5, 0x8d, 0x14, 0xd7, 0xca, 0xcf, 0xe1, 0xe6, 0xc2, 0xab, 0x17, 0xb8, 0xfc, 0x4d,
+	0x66, 0xb0, 0x21, 0x0d, 0x6e, 0x64, 0xf4, 0x90, 0x58, 0x6d, 0xd6, 0x83, 0x76, 0xcc, 0x6d, 0xd7,
+	0x8a, 0x29, 0xc6, 0x22, 0x11, 0x96, 0x13, 0xce, 0x83, 0xa4, 0xb3, 0x29, 0xef, 0xed, 0x36, 0x51,
+	0xa6, 0x66, 0x06, 0x44, 0xb0, 0x87, 0x70, 0xe3, 0xa7, 0xd8, 0x4b, 0xf8, 0xb2, 0xc1, 0x96, 0x34,
+	0x60, 0x92, 0xbb, 0x66, 0x91, 0x84, 0x89, 0xed, 0x5b, 0x14, 0x08, 0xdb, 0x49, 0xbc, 0xe0, 0xd2,
+	0x7a, 0xfe, 0x42, 0x74, 0x40, 0x59, 0x48, 0x6e, 0x90, 0x51, 0xc8, 0xe0, 0x15, 0xd8, 0x71, 0xe6,
+	0x71, 0xcc, 0x83, 0x24, 0xb5, 0xc1, 0xe0, 0x92, 0x89, 0x21, 0x4d, 0xda, 0x9a, 0x1c, 0xa4, 0x1c,
+	0xd9, 0xdc, 0x07, 0x16, 0x87, 0x61, 0x92, 0xdf, 0xf9, 0xf3, 0x7e, 0xa7, 0xa6, 0xa2, 0x4a, 0x4c,
+	0xb6, 0xe9, 0xe7, 0x7d, 0xf6, 0x08, 0xf6, 0xd4, 0x92, 0xe8, 0x8a, 0x79, 0xce, 0x92, 0x51, 0x5d,
+	0x1a, 0xed, 0x4a, 0xc5, 0x58, 0x0a, 0xde, 0x67, 0x3b, 0xf1, 0xc3, 0x70, 0x96, 0xd9, 0x36, 0xae,
+	0xd9, 0xf6, 0x89, 0xd7, 0xb6, 0x18, 0x0a, 0xda, 0x90, 0xcf, 0x93, 0xe2, 0x0d, 0x68, 0xaa, 0x50,
+	0xa4, 0x5c, 0xee, 0xc2, 0x7c, 0x04, 0x75, 0xd7, 0x4e, 0x6c, 0xcb, 0x0f, 0x1d, 0xdb, 0xf7, 0x92,
+	0xb7, 0x9d, 0x16, 0x4a, 0xcb, 0x66, 0x8d, 0xc0, 0x91, 0xc6, 0x70, 0x49, 0xea, 0x3a, 0xce, 0xec,
+	0x1f, 0xc3, 0x38, 0x0b, 0x33, 0x5e, 0x8a, 0x44, 0x74, 0xb6, 0xc9, 0xf5, 0xa3, 0xd2, 0x43, 0x75,
+	0x23, 0x4f, 0x48, 0x31, 0xc8, 0x04, 0x17, 0x82, 0x9d, 0xa7, 0x99, 0xbc, 0x72, 0x61, 0xec, 0xdd,
+	0x57, 0x53, 0x65, 0xdb, 0xe0, 0xfa, 0x92, 0x1f, 0xc3, 0x07, 0x98, 0x64, 0xf8, 0x0a, 0x71, 0xca,
+	0xaa, 0xeb, 0xa9, 0xd5, 0x96, 0x9b, 0xbd, 0x95, 0x6a, 0xcc, 0xe5, 0x14, 0xeb, 0xfe, 0x52, 0x82,
+	0xb6, 0xc9, 0x23, 0xdf, 0x73, 0xec, 0x44, 0x5f, 0xf4, 0xb1, 0x17, 0xbc, 0xc4, 0x54, 0x65, 0xf6,
+	0x25, 0x3f, 0x9b, 0x8e, 0x70, 0x23, 0x4f, 0x22, 0xe4, 0xb9, 0x7b, 0x16, 0xe9, 0x7a, 0xb3, 0x82,
+	0x61, 0x5f, 0xc1, 0xad, 0xc4, 0x9b, 0xf1, 0x31, 0xbd, 0x3d, 0x62, 0xd9, 0x4c, 0xd5, 0xbb, 0x77,
+	0x0b, 0xba, 0x7f, 0x97, 0x60, 0x67, 0x79, 0x15, 0xe1, 0x3c, 0x76, 0x38, 0x15, 0x8d, 0x88, 0xe3,
+	0x23, 0x7b, 0x28, 0xe7, 0xde, 0x32, 0xf5, 0x57, 0x61, 0x7d, 0xe3, 0x2b, 0x2f, 0x8a, 0x72, 0x13,
+	0xad, 0x60, 0xd8, 0x5d, 0x68, 0x50, 0xda, 0x20, 0x1c, 0x5e, 0x7e, 0x37, 0xe7, 0x73, 0x8e, 0x85,
+	0xa6, 0x4c, 0x37, 0xbb, 0x88, 0xd2, 0xf1, 0x66, 0xcb, 0x5c, 0xf6, 0x5e, 0x95, 0xde, 0xdf, 0xc9,
+	0xd3, 0x1c, 0x71, 0x6e, 0x13, 0xf6, 0x25, 0x16, 0x1a, 0xb2, 0x58, 0x42, 0xbb, 0xbf, 0x55, 0x01,
+	0xc6, 0x3c, 0x7e, 0xcd, 0x63, 0x59, 0x57, 0x1f, 0x00, 0x0b, 0xe6, 0xb3, 0x09, 0x8f, 0xad, 0x70,
+	0x9a, 0x9d, 0x1f, 0x6e, 0x97, 0x4e, 0xae, 0xa5, 0x98, 0xb3, 0x69, 0x7a, 0x6a, 0xf4, 0x1c, 0xa8,
+	0x2b, 0xb1, 0xc2, 0xa6, 0x2c, 0x6d, 0x76, 0x24, 0x7f, 0xba, 0x6c, 0x78, 0x07, 0x6a, 0x73, 0x2a,
+	0x9c, 0x57, 0xdc, 0x8e, 0xa8, 0x50, 0xe9, 0x42, 0x4b, 0xd8, 0x33, 0x84, 0xb0, 0x3c, 0xdd, 0x06,
+	0x63, 0x66, 0xbf, 0xc9, 0x04, 0xaa, 0xb2, 0x6e, 0x21, 0xa4, 0xf9, 0x4f, 0xb3, 0xd7, 0xd2, 0xc7,
+	0x75, 0x0b, 0xdc, 0x5d, 0xa5, 0xd8, 0xc7, 0xd0, 0x76, 0xd2, 0xc7, 0x92, 0xc6, 0x82, 0x7d, 0x06,
+	0x35, 0x27, 0xc4, 0xa6, 0xc8, 0xc1, 0x9a, 0x1c, 0xc6, 0x02, 0xcb, 0x69, 0x25, 0x7d, 0x60, 0x07,
+	0x0b, 0xdc, 0x2c, 0x88, 0xa8, 0x66, 0x63, 0xc4, 0xc2, 0x38, 0xa1, 0x6b, 0x8f, 0xbf, 0x14, 0x70,
+	0x59, 0x57, 0xab, 0xf4, 0xa8, 0x10, 0x31, 0x26, 0xfc, 0x02, 0x61, 0x8c, 0xb9, 0x86, 0x2c, 0x1e,
+	0xb8, 0x4a, 0xa9, 0xca, 0x69, 0x5d, 0xc1, 0x47, 0x81, 0x2b, 0x75, 0x58, 0xdb, 0xa9, 0xf7, 0xc2,
+	0x0b, 0x47, 0x71, 0xb7, 0x88, 0x92, 0x65, 0x14, 0x33, 0x80, 0x70, 0x75, 0x1c, 0xe7, 0x88, 0xb2,
+	0x27, 0xea, 0x14, 0x17, 0x39, 0x88, 0xc5, 0x93, 0x16, 0x7d, 0x4b, 0xed, 0x73, 0x45, 0x92, 0x9a,
+	0x4b, 0x06, 0xf8, 0x62, 0xd5, 0x32, 0x04, 0x2f, 0x93, 0x2c, 0xa5, 0xc6, 0xc1, 0xcd, 0x55, 0x0e,
+	0x90, 0x36, 0x0b, 0xe2, 0xae, 0x07, 0x8d, 0x91, 0xf7, 0x9a, 0xab, 0x15, 0xc9, 0x6e, 0xf0, 0x2e,
+	0x3e, 0x9c, 0xf2, 0x2b, 0xdf, 0x39, 0x2a, 0x9e, 0xba, 0x0b, 0x53, 0xb3, 0xd4, 0x66, 0xea, 0xed,
+	0xd1, 0xf9, 0xe8, 0x66, 0x26, 0x27, 0x96, 0xc7, 0x03, 0x22, 0x1b, 0x77, 0xff, 0xa9, 0x40, 0xbd,
+	0xd0, 0xeb, 0xb2, 0x6f, 0xa0, 0x7e, 0x35, 0xc1, 0x1e, 0xd7, 0x42, 0x89, 0xc0, 0x35, 0xca, 0x34,
+	0x34, 0x0e, 0xfe, 0x4f, 0x4e, 0x64, 0xf3, 0xfb, 0x42, 0xe1, 0xc7, 0xf8, 0xb2, 0x0d, 0xc2, 0x20,
+	0xc1, 0x97, 0xc1, 0xac, 0x49, 0x0b, 0x4d, 0xe0, 0xd3, 0x58, 0xf3, 0x71, 0xf9, 0x3a, 0xd0, 0x42,
+	0x37, 0x1c, 0x8c, 0x1c, 0x14, 0xb7, 0x65, 0x1a, 0x7e, 0xf6, 0x2d, 0x28, 0xb7, 0x5c, 0xaa, 0x5f,
+	0xa9, 0x59, 0x65, 0x91, 0x5b, 0xb9, 0x9d, 0x1a, 0xa4, 0x49, 0x4d, 0xbe, 0x85, 0x1d, 0x95, 0x6a,
+	0x02, 0xdf, 0x14, 0x2b, 0xc9, 0xda, 0x3f, 0x4c, 0x5c, 0xb2, 0xdd, 0xcd, 0xf7, 0xd7, 0x8b, 0xe6,
+	0xd0, 0x6c, 0x6b, 0xa3, 0x42, 0xc7, 0xf8, 0x00, 0xc0, 0x51, 0x81, 0xa0, 0x4a, 0xbc, 0x26, 0x37,
+	0x5d, 0x97, 0x59, 0x9a, 0x36, 0xf9, 0xe6, 0x96, 0x93, 0x0e, 0x31, 0x4a, 0xed, 0x99, 0x2d, 0xc5,
+	0xff, 0x25, 0xb9, 0x99, 0xd2, 0x0e, 0xf2, 0x29, 0x8e, 0x47, 0xaa, 0x50, 0x99, 0xd7, 0x2b, 0x8e,
+	0x54, 0xb1, 0x18, 0xcd, 0xc6, 0xc4, 0x76, 0x5e, 0xce, 0x23, 0x4b, 0x01, 0x02, 0xb3, 0x7b, 0x55,
+	0x60, 0xea, 0x4a, 0x75, 0xa2, 0x44, 0xd4, 0x6f, 0x4e, 0x6c, 0xdf, 0xc6, 0x37, 0x02, 0x0b, 0x44,
+	0x20, 0x13, 0x7d, 0xd3, 0x84, 0x14, 0x3a, 0x0b, 0xfa, 0xc7, 0x70, 0x2f, 0x8c, 0x2f, 0x7b, 0x36,
+	0xbe, 0x4d, 0x57, 0xbc, 0x77, 0x65, 0xbb, 0x61, 0x18, 0xf5, 0xe4, 0x39, 0xaa, 0xbf, 0x30, 0x93,
+	0xf9, 0xb4, 0x77, 0xc9, 0x03, 0x1e, 0x63, 0xc7, 0xeb, 0xf6, 0x8b, 0x7f, 0x88, 0xce, 0x49, 0x20,
+	0x9e, 0x95, 0x7e, 0x2f, 0x95, 0xfe, 0x0d, 0x00, 0x00, 0xff, 0xff, 0xbb, 0x2a, 0x47, 0x22, 0x2b,
+	0x0d, 0x00, 0x00,
 }

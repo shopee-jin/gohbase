@@ -18,8 +18,8 @@
 
 // ZNode data in hbase are serialized protobufs with a four byte
 // 'magic' 'PBUF' prefix.
-
 package pb;
+
 option java_package = "org.apache.hadoop.hbase.protobuf.generated";
 option java_outer_classname = "ZooKeeperProtos";
 option java_generic_services = true;
@@ -66,21 +66,6 @@ message ClusterUp {
 }
 
 /**
- * What we write under unassigned up in zookeeper as a region moves through
- * open/close, etc., regions.  Details a region in transition.
- */
-message RegionTransition {
-  // Code for EventType gotten by doing o.a.h.h.EventHandler.EventType.getCode()
-  required uint32 event_type_code = 1;
-  // Full regionname in bytes
-  required bytes region_name = 2;
-  required uint64 create_time = 3;
-  // The region server where the transition will happen or is happening
-  required ServerName server_name = 4;
-  optional bytes payload = 5;
-}
-
-/**
  * WAL SplitLog directory znodes have this for content.  Used doing distributed
  * WAL splitting.  Holds current state and name of server that originated split.
  */
@@ -104,8 +89,9 @@ message SplitLogTask {
 
 /**
  * The znode that holds state of table.
+ * Deprected, table state is stored in table descriptor on HDFS.
  */
-message Table {
+message DeprecatedTableState {
   // Table's current state
   enum State {
     ENABLED = 0;
@@ -119,6 +105,11 @@ message Table {
   required State state = 1 [default = ENABLED];
 }
 
+message TableCF {
+  optional TableName table_name = 1;
+  repeated bytes families = 2;
+}
+
 /**
  * Used by replication. Holds a replication peer key.
  */
@@ -129,6 +120,9 @@ message ReplicationPeer {
   optional string replicationEndpointImpl = 2;
   repeated BytesBytesPair data = 3;
   repeated NameStringPair configuration = 4;
+  repeated TableCF table_cfs = 5;
+  repeated bytes namespaces = 6;
+  optional int64 bandwidth = 7;
 }
 
 /**
@@ -150,20 +144,8 @@ message ReplicationHLogPosition {
 }
 
 /**
- * Used by replication. Used to lock a region server during failover.
+ * State of the switch.
  */
-message ReplicationLock {
-  required string lock_owner = 1;
-}
-
-/**
- * Metadata associated with a table lock in zookeeper
- */
-message TableLock {
-  optional TableName table_name = 1;
-  optional ServerName lock_owner = 2;
-  optional int64 thread_id = 3;
-  optional bool is_shared = 4;
-  optional string purpose = 5;
-  optional int64 create_time = 6;
+message SwitchState {
+  optional bool enabled = 1;
 }

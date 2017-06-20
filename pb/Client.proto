@@ -17,8 +17,8 @@
  */
 
 // This file contains protocol buffers that are used for Client service.
-
 package pb;
+
 option java_package = "org.apache.hadoop.hbase.protobuf.generated";
 option java_outer_classname = "ClientProtos";
 option java_generic_services = true;
@@ -29,6 +29,7 @@ import "HBase.proto";
 import "Filter.proto";
 import "Cell.proto";
 import "Comparator.proto";
+import "MapReduce.proto";
 
 /**
  * The protocol buffer version of Authorizations.
@@ -63,8 +64,7 @@ enum Consistency {
 /**
  * The protocol buffer version of Get.
  * Unless existence_only is specified, return all the requested data
- * for the row that matches exactly, or the one that immediately
- * precedes it if closest_row_before is specified.
+ * for the row that matches exactly.
  */
 message Get {
   required bytes row = 1;
@@ -81,11 +81,9 @@ message Get {
   // the existence.
   optional bool existence_only = 10 [default = false];
 
-  // If the row to get doesn't exist, return the
-  // closest row before.
-  optional bool closest_row_before = 11 [default = false];
-
   optional Consistency consistency = 12 [default = STRONG];
+  repeated ColumnFamilyTimeRange cf_time_range = 13;
+  optional bool load_column_families_on_demand = 14; /* DO NOT add defaults to load_column_families_on_demand. */
 }
 
 message Result {
@@ -104,13 +102,14 @@ message Result {
   //  in the query.
   optional bool exists = 3;
 
-  // Whether or not the results are coming from possibly stale data
+  // Whether or not the results are coming from possibly stale data 
   optional bool stale = 4 [default = false];
 
   // Whether or not the entire result could be returned. Results will be split when
   // the RPC chunk size limit is reached. Partial results contain only a subset of the
   // cells for a row and must be combined with a result containing the remaining cells
-  // to form a complete result
+  // to form a complete result. The equivalent flag in o.a.h.h.client.Result is
+  // mayHaveMoreCellsInRow.
   optional bool partial = 5 [default = false];
 }
 
@@ -251,10 +250,22 @@ message Scan {
   optional uint32 store_limit = 11;
   optional uint32 store_offset = 12;
   optional bool load_column_families_on_demand = 13; /* DO NOT add defaults to load_column_families_on_demand. */
-  optional bool small = 14;
+  optional bool small = 14 [deprecated = true];
   optional bool reversed = 15 [default = false];
   optional Consistency consistency = 16 [default = STRONG];
   optional uint32 caching = 17;
+  optional bool allow_partial_results = 18;
+  repeated ColumnFamilyTimeRange cf_time_range = 19;
+  optional uint64 mvcc_read_point = 20 [default = 0];
+  optional bool include_start_row = 21 [default = true];
+  optional bool include_stop_row = 22 [default = false];
+  enum ReadType {
+    DEFAULT = 0;
+    STREAM = 1;
+    PREAD = 2;
+  }
+  optional ReadType readType = 23 [default = DEFAULT];
+  optional bool need_cursor_result = 24 [default = false];
 }
 
 /**
@@ -277,6 +288,18 @@ message ScanRequest {
   optional uint64 next_call_seq = 6;
   optional bool client_handles_partials = 7;
   optional bool client_handles_heartbeats = 8;
+  optional bool track_scan_metrics = 9;
+  optional bool renew = 10 [default = false];
+  // if we have returned limit_of_rows rows to client, then close the scanner.
+  optional uint32 limit_of_rows = 11 [default = 0];
+}
+
+/**
+* Scan cursor to tell client where we are scanning.
+*
+ */
+message Cursor {
+  optional bytes row = 1;
 }
 
 /**
@@ -321,6 +344,20 @@ message ScanResponse {
   // timing out. Seeing a heartbeat message communicates to the Client that the
   // server would have continued to scan had the time limit not been reached.
   optional bool heartbeat_message = 9;
+
+  // This field is filled in if the client has requested that scan metrics be tracked.
+  // The metrics tracked here are sent back to the client to be tracked together with
+  // the existing client side metrics.
+  optional ScanMetrics scan_metrics = 10;
+
+  // The mvcc read point which is used to open the scanner at server side. Client can
+  // make use of this mvcc_read_point when restarting a scanner to get a consistent view
+  // of a row.
+  optional uint64 mvcc_read_point = 11 [default = 0];
+
+  // If the Scan need cursor, return the row key we are scanning in heartbeat message.
+  // If the Scan doesn't need a cursor, don't set this field to reduce network IO.
+  optional Cursor cursor = 12;
 }
 
 /**
@@ -331,6 +368,9 @@ message BulkLoadHFileRequest {
   required RegionSpecifier region = 1;
   repeated FamilyPath family_path = 2;
   optional bool assign_seq_num = 3;
+  optional DelegationToken fs_token = 4;
+  optional string bulk_token = 5;
+  optional bool copy_file = 6 [default = false];
 
   message FamilyPath {
     required bytes family = 1;
@@ -340,6 +380,30 @@ message BulkLoadHFileRequest {
 
 message BulkLoadHFileResponse {
   required bool loaded = 1;
+}
+
+message DelegationToken {
+  optional bytes identifier = 1;
+  optional bytes password = 2;
+  optional string kind = 3;
+  optional string service = 4;
+}
+
+message PrepareBulkLoadRequest {
+  required TableName table_name = 1;
+  optional RegionSpecifier region = 2;
+}
+
+message PrepareBulkLoadResponse {
+  required string bulk_token = 1;
+}
+
+message CleanupBulkLoadRequest {
+  required string bulk_token = 1;
+  optional RegionSpecifier region = 2;
+}
+
+message CleanupBulkLoadResponse {
 }
 
 message CoprocessorServiceCall {
@@ -392,6 +456,13 @@ message RegionLoadStats {
   // Percent JVM heap occupancy. Guaranteed to be positive, between 0 and 100.
   // We can move this to "ServerLoadStats" should we develop them.
   optional int32 heapOccupancy = 2 [default = 0];
+  // Compaction pressure. Guaranteed to be positive, between 0 and 100.
+  optional int32 compactionPressure = 3 [default = 0];
+}
+
+message MultiRegionLoadStats{
+  repeated RegionSpecifier region = 1;
+  repeated RegionLoadStats stat = 2;
 }
 
 /**
@@ -408,7 +479,7 @@ message ResultOrException {
   // result if this was a coprocessor service call
   optional CoprocessorServiceResult service_result = 4;
   // current load on the region
-  optional RegionLoadStats loadStats = 5;
+  optional RegionLoadStats loadStats = 5 [deprecated=true];
 }
 
 /**
@@ -437,6 +508,7 @@ message MultiResponse {
   repeated RegionActionResult regionActionResult = 1;
   // used for mutate to indicate processed only
   optional bool processed = 2;
+  optional MultiRegionLoadStats regionStatistics = 3;
 }
 
 
@@ -453,9 +525,15 @@ service ClientService {
   rpc BulkLoadHFile(BulkLoadHFileRequest)
     returns(BulkLoadHFileResponse);
 
+  rpc PrepareBulkLoad(PrepareBulkLoadRequest)
+    returns (PrepareBulkLoadResponse);
+
+  rpc CleanupBulkLoad(CleanupBulkLoadRequest)
+    returns (CleanupBulkLoadResponse);
+
   rpc ExecService(CoprocessorServiceRequest)
     returns(CoprocessorServiceResponse);
-
+    
   rpc ExecRegionServerService(CoprocessorServiceRequest)
     returns(CoprocessorServiceResponse);
 
