@@ -1,6 +1,8 @@
 package hrpc
 
 import (
+	"context"
+
 	"github.com/golang/protobuf/proto"
 	"github.com/tsuna/gohbase/pb"
 )
@@ -15,14 +17,15 @@ type CompactRegion struct {
 
 func NewCompactRegion(region string, family []byte, major bool) *CompactRegion {
 	return &CompactRegion{
-		region: region,
-		family: family,
-		major:  major,
+		tableOp: tableOp{base: base{ctx: context.Background()}},
+		region:  region,
+		family:  family,
+		major:   major,
 	}
 }
 
 func (cr *CompactRegion) Name() string {
-	return "CompactRegionRequest"
+	return "CompactRegion"
 }
 
 // ToProto converts the RPC into a protobuf message
