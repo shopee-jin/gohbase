@@ -19,14 +19,16 @@
 // This file contains protocol buffers that are used for Admin service.
 package pb;
 
-option java_package = "org.apache.hadoop.hbase.protobuf.generated";
+option java_package = "org.apache.hadoop.hbase.shaded.protobuf.generated";
 option java_outer_classname = "AdminProtos";
 option java_generic_services = true;
 option java_generate_equals_and_hash = true;
 option optimize_for = SPEED;
 
+import "ClusterStatus.proto";
 import "HBase.proto";
 import "WAL.proto";
+import "Quota.proto";
 
 message GetRegionInfoRequest {
   required RegionSpecifier region = 1;
@@ -37,6 +39,10 @@ message GetRegionInfoResponse {
   required RegionInfo region_info = 1;
   optional CompactionState compaction_state = 2;
   optional bool isRecovering = 3;
+  // True if region is splittable, false otherwise.
+  optional bool splittable = 4;
+  // True if region is mergeable, false otherwise.
+  optional bool mergeable = 5;
 
   enum CompactionState {
     NONE = 0;
@@ -176,22 +182,6 @@ message UpdateFavoredNodesResponse {
   optional uint32 response = 1;
 }
 
-/**
- * Merges the specified regions.
- * <p>
- * This method currently closes the regions and then merges them
- */
-message MergeRegionsRequest {
-  required RegionSpecifier region_a = 1;
-  required RegionSpecifier region_b = 2;
-  optional bool forcible = 3 [default = false];
-  // wall clock time from master
-  optional uint64 master_system_time = 4;
-}
-
-message MergeRegionsResponse {
-}
-
 // Protocol buffer version of WAL for replication
 message WALEntry {
   required WALKey key = 1;
@@ -255,6 +245,47 @@ message UpdateConfigurationRequest {
 message UpdateConfigurationResponse {
 }
 
+message GetRegionLoadRequest {
+  optional TableName table_name = 1;
+}
+
+message GetRegionLoadResponse {
+  repeated RegionLoad region_loads = 1;
+}
+
+message ClearCompactionQueuesRequest {
+  repeated string queue_name = 1;
+}
+
+message ClearCompactionQueuesResponse {
+}
+
+message ExecuteProceduresRequest {
+  repeated OpenRegionRequest open_region = 1;
+  repeated CloseRegionRequest close_region = 2;
+}
+
+message ExecuteProceduresResponse {
+  repeated OpenRegionResponse open_region = 1;
+  repeated CloseRegionResponse close_region = 2;
+}
+
+/**
+ * Merges the specified regions.
+ * <p>
+ * This method currently closes the regions and then merges them
+ */
+message MergeRegionsRequest {
+  required RegionSpecifier region_a = 1;
+  required RegionSpecifier region_b = 2;
+  optional bool forcible = 3 [default = false];
+  // wall clock time from master
+  optional uint64 master_system_time = 4;
+}
+
+message MergeRegionsResponse {
+}
+
 service AdminService {
   rpc GetRegionInfo(GetRegionInfoRequest)
     returns(GetRegionInfoResponse);
@@ -283,9 +314,6 @@ service AdminService {
   rpc CompactRegion(CompactRegionRequest)
     returns(CompactRegionResponse);
 
-  rpc MergeRegions(MergeRegionsRequest)
-    returns(MergeRegionsResponse);
-
   rpc ReplicateWALEntry(ReplicateWALEntryRequest)
     returns(ReplicateWALEntryResponse);
 
@@ -306,4 +334,20 @@ service AdminService {
 
   rpc UpdateConfiguration(UpdateConfigurationRequest)
     returns(UpdateConfigurationResponse);
+
+  rpc GetRegionLoad(GetRegionLoadRequest)
+    returns(GetRegionLoadResponse);
+
+  rpc ClearCompactionQueues(ClearCompactionQueuesRequest)
+    returns(ClearCompactionQueuesResponse);
+
+  /** Fetches the RegionServer's view of space quotas */
+  rpc GetSpaceQuotaSnapshots(GetSpaceQuotaSnapshotsRequest)
+    returns(GetSpaceQuotaSnapshotsResponse);
+
+  rpc ExecuteProcedures(ExecuteProceduresRequest)
+    returns(ExecuteProceduresResponse);
+
+  rpc MergeRegions(MergeRegionsRequest)
+    returns(MergeRegionsResponse);
 }

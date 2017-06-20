@@ -17,13 +17,19 @@
  */
 package pb;
 
-option java_package = "org.apache.hadoop.hbase.protobuf.generated";
+option java_package = "org.apache.hadoop.hbase.shaded.protobuf.generated";
 option java_outer_classname = "AccessControlProtos";
 option java_generic_services = true;
 option java_generate_equals_and_hash = true;
 option optimize_for = SPEED;
 
 import "HBase.proto";
+
+/**
+* Messages and services in shaded AccessControl.proto only use for serializing/deserializing permissions
+* in .snapshotinfo, and should not use for access control logic for coprocessor endpoints compatibility
+* (use AccessControl.proto under hbase-protocol module instead).
+*/
 
 message Permission {
     enum Action {

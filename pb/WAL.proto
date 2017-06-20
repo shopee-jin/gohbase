@@ -17,7 +17,7 @@
  */
 package pb;
 
-option java_package = "org.apache.hadoop.hbase.protobuf.generated";
+option java_package = "org.apache.hadoop.hbase.shaded.protobuf.generated";
 option java_outer_classname = "WALProtos";
 option java_generic_services = false;
 option java_generate_equals_and_hash = true;
