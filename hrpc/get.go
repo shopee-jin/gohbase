@@ -20,10 +20,6 @@ type Get struct {
 
 	families map[string][]string //Maps a column family to a list of qualifiers
 
-	// Return the row for the given key or, if this key doesn't exist,
-	// whichever key happens to be right before.
-	closestBefore bool
-
 	// Don't return any KeyValue, just say whether the row key exists in the
 	// table or not.
 	existsOnly bool
@@ -134,9 +130,7 @@ func (g *Get) ToProto() (proto.Message, error) {
 	if g.toTimestamp != MaxTimestamp {
 		get.Get.TimeRange.To = &g.toTimestamp
 	}
-	if g.closestBefore {
-		get.Get.ClosestRowBefore = proto.Bool(true)
-	}
+
 	if g.existsOnly {
 		get.Get.ExistenceOnly = proto.Bool(true)
 	}
