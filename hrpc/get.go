@@ -72,7 +72,6 @@ func NewGetBefore(ctx context.Context, table, key []byte,
 	if err != nil {
 		return nil, err
 	}
-	g.closestBefore = true
 	return g, nil
 }
 
