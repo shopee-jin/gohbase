@@ -5,10 +5,12 @@
 package pb
 
 import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
 import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
+var _ = fmt.Errorf
 var _ = math.Inf
 
 type GetProcedureResultResponse_State int32
@@ -46,16 +48,70 @@ func (x *GetProcedureResultResponse_State) UnmarshalJSON(data []byte) error {
 	*x = GetProcedureResultResponse_State(value)
 	return nil
 }
+func (GetProcedureResultResponse_State) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{91, 0}
+}
+
+type SecurityCapabilitiesResponse_Capability int32
+
+const (
+	SecurityCapabilitiesResponse_SIMPLE_AUTHENTICATION SecurityCapabilitiesResponse_Capability = 0
+	SecurityCapabilitiesResponse_SECURE_AUTHENTICATION SecurityCapabilitiesResponse_Capability = 1
+	SecurityCapabilitiesResponse_AUTHORIZATION         SecurityCapabilitiesResponse_Capability = 2
+	SecurityCapabilitiesResponse_CELL_AUTHORIZATION    SecurityCapabilitiesResponse_Capability = 3
+	SecurityCapabilitiesResponse_CELL_VISIBILITY       SecurityCapabilitiesResponse_Capability = 4
+)
+
+var SecurityCapabilitiesResponse_Capability_name = map[int32]string{
+	0: "SIMPLE_AUTHENTICATION",
+	1: "SECURE_AUTHENTICATION",
+	2: "AUTHORIZATION",
+	3: "CELL_AUTHORIZATION",
+	4: "CELL_VISIBILITY",
+}
+var SecurityCapabilitiesResponse_Capability_value = map[string]int32{
+	"SIMPLE_AUTHENTICATION": 0,
+	"SECURE_AUTHENTICATION": 1,
+	"AUTHORIZATION":         2,
+	"CELL_AUTHORIZATION":    3,
+	"CELL_VISIBILITY":       4,
+}
+
+func (x SecurityCapabilitiesResponse_Capability) Enum() *SecurityCapabilitiesResponse_Capability {
+	p := new(SecurityCapabilitiesResponse_Capability)
+	*p = x
+	return p
+}
+func (x SecurityCapabilitiesResponse_Capability) String() string {
+	return proto.EnumName(SecurityCapabilitiesResponse_Capability_name, int32(x))
+}
+func (x *SecurityCapabilitiesResponse_Capability) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(SecurityCapabilitiesResponse_Capability_value, data, "SecurityCapabilitiesResponse_Capability")
+	if err != nil {
+		return err
+	}
+	*x = SecurityCapabilitiesResponse_Capability(value)
+	return nil
+}
+func (SecurityCapabilitiesResponse_Capability) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{102, 0}
+}
 
 type AddColumnRequest struct {
-	TableName        *TableName          `protobuf:"bytes,1,req,name=table_name" json:"table_name,omitempty"`
-	ColumnFamilies   *ColumnFamilySchema `protobuf:"bytes,2,req,name=column_families" json:"column_families,omitempty"`
+	TableName        *TableName          `protobuf:"bytes,1,req,name=table_name,json=tableName" json:"table_name,omitempty"`
+	ColumnFamilies   *ColumnFamilySchema `protobuf:"bytes,2,req,name=column_families,json=columnFamilies" json:"column_families,omitempty"`
+	NonceGroup       *uint64             `protobuf:"varint,3,opt,name=nonce_group,json=nonceGroup,def=0" json:"nonce_group,omitempty"`
+	Nonce            *uint64             `protobuf:"varint,4,opt,name=nonce,def=0" json:"nonce,omitempty"`
 	XXX_unrecognized []byte              `json:"-"`
 }
 
-func (m *AddColumnRequest) Reset()         { *m = AddColumnRequest{} }
-func (m *AddColumnRequest) String() string { return proto.CompactTextString(m) }
-func (*AddColumnRequest) ProtoMessage()    {}
+func (m *AddColumnRequest) Reset()                    { *m = AddColumnRequest{} }
+func (m *AddColumnRequest) String() string            { return proto.CompactTextString(m) }
+func (*AddColumnRequest) ProtoMessage()               {}
+func (*AddColumnRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{0} }
+
+const Default_AddColumnRequest_NonceGroup uint64 = 0
+const Default_AddColumnRequest_Nonce uint64 = 0
 
 func (m *AddColumnRequest) GetTableName() *TableName {
 	if m != nil {
@@ -71,23 +127,44 @@ func (m *AddColumnRequest) GetColumnFamilies() *ColumnFamilySchema {
 	return nil
 }
 
+func (m *AddColumnRequest) GetNonceGroup() uint64 {
+	if m != nil && m.NonceGroup != nil {
+		return *m.NonceGroup
+	}
+	return Default_AddColumnRequest_NonceGroup
+}
+
+func (m *AddColumnRequest) GetNonce() uint64 {
+	if m != nil && m.Nonce != nil {
+		return *m.Nonce
+	}
+	return Default_AddColumnRequest_Nonce
+}
+
 type AddColumnResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *AddColumnResponse) Reset()         { *m = AddColumnResponse{} }
-func (m *AddColumnResponse) String() string { return proto.CompactTextString(m) }
-func (*AddColumnResponse) ProtoMessage()    {}
+func (m *AddColumnResponse) Reset()                    { *m = AddColumnResponse{} }
+func (m *AddColumnResponse) String() string            { return proto.CompactTextString(m) }
+func (*AddColumnResponse) ProtoMessage()               {}
+func (*AddColumnResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{1} }
 
 type DeleteColumnRequest struct {
-	TableName        *TableName `protobuf:"bytes,1,req,name=table_name" json:"table_name,omitempty"`
-	ColumnName       []byte     `protobuf:"bytes,2,req,name=column_name" json:"column_name,omitempty"`
+	TableName        *TableName `protobuf:"bytes,1,req,name=table_name,json=tableName" json:"table_name,omitempty"`
+	ColumnName       []byte     `protobuf:"bytes,2,req,name=column_name,json=columnName" json:"column_name,omitempty"`
+	NonceGroup       *uint64    `protobuf:"varint,3,opt,name=nonce_group,json=nonceGroup,def=0" json:"nonce_group,omitempty"`
+	Nonce            *uint64    `protobuf:"varint,4,opt,name=nonce,def=0" json:"nonce,omitempty"`
 	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (m *DeleteColumnRequest) Reset()         { *m = DeleteColumnRequest{} }
-func (m *DeleteColumnRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteColumnRequest) ProtoMessage()    {}
+func (m *DeleteColumnRequest) Reset()                    { *m = DeleteColumnRequest{} }
+func (m *DeleteColumnRequest) String() string            { return proto.CompactTextString(m) }
+func (*DeleteColumnRequest) ProtoMessage()               {}
+func (*DeleteColumnRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{2} }
+
+const Default_DeleteColumnRequest_NonceGroup uint64 = 0
+const Default_DeleteColumnRequest_Nonce uint64 = 0
 
 func (m *DeleteColumnRequest) GetTableName() *TableName {
 	if m != nil {
@@ -103,23 +180,44 @@ func (m *DeleteColumnRequest) GetColumnName() []byte {
 	return nil
 }
 
+func (m *DeleteColumnRequest) GetNonceGroup() uint64 {
+	if m != nil && m.NonceGroup != nil {
+		return *m.NonceGroup
+	}
+	return Default_DeleteColumnRequest_NonceGroup
+}
+
+func (m *DeleteColumnRequest) GetNonce() uint64 {
+	if m != nil && m.Nonce != nil {
+		return *m.Nonce
+	}
+	return Default_DeleteColumnRequest_Nonce
+}
+
 type DeleteColumnResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DeleteColumnResponse) Reset()         { *m = DeleteColumnResponse{} }
-func (m *DeleteColumnResponse) String() string { return proto.CompactTextString(m) }
-func (*DeleteColumnResponse) ProtoMessage()    {}
+func (m *DeleteColumnResponse) Reset()                    { *m = DeleteColumnResponse{} }
+func (m *DeleteColumnResponse) String() string            { return proto.CompactTextString(m) }
+func (*DeleteColumnResponse) ProtoMessage()               {}
+func (*DeleteColumnResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{3} }
 
 type ModifyColumnRequest struct {
-	TableName        *TableName          `protobuf:"bytes,1,req,name=table_name" json:"table_name,omitempty"`
-	ColumnFamilies   *ColumnFamilySchema `protobuf:"bytes,2,req,name=column_families" json:"column_families,omitempty"`
+	TableName        *TableName          `protobuf:"bytes,1,req,name=table_name,json=tableName" json:"table_name,omitempty"`
+	ColumnFamilies   *ColumnFamilySchema `protobuf:"bytes,2,req,name=column_families,json=columnFamilies" json:"column_families,omitempty"`
+	NonceGroup       *uint64             `protobuf:"varint,3,opt,name=nonce_group,json=nonceGroup,def=0" json:"nonce_group,omitempty"`
+	Nonce            *uint64             `protobuf:"varint,4,opt,name=nonce,def=0" json:"nonce,omitempty"`
 	XXX_unrecognized []byte              `json:"-"`
 }
 
-func (m *ModifyColumnRequest) Reset()         { *m = ModifyColumnRequest{} }
-func (m *ModifyColumnRequest) String() string { return proto.CompactTextString(m) }
-func (*ModifyColumnRequest) ProtoMessage()    {}
+func (m *ModifyColumnRequest) Reset()                    { *m = ModifyColumnRequest{} }
+func (m *ModifyColumnRequest) String() string            { return proto.CompactTextString(m) }
+func (*ModifyColumnRequest) ProtoMessage()               {}
+func (*ModifyColumnRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{4} }
+
+const Default_ModifyColumnRequest_NonceGroup uint64 = 0
+const Default_ModifyColumnRequest_Nonce uint64 = 0
 
 func (m *ModifyColumnRequest) GetTableName() *TableName {
 	if m != nil {
@@ -135,23 +233,39 @@ func (m *ModifyColumnRequest) GetColumnFamilies() *ColumnFamilySchema {
 	return nil
 }
 
+func (m *ModifyColumnRequest) GetNonceGroup() uint64 {
+	if m != nil && m.NonceGroup != nil {
+		return *m.NonceGroup
+	}
+	return Default_ModifyColumnRequest_NonceGroup
+}
+
+func (m *ModifyColumnRequest) GetNonce() uint64 {
+	if m != nil && m.Nonce != nil {
+		return *m.Nonce
+	}
+	return Default_ModifyColumnRequest_Nonce
+}
+
 type ModifyColumnResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ModifyColumnResponse) Reset()         { *m = ModifyColumnResponse{} }
-func (m *ModifyColumnResponse) String() string { return proto.CompactTextString(m) }
-func (*ModifyColumnResponse) ProtoMessage()    {}
+func (m *ModifyColumnResponse) Reset()                    { *m = ModifyColumnResponse{} }
+func (m *ModifyColumnResponse) String() string            { return proto.CompactTextString(m) }
+func (*ModifyColumnResponse) ProtoMessage()               {}
+func (*ModifyColumnResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{5} }
 
 type MoveRegionRequest struct {
 	Region           *RegionSpecifier `protobuf:"bytes,1,req,name=region" json:"region,omitempty"`
-	DestServerName   *ServerName      `protobuf:"bytes,2,opt,name=dest_server_name" json:"dest_server_name,omitempty"`
+	DestServerName   *ServerName      `protobuf:"bytes,2,opt,name=dest_server_name,json=destServerName" json:"dest_server_name,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *MoveRegionRequest) Reset()         { *m = MoveRegionRequest{} }
-func (m *MoveRegionRequest) String() string { return proto.CompactTextString(m) }
-func (*MoveRegionRequest) ProtoMessage()    {}
+func (m *MoveRegionRequest) Reset()                    { *m = MoveRegionRequest{} }
+func (m *MoveRegionRequest) String() string            { return proto.CompactTextString(m) }
+func (*MoveRegionRequest) ProtoMessage()               {}
+func (*MoveRegionRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{6} }
 
 func (m *MoveRegionRequest) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -171,22 +285,24 @@ type MoveRegionResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *MoveRegionResponse) Reset()         { *m = MoveRegionResponse{} }
-func (m *MoveRegionResponse) String() string { return proto.CompactTextString(m) }
-func (*MoveRegionResponse) ProtoMessage()    {}
+func (m *MoveRegionResponse) Reset()                    { *m = MoveRegionResponse{} }
+func (m *MoveRegionResponse) String() string            { return proto.CompactTextString(m) }
+func (*MoveRegionResponse) ProtoMessage()               {}
+func (*MoveRegionResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{7} }
 
 // *
 // Dispatch merging the specified regions.
 type DispatchMergingRegionsRequest struct {
-	RegionA          *RegionSpecifier `protobuf:"bytes,1,req,name=region_a" json:"region_a,omitempty"`
-	RegionB          *RegionSpecifier `protobuf:"bytes,2,req,name=region_b" json:"region_b,omitempty"`
+	RegionA          *RegionSpecifier `protobuf:"bytes,1,req,name=region_a,json=regionA" json:"region_a,omitempty"`
+	RegionB          *RegionSpecifier `protobuf:"bytes,2,req,name=region_b,json=regionB" json:"region_b,omitempty"`
 	Forcible         *bool            `protobuf:"varint,3,opt,name=forcible,def=0" json:"forcible,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *DispatchMergingRegionsRequest) Reset()         { *m = DispatchMergingRegionsRequest{} }
-func (m *DispatchMergingRegionsRequest) String() string { return proto.CompactTextString(m) }
-func (*DispatchMergingRegionsRequest) ProtoMessage()    {}
+func (m *DispatchMergingRegionsRequest) Reset()                    { *m = DispatchMergingRegionsRequest{} }
+func (m *DispatchMergingRegionsRequest) String() string            { return proto.CompactTextString(m) }
+func (*DispatchMergingRegionsRequest) ProtoMessage()               {}
+func (*DispatchMergingRegionsRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{8} }
 
 const Default_DispatchMergingRegionsRequest_Forcible bool = false
 
@@ -215,18 +331,20 @@ type DispatchMergingRegionsResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DispatchMergingRegionsResponse) Reset()         { *m = DispatchMergingRegionsResponse{} }
-func (m *DispatchMergingRegionsResponse) String() string { return proto.CompactTextString(m) }
-func (*DispatchMergingRegionsResponse) ProtoMessage()    {}
+func (m *DispatchMergingRegionsResponse) Reset()                    { *m = DispatchMergingRegionsResponse{} }
+func (m *DispatchMergingRegionsResponse) String() string            { return proto.CompactTextString(m) }
+func (*DispatchMergingRegionsResponse) ProtoMessage()               {}
+func (*DispatchMergingRegionsResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{9} }
 
 type AssignRegionRequest struct {
 	Region           *RegionSpecifier `protobuf:"bytes,1,req,name=region" json:"region,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *AssignRegionRequest) Reset()         { *m = AssignRegionRequest{} }
-func (m *AssignRegionRequest) String() string { return proto.CompactTextString(m) }
-func (*AssignRegionRequest) ProtoMessage()    {}
+func (m *AssignRegionRequest) Reset()                    { *m = AssignRegionRequest{} }
+func (m *AssignRegionRequest) String() string            { return proto.CompactTextString(m) }
+func (*AssignRegionRequest) ProtoMessage()               {}
+func (*AssignRegionRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{10} }
 
 func (m *AssignRegionRequest) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -239,9 +357,10 @@ type AssignRegionResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *AssignRegionResponse) Reset()         { *m = AssignRegionResponse{} }
-func (m *AssignRegionResponse) String() string { return proto.CompactTextString(m) }
-func (*AssignRegionResponse) ProtoMessage()    {}
+func (m *AssignRegionResponse) Reset()                    { *m = AssignRegionResponse{} }
+func (m *AssignRegionResponse) String() string            { return proto.CompactTextString(m) }
+func (*AssignRegionResponse) ProtoMessage()               {}
+func (*AssignRegionResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{11} }
 
 type UnassignRegionRequest struct {
 	Region           *RegionSpecifier `protobuf:"bytes,1,req,name=region" json:"region,omitempty"`
@@ -249,9 +368,10 @@ type UnassignRegionRequest struct {
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *UnassignRegionRequest) Reset()         { *m = UnassignRegionRequest{} }
-func (m *UnassignRegionRequest) String() string { return proto.CompactTextString(m) }
-func (*UnassignRegionRequest) ProtoMessage()    {}
+func (m *UnassignRegionRequest) Reset()                    { *m = UnassignRegionRequest{} }
+func (m *UnassignRegionRequest) String() string            { return proto.CompactTextString(m) }
+func (*UnassignRegionRequest) ProtoMessage()               {}
+func (*UnassignRegionRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{12} }
 
 const Default_UnassignRegionRequest_Force bool = false
 
@@ -273,18 +393,20 @@ type UnassignRegionResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *UnassignRegionResponse) Reset()         { *m = UnassignRegionResponse{} }
-func (m *UnassignRegionResponse) String() string { return proto.CompactTextString(m) }
-func (*UnassignRegionResponse) ProtoMessage()    {}
+func (m *UnassignRegionResponse) Reset()                    { *m = UnassignRegionResponse{} }
+func (m *UnassignRegionResponse) String() string            { return proto.CompactTextString(m) }
+func (*UnassignRegionResponse) ProtoMessage()               {}
+func (*UnassignRegionResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{13} }
 
 type OfflineRegionRequest struct {
 	Region           *RegionSpecifier `protobuf:"bytes,1,req,name=region" json:"region,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *OfflineRegionRequest) Reset()         { *m = OfflineRegionRequest{} }
-func (m *OfflineRegionRequest) String() string { return proto.CompactTextString(m) }
-func (*OfflineRegionRequest) ProtoMessage()    {}
+func (m *OfflineRegionRequest) Reset()                    { *m = OfflineRegionRequest{} }
+func (m *OfflineRegionRequest) String() string            { return proto.CompactTextString(m) }
+func (*OfflineRegionRequest) ProtoMessage()               {}
+func (*OfflineRegionRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{14} }
 
 func (m *OfflineRegionRequest) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -297,19 +419,26 @@ type OfflineRegionResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *OfflineRegionResponse) Reset()         { *m = OfflineRegionResponse{} }
-func (m *OfflineRegionResponse) String() string { return proto.CompactTextString(m) }
-func (*OfflineRegionResponse) ProtoMessage()    {}
+func (m *OfflineRegionResponse) Reset()                    { *m = OfflineRegionResponse{} }
+func (m *OfflineRegionResponse) String() string            { return proto.CompactTextString(m) }
+func (*OfflineRegionResponse) ProtoMessage()               {}
+func (*OfflineRegionResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{15} }
 
 type CreateTableRequest struct {
-	TableSchema      *TableSchema `protobuf:"bytes,1,req,name=table_schema" json:"table_schema,omitempty"`
-	SplitKeys        [][]byte     `protobuf:"bytes,2,rep,name=split_keys" json:"split_keys,omitempty"`
+	TableSchema      *TableSchema `protobuf:"bytes,1,req,name=table_schema,json=tableSchema" json:"table_schema,omitempty"`
+	SplitKeys        [][]byte     `protobuf:"bytes,2,rep,name=split_keys,json=splitKeys" json:"split_keys,omitempty"`
+	NonceGroup       *uint64      `protobuf:"varint,3,opt,name=nonce_group,json=nonceGroup,def=0" json:"nonce_group,omitempty"`
+	Nonce            *uint64      `protobuf:"varint,4,opt,name=nonce,def=0" json:"nonce,omitempty"`
 	XXX_unrecognized []byte       `json:"-"`
 }
 
-func (m *CreateTableRequest) Reset()         { *m = CreateTableRequest{} }
-func (m *CreateTableRequest) String() string { return proto.CompactTextString(m) }
-func (*CreateTableRequest) ProtoMessage()    {}
+func (m *CreateTableRequest) Reset()                    { *m = CreateTableRequest{} }
+func (m *CreateTableRequest) String() string            { return proto.CompactTextString(m) }
+func (*CreateTableRequest) ProtoMessage()               {}
+func (*CreateTableRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{16} }
+
+const Default_CreateTableRequest_NonceGroup uint64 = 0
+const Default_CreateTableRequest_Nonce uint64 = 0
 
 func (m *CreateTableRequest) GetTableSchema() *TableSchema {
 	if m != nil {
@@ -325,14 +454,29 @@ func (m *CreateTableRequest) GetSplitKeys() [][]byte {
 	return nil
 }
 
+func (m *CreateTableRequest) GetNonceGroup() uint64 {
+	if m != nil && m.NonceGroup != nil {
+		return *m.NonceGroup
+	}
+	return Default_CreateTableRequest_NonceGroup
+}
+
+func (m *CreateTableRequest) GetNonce() uint64 {
+	if m != nil && m.Nonce != nil {
+		return *m.Nonce
+	}
+	return Default_CreateTableRequest_Nonce
+}
+
 type CreateTableResponse struct {
-	ProcId           *uint64 `protobuf:"varint,1,opt,name=proc_id" json:"proc_id,omitempty"`
+	ProcId           *uint64 `protobuf:"varint,1,opt,name=proc_id,json=procId" json:"proc_id,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *CreateTableResponse) Reset()         { *m = CreateTableResponse{} }
-func (m *CreateTableResponse) String() string { return proto.CompactTextString(m) }
-func (*CreateTableResponse) ProtoMessage()    {}
+func (m *CreateTableResponse) Reset()                    { *m = CreateTableResponse{} }
+func (m *CreateTableResponse) String() string            { return proto.CompactTextString(m) }
+func (*CreateTableResponse) ProtoMessage()               {}
+func (*CreateTableResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{17} }
 
 func (m *CreateTableResponse) GetProcId() uint64 {
 	if m != nil && m.ProcId != nil {
@@ -342,13 +486,19 @@ func (m *CreateTableResponse) GetProcId() uint64 {
 }
 
 type DeleteTableRequest struct {
-	TableName        *TableName `protobuf:"bytes,1,req,name=table_name" json:"table_name,omitempty"`
+	TableName        *TableName `protobuf:"bytes,1,req,name=table_name,json=tableName" json:"table_name,omitempty"`
+	NonceGroup       *uint64    `protobuf:"varint,2,opt,name=nonce_group,json=nonceGroup,def=0" json:"nonce_group,omitempty"`
+	Nonce            *uint64    `protobuf:"varint,3,opt,name=nonce,def=0" json:"nonce,omitempty"`
 	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (m *DeleteTableRequest) Reset()         { *m = DeleteTableRequest{} }
-func (m *DeleteTableRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteTableRequest) ProtoMessage()    {}
+func (m *DeleteTableRequest) Reset()                    { *m = DeleteTableRequest{} }
+func (m *DeleteTableRequest) String() string            { return proto.CompactTextString(m) }
+func (*DeleteTableRequest) ProtoMessage()               {}
+func (*DeleteTableRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{18} }
+
+const Default_DeleteTableRequest_NonceGroup uint64 = 0
+const Default_DeleteTableRequest_Nonce uint64 = 0
 
 func (m *DeleteTableRequest) GetTableName() *TableName {
 	if m != nil {
@@ -357,14 +507,29 @@ func (m *DeleteTableRequest) GetTableName() *TableName {
 	return nil
 }
 
+func (m *DeleteTableRequest) GetNonceGroup() uint64 {
+	if m != nil && m.NonceGroup != nil {
+		return *m.NonceGroup
+	}
+	return Default_DeleteTableRequest_NonceGroup
+}
+
+func (m *DeleteTableRequest) GetNonce() uint64 {
+	if m != nil && m.Nonce != nil {
+		return *m.Nonce
+	}
+	return Default_DeleteTableRequest_Nonce
+}
+
 type DeleteTableResponse struct {
-	ProcId           *uint64 `protobuf:"varint,1,opt,name=proc_id" json:"proc_id,omitempty"`
+	ProcId           *uint64 `protobuf:"varint,1,opt,name=proc_id,json=procId" json:"proc_id,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DeleteTableResponse) Reset()         { *m = DeleteTableResponse{} }
-func (m *DeleteTableResponse) String() string { return proto.CompactTextString(m) }
-func (*DeleteTableResponse) ProtoMessage()    {}
+func (m *DeleteTableResponse) Reset()                    { *m = DeleteTableResponse{} }
+func (m *DeleteTableResponse) String() string            { return proto.CompactTextString(m) }
+func (*DeleteTableResponse) ProtoMessage()               {}
+func (*DeleteTableResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{19} }
 
 func (m *DeleteTableResponse) GetProcId() uint64 {
 	if m != nil && m.ProcId != nil {
@@ -376,14 +541,19 @@ func (m *DeleteTableResponse) GetProcId() uint64 {
 type TruncateTableRequest struct {
 	TableName        *TableName `protobuf:"bytes,1,req,name=tableName" json:"tableName,omitempty"`
 	PreserveSplits   *bool      `protobuf:"varint,2,opt,name=preserveSplits,def=0" json:"preserveSplits,omitempty"`
+	NonceGroup       *uint64    `protobuf:"varint,3,opt,name=nonce_group,json=nonceGroup,def=0" json:"nonce_group,omitempty"`
+	Nonce            *uint64    `protobuf:"varint,4,opt,name=nonce,def=0" json:"nonce,omitempty"`
 	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (m *TruncateTableRequest) Reset()         { *m = TruncateTableRequest{} }
-func (m *TruncateTableRequest) String() string { return proto.CompactTextString(m) }
-func (*TruncateTableRequest) ProtoMessage()    {}
+func (m *TruncateTableRequest) Reset()                    { *m = TruncateTableRequest{} }
+func (m *TruncateTableRequest) String() string            { return proto.CompactTextString(m) }
+func (*TruncateTableRequest) ProtoMessage()               {}
+func (*TruncateTableRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{20} }
 
 const Default_TruncateTableRequest_PreserveSplits bool = false
+const Default_TruncateTableRequest_NonceGroup uint64 = 0
+const Default_TruncateTableRequest_Nonce uint64 = 0
 
 func (m *TruncateTableRequest) GetTableName() *TableName {
 	if m != nil {
@@ -399,22 +569,43 @@ func (m *TruncateTableRequest) GetPreserveSplits() bool {
 	return Default_TruncateTableRequest_PreserveSplits
 }
 
+func (m *TruncateTableRequest) GetNonceGroup() uint64 {
+	if m != nil && m.NonceGroup != nil {
+		return *m.NonceGroup
+	}
+	return Default_TruncateTableRequest_NonceGroup
+}
+
+func (m *TruncateTableRequest) GetNonce() uint64 {
+	if m != nil && m.Nonce != nil {
+		return *m.Nonce
+	}
+	return Default_TruncateTableRequest_Nonce
+}
+
 type TruncateTableResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *TruncateTableResponse) Reset()         { *m = TruncateTableResponse{} }
-func (m *TruncateTableResponse) String() string { return proto.CompactTextString(m) }
-func (*TruncateTableResponse) ProtoMessage()    {}
+func (m *TruncateTableResponse) Reset()                    { *m = TruncateTableResponse{} }
+func (m *TruncateTableResponse) String() string            { return proto.CompactTextString(m) }
+func (*TruncateTableResponse) ProtoMessage()               {}
+func (*TruncateTableResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{21} }
 
 type EnableTableRequest struct {
-	TableName        *TableName `protobuf:"bytes,1,req,name=table_name" json:"table_name,omitempty"`
+	TableName        *TableName `protobuf:"bytes,1,req,name=table_name,json=tableName" json:"table_name,omitempty"`
+	NonceGroup       *uint64    `protobuf:"varint,2,opt,name=nonce_group,json=nonceGroup,def=0" json:"nonce_group,omitempty"`
+	Nonce            *uint64    `protobuf:"varint,3,opt,name=nonce,def=0" json:"nonce,omitempty"`
 	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (m *EnableTableRequest) Reset()         { *m = EnableTableRequest{} }
-func (m *EnableTableRequest) String() string { return proto.CompactTextString(m) }
-func (*EnableTableRequest) ProtoMessage()    {}
+func (m *EnableTableRequest) Reset()                    { *m = EnableTableRequest{} }
+func (m *EnableTableRequest) String() string            { return proto.CompactTextString(m) }
+func (*EnableTableRequest) ProtoMessage()               {}
+func (*EnableTableRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{22} }
+
+const Default_EnableTableRequest_NonceGroup uint64 = 0
+const Default_EnableTableRequest_Nonce uint64 = 0
 
 func (m *EnableTableRequest) GetTableName() *TableName {
 	if m != nil {
@@ -423,14 +614,29 @@ func (m *EnableTableRequest) GetTableName() *TableName {
 	return nil
 }
 
+func (m *EnableTableRequest) GetNonceGroup() uint64 {
+	if m != nil && m.NonceGroup != nil {
+		return *m.NonceGroup
+	}
+	return Default_EnableTableRequest_NonceGroup
+}
+
+func (m *EnableTableRequest) GetNonce() uint64 {
+	if m != nil && m.Nonce != nil {
+		return *m.Nonce
+	}
+	return Default_EnableTableRequest_Nonce
+}
+
 type EnableTableResponse struct {
-	ProcId           *uint64 `protobuf:"varint,1,opt,name=proc_id" json:"proc_id,omitempty"`
+	ProcId           *uint64 `protobuf:"varint,1,opt,name=proc_id,json=procId" json:"proc_id,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *EnableTableResponse) Reset()         { *m = EnableTableResponse{} }
-func (m *EnableTableResponse) String() string { return proto.CompactTextString(m) }
-func (*EnableTableResponse) ProtoMessage()    {}
+func (m *EnableTableResponse) Reset()                    { *m = EnableTableResponse{} }
+func (m *EnableTableResponse) String() string            { return proto.CompactTextString(m) }
+func (*EnableTableResponse) ProtoMessage()               {}
+func (*EnableTableResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{23} }
 
 func (m *EnableTableResponse) GetProcId() uint64 {
 	if m != nil && m.ProcId != nil {
@@ -440,13 +646,19 @@ func (m *EnableTableResponse) GetProcId() uint64 {
 }
 
 type DisableTableRequest struct {
-	TableName        *TableName `protobuf:"bytes,1,req,name=table_name" json:"table_name,omitempty"`
+	TableName        *TableName `protobuf:"bytes,1,req,name=table_name,json=tableName" json:"table_name,omitempty"`
+	NonceGroup       *uint64    `protobuf:"varint,2,opt,name=nonce_group,json=nonceGroup,def=0" json:"nonce_group,omitempty"`
+	Nonce            *uint64    `protobuf:"varint,3,opt,name=nonce,def=0" json:"nonce,omitempty"`
 	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (m *DisableTableRequest) Reset()         { *m = DisableTableRequest{} }
-func (m *DisableTableRequest) String() string { return proto.CompactTextString(m) }
-func (*DisableTableRequest) ProtoMessage()    {}
+func (m *DisableTableRequest) Reset()                    { *m = DisableTableRequest{} }
+func (m *DisableTableRequest) String() string            { return proto.CompactTextString(m) }
+func (*DisableTableRequest) ProtoMessage()               {}
+func (*DisableTableRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{24} }
+
+const Default_DisableTableRequest_NonceGroup uint64 = 0
+const Default_DisableTableRequest_Nonce uint64 = 0
 
 func (m *DisableTableRequest) GetTableName() *TableName {
 	if m != nil {
@@ -455,14 +667,29 @@ func (m *DisableTableRequest) GetTableName() *TableName {
 	return nil
 }
 
+func (m *DisableTableRequest) GetNonceGroup() uint64 {
+	if m != nil && m.NonceGroup != nil {
+		return *m.NonceGroup
+	}
+	return Default_DisableTableRequest_NonceGroup
+}
+
+func (m *DisableTableRequest) GetNonce() uint64 {
+	if m != nil && m.Nonce != nil {
+		return *m.Nonce
+	}
+	return Default_DisableTableRequest_Nonce
+}
+
 type DisableTableResponse struct {
-	ProcId           *uint64 `protobuf:"varint,1,opt,name=proc_id" json:"proc_id,omitempty"`
+	ProcId           *uint64 `protobuf:"varint,1,opt,name=proc_id,json=procId" json:"proc_id,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DisableTableResponse) Reset()         { *m = DisableTableResponse{} }
-func (m *DisableTableResponse) String() string { return proto.CompactTextString(m) }
-func (*DisableTableResponse) ProtoMessage()    {}
+func (m *DisableTableResponse) Reset()                    { *m = DisableTableResponse{} }
+func (m *DisableTableResponse) String() string            { return proto.CompactTextString(m) }
+func (*DisableTableResponse) ProtoMessage()               {}
+func (*DisableTableResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{25} }
 
 func (m *DisableTableResponse) GetProcId() uint64 {
 	if m != nil && m.ProcId != nil {
@@ -472,14 +699,20 @@ func (m *DisableTableResponse) GetProcId() uint64 {
 }
 
 type ModifyTableRequest struct {
-	TableName        *TableName   `protobuf:"bytes,1,req,name=table_name" json:"table_name,omitempty"`
-	TableSchema      *TableSchema `protobuf:"bytes,2,req,name=table_schema" json:"table_schema,omitempty"`
+	TableName        *TableName   `protobuf:"bytes,1,req,name=table_name,json=tableName" json:"table_name,omitempty"`
+	TableSchema      *TableSchema `protobuf:"bytes,2,req,name=table_schema,json=tableSchema" json:"table_schema,omitempty"`
+	NonceGroup       *uint64      `protobuf:"varint,3,opt,name=nonce_group,json=nonceGroup,def=0" json:"nonce_group,omitempty"`
+	Nonce            *uint64      `protobuf:"varint,4,opt,name=nonce,def=0" json:"nonce,omitempty"`
 	XXX_unrecognized []byte       `json:"-"`
 }
 
-func (m *ModifyTableRequest) Reset()         { *m = ModifyTableRequest{} }
-func (m *ModifyTableRequest) String() string { return proto.CompactTextString(m) }
-func (*ModifyTableRequest) ProtoMessage()    {}
+func (m *ModifyTableRequest) Reset()                    { *m = ModifyTableRequest{} }
+func (m *ModifyTableRequest) String() string            { return proto.CompactTextString(m) }
+func (*ModifyTableRequest) ProtoMessage()               {}
+func (*ModifyTableRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{26} }
+
+const Default_ModifyTableRequest_NonceGroup uint64 = 0
+const Default_ModifyTableRequest_Nonce uint64 = 0
 
 func (m *ModifyTableRequest) GetTableName() *TableName {
 	if m != nil {
@@ -495,22 +728,38 @@ func (m *ModifyTableRequest) GetTableSchema() *TableSchema {
 	return nil
 }
 
+func (m *ModifyTableRequest) GetNonceGroup() uint64 {
+	if m != nil && m.NonceGroup != nil {
+		return *m.NonceGroup
+	}
+	return Default_ModifyTableRequest_NonceGroup
+}
+
+func (m *ModifyTableRequest) GetNonce() uint64 {
+	if m != nil && m.Nonce != nil {
+		return *m.Nonce
+	}
+	return Default_ModifyTableRequest_Nonce
+}
+
 type ModifyTableResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ModifyTableResponse) Reset()         { *m = ModifyTableResponse{} }
-func (m *ModifyTableResponse) String() string { return proto.CompactTextString(m) }
-func (*ModifyTableResponse) ProtoMessage()    {}
+func (m *ModifyTableResponse) Reset()                    { *m = ModifyTableResponse{} }
+func (m *ModifyTableResponse) String() string            { return proto.CompactTextString(m) }
+func (*ModifyTableResponse) ProtoMessage()               {}
+func (*ModifyTableResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{27} }
 
 type CreateNamespaceRequest struct {
 	NamespaceDescriptor *NamespaceDescriptor `protobuf:"bytes,1,req,name=namespaceDescriptor" json:"namespaceDescriptor,omitempty"`
 	XXX_unrecognized    []byte               `json:"-"`
 }
 
-func (m *CreateNamespaceRequest) Reset()         { *m = CreateNamespaceRequest{} }
-func (m *CreateNamespaceRequest) String() string { return proto.CompactTextString(m) }
-func (*CreateNamespaceRequest) ProtoMessage()    {}
+func (m *CreateNamespaceRequest) Reset()                    { *m = CreateNamespaceRequest{} }
+func (m *CreateNamespaceRequest) String() string            { return proto.CompactTextString(m) }
+func (*CreateNamespaceRequest) ProtoMessage()               {}
+func (*CreateNamespaceRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{28} }
 
 func (m *CreateNamespaceRequest) GetNamespaceDescriptor() *NamespaceDescriptor {
 	if m != nil {
@@ -523,18 +772,20 @@ type CreateNamespaceResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *CreateNamespaceResponse) Reset()         { *m = CreateNamespaceResponse{} }
-func (m *CreateNamespaceResponse) String() string { return proto.CompactTextString(m) }
-func (*CreateNamespaceResponse) ProtoMessage()    {}
+func (m *CreateNamespaceResponse) Reset()                    { *m = CreateNamespaceResponse{} }
+func (m *CreateNamespaceResponse) String() string            { return proto.CompactTextString(m) }
+func (*CreateNamespaceResponse) ProtoMessage()               {}
+func (*CreateNamespaceResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{29} }
 
 type DeleteNamespaceRequest struct {
 	NamespaceName    *string `protobuf:"bytes,1,req,name=namespaceName" json:"namespaceName,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DeleteNamespaceRequest) Reset()         { *m = DeleteNamespaceRequest{} }
-func (m *DeleteNamespaceRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteNamespaceRequest) ProtoMessage()    {}
+func (m *DeleteNamespaceRequest) Reset()                    { *m = DeleteNamespaceRequest{} }
+func (m *DeleteNamespaceRequest) String() string            { return proto.CompactTextString(m) }
+func (*DeleteNamespaceRequest) ProtoMessage()               {}
+func (*DeleteNamespaceRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{30} }
 
 func (m *DeleteNamespaceRequest) GetNamespaceName() string {
 	if m != nil && m.NamespaceName != nil {
@@ -547,18 +798,20 @@ type DeleteNamespaceResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DeleteNamespaceResponse) Reset()         { *m = DeleteNamespaceResponse{} }
-func (m *DeleteNamespaceResponse) String() string { return proto.CompactTextString(m) }
-func (*DeleteNamespaceResponse) ProtoMessage()    {}
+func (m *DeleteNamespaceResponse) Reset()                    { *m = DeleteNamespaceResponse{} }
+func (m *DeleteNamespaceResponse) String() string            { return proto.CompactTextString(m) }
+func (*DeleteNamespaceResponse) ProtoMessage()               {}
+func (*DeleteNamespaceResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{31} }
 
 type ModifyNamespaceRequest struct {
 	NamespaceDescriptor *NamespaceDescriptor `protobuf:"bytes,1,req,name=namespaceDescriptor" json:"namespaceDescriptor,omitempty"`
 	XXX_unrecognized    []byte               `json:"-"`
 }
 
-func (m *ModifyNamespaceRequest) Reset()         { *m = ModifyNamespaceRequest{} }
-func (m *ModifyNamespaceRequest) String() string { return proto.CompactTextString(m) }
-func (*ModifyNamespaceRequest) ProtoMessage()    {}
+func (m *ModifyNamespaceRequest) Reset()                    { *m = ModifyNamespaceRequest{} }
+func (m *ModifyNamespaceRequest) String() string            { return proto.CompactTextString(m) }
+func (*ModifyNamespaceRequest) ProtoMessage()               {}
+func (*ModifyNamespaceRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{32} }
 
 func (m *ModifyNamespaceRequest) GetNamespaceDescriptor() *NamespaceDescriptor {
 	if m != nil {
@@ -571,18 +824,20 @@ type ModifyNamespaceResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ModifyNamespaceResponse) Reset()         { *m = ModifyNamespaceResponse{} }
-func (m *ModifyNamespaceResponse) String() string { return proto.CompactTextString(m) }
-func (*ModifyNamespaceResponse) ProtoMessage()    {}
+func (m *ModifyNamespaceResponse) Reset()                    { *m = ModifyNamespaceResponse{} }
+func (m *ModifyNamespaceResponse) String() string            { return proto.CompactTextString(m) }
+func (*ModifyNamespaceResponse) ProtoMessage()               {}
+func (*ModifyNamespaceResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{33} }
 
 type GetNamespaceDescriptorRequest struct {
 	NamespaceName    *string `protobuf:"bytes,1,req,name=namespaceName" json:"namespaceName,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetNamespaceDescriptorRequest) Reset()         { *m = GetNamespaceDescriptorRequest{} }
-func (m *GetNamespaceDescriptorRequest) String() string { return proto.CompactTextString(m) }
-func (*GetNamespaceDescriptorRequest) ProtoMessage()    {}
+func (m *GetNamespaceDescriptorRequest) Reset()                    { *m = GetNamespaceDescriptorRequest{} }
+func (m *GetNamespaceDescriptorRequest) String() string            { return proto.CompactTextString(m) }
+func (*GetNamespaceDescriptorRequest) ProtoMessage()               {}
+func (*GetNamespaceDescriptorRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{34} }
 
 func (m *GetNamespaceDescriptorRequest) GetNamespaceName() string {
 	if m != nil && m.NamespaceName != nil {
@@ -599,6 +854,9 @@ type GetNamespaceDescriptorResponse struct {
 func (m *GetNamespaceDescriptorResponse) Reset()         { *m = GetNamespaceDescriptorResponse{} }
 func (m *GetNamespaceDescriptorResponse) String() string { return proto.CompactTextString(m) }
 func (*GetNamespaceDescriptorResponse) ProtoMessage()    {}
+func (*GetNamespaceDescriptorResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{35}
+}
 
 func (m *GetNamespaceDescriptorResponse) GetNamespaceDescriptor() *NamespaceDescriptor {
 	if m != nil {
@@ -614,6 +872,9 @@ type ListNamespaceDescriptorsRequest struct {
 func (m *ListNamespaceDescriptorsRequest) Reset()         { *m = ListNamespaceDescriptorsRequest{} }
 func (m *ListNamespaceDescriptorsRequest) String() string { return proto.CompactTextString(m) }
 func (*ListNamespaceDescriptorsRequest) ProtoMessage()    {}
+func (*ListNamespaceDescriptorsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{36}
+}
 
 type ListNamespaceDescriptorsResponse struct {
 	NamespaceDescriptor []*NamespaceDescriptor `protobuf:"bytes,1,rep,name=namespaceDescriptor" json:"namespaceDescriptor,omitempty"`
@@ -623,6 +884,9 @@ type ListNamespaceDescriptorsResponse struct {
 func (m *ListNamespaceDescriptorsResponse) Reset()         { *m = ListNamespaceDescriptorsResponse{} }
 func (m *ListNamespaceDescriptorsResponse) String() string { return proto.CompactTextString(m) }
 func (*ListNamespaceDescriptorsResponse) ProtoMessage()    {}
+func (*ListNamespaceDescriptorsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{37}
+}
 
 func (m *ListNamespaceDescriptorsResponse) GetNamespaceDescriptor() []*NamespaceDescriptor {
 	if m != nil {
@@ -641,6 +905,9 @@ func (m *ListTableDescriptorsByNamespaceRequest) Reset() {
 }
 func (m *ListTableDescriptorsByNamespaceRequest) String() string { return proto.CompactTextString(m) }
 func (*ListTableDescriptorsByNamespaceRequest) ProtoMessage()    {}
+func (*ListTableDescriptorsByNamespaceRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{38}
+}
 
 func (m *ListTableDescriptorsByNamespaceRequest) GetNamespaceName() string {
 	if m != nil && m.NamespaceName != nil {
@@ -659,6 +926,9 @@ func (m *ListTableDescriptorsByNamespaceResponse) Reset() {
 }
 func (m *ListTableDescriptorsByNamespaceResponse) String() string { return proto.CompactTextString(m) }
 func (*ListTableDescriptorsByNamespaceResponse) ProtoMessage()    {}
+func (*ListTableDescriptorsByNamespaceResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{39}
+}
 
 func (m *ListTableDescriptorsByNamespaceResponse) GetTableSchema() []*TableSchema {
 	if m != nil {
@@ -675,6 +945,9 @@ type ListTableNamesByNamespaceRequest struct {
 func (m *ListTableNamesByNamespaceRequest) Reset()         { *m = ListTableNamesByNamespaceRequest{} }
 func (m *ListTableNamesByNamespaceRequest) String() string { return proto.CompactTextString(m) }
 func (*ListTableNamesByNamespaceRequest) ProtoMessage()    {}
+func (*ListTableNamesByNamespaceRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{40}
+}
 
 func (m *ListTableNamesByNamespaceRequest) GetNamespaceName() string {
 	if m != nil && m.NamespaceName != nil {
@@ -691,6 +964,9 @@ type ListTableNamesByNamespaceResponse struct {
 func (m *ListTableNamesByNamespaceResponse) Reset()         { *m = ListTableNamesByNamespaceResponse{} }
 func (m *ListTableNamesByNamespaceResponse) String() string { return proto.CompactTextString(m) }
 func (*ListTableNamesByNamespaceResponse) ProtoMessage()    {}
+func (*ListTableNamesByNamespaceResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{41}
+}
 
 func (m *ListTableNamesByNamespaceResponse) GetTableName() []*TableName {
 	if m != nil {
@@ -703,50 +979,56 @@ type ShutdownRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ShutdownRequest) Reset()         { *m = ShutdownRequest{} }
-func (m *ShutdownRequest) String() string { return proto.CompactTextString(m) }
-func (*ShutdownRequest) ProtoMessage()    {}
+func (m *ShutdownRequest) Reset()                    { *m = ShutdownRequest{} }
+func (m *ShutdownRequest) String() string            { return proto.CompactTextString(m) }
+func (*ShutdownRequest) ProtoMessage()               {}
+func (*ShutdownRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{42} }
 
 type ShutdownResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ShutdownResponse) Reset()         { *m = ShutdownResponse{} }
-func (m *ShutdownResponse) String() string { return proto.CompactTextString(m) }
-func (*ShutdownResponse) ProtoMessage()    {}
+func (m *ShutdownResponse) Reset()                    { *m = ShutdownResponse{} }
+func (m *ShutdownResponse) String() string            { return proto.CompactTextString(m) }
+func (*ShutdownResponse) ProtoMessage()               {}
+func (*ShutdownResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{43} }
 
 type StopMasterRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *StopMasterRequest) Reset()         { *m = StopMasterRequest{} }
-func (m *StopMasterRequest) String() string { return proto.CompactTextString(m) }
-func (*StopMasterRequest) ProtoMessage()    {}
+func (m *StopMasterRequest) Reset()                    { *m = StopMasterRequest{} }
+func (m *StopMasterRequest) String() string            { return proto.CompactTextString(m) }
+func (*StopMasterRequest) ProtoMessage()               {}
+func (*StopMasterRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{44} }
 
 type StopMasterResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *StopMasterResponse) Reset()         { *m = StopMasterResponse{} }
-func (m *StopMasterResponse) String() string { return proto.CompactTextString(m) }
-func (*StopMasterResponse) ProtoMessage()    {}
+func (m *StopMasterResponse) Reset()                    { *m = StopMasterResponse{} }
+func (m *StopMasterResponse) String() string            { return proto.CompactTextString(m) }
+func (*StopMasterResponse) ProtoMessage()               {}
+func (*StopMasterResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{45} }
 
 type BalanceRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *BalanceRequest) Reset()         { *m = BalanceRequest{} }
-func (m *BalanceRequest) String() string { return proto.CompactTextString(m) }
-func (*BalanceRequest) ProtoMessage()    {}
+func (m *BalanceRequest) Reset()                    { *m = BalanceRequest{} }
+func (m *BalanceRequest) String() string            { return proto.CompactTextString(m) }
+func (*BalanceRequest) ProtoMessage()               {}
+func (*BalanceRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{46} }
 
 type BalanceResponse struct {
-	BalancerRan      *bool  `protobuf:"varint,1,req,name=balancer_ran" json:"balancer_ran,omitempty"`
+	BalancerRan      *bool  `protobuf:"varint,1,req,name=balancer_ran,json=balancerRan" json:"balancer_ran,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *BalanceResponse) Reset()         { *m = BalanceResponse{} }
-func (m *BalanceResponse) String() string { return proto.CompactTextString(m) }
-func (*BalanceResponse) ProtoMessage()    {}
+func (m *BalanceResponse) Reset()                    { *m = BalanceResponse{} }
+func (m *BalanceResponse) String() string            { return proto.CompactTextString(m) }
+func (*BalanceResponse) ProtoMessage()               {}
+func (*BalanceResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{47} }
 
 func (m *BalanceResponse) GetBalancerRan() bool {
 	if m != nil && m.BalancerRan != nil {
@@ -761,9 +1043,10 @@ type SetBalancerRunningRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SetBalancerRunningRequest) Reset()         { *m = SetBalancerRunningRequest{} }
-func (m *SetBalancerRunningRequest) String() string { return proto.CompactTextString(m) }
-func (*SetBalancerRunningRequest) ProtoMessage()    {}
+func (m *SetBalancerRunningRequest) Reset()                    { *m = SetBalancerRunningRequest{} }
+func (m *SetBalancerRunningRequest) String() string            { return proto.CompactTextString(m) }
+func (*SetBalancerRunningRequest) ProtoMessage()               {}
+func (*SetBalancerRunningRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{48} }
 
 func (m *SetBalancerRunningRequest) GetOn() bool {
 	if m != nil && m.On != nil {
@@ -780,13 +1063,14 @@ func (m *SetBalancerRunningRequest) GetSynchronous() bool {
 }
 
 type SetBalancerRunningResponse struct {
-	PrevBalanceValue *bool  `protobuf:"varint,1,opt,name=prev_balance_value" json:"prev_balance_value,omitempty"`
+	PrevBalanceValue *bool  `protobuf:"varint,1,opt,name=prev_balance_value,json=prevBalanceValue" json:"prev_balance_value,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SetBalancerRunningResponse) Reset()         { *m = SetBalancerRunningResponse{} }
-func (m *SetBalancerRunningResponse) String() string { return proto.CompactTextString(m) }
-func (*SetBalancerRunningResponse) ProtoMessage()    {}
+func (m *SetBalancerRunningResponse) Reset()                    { *m = SetBalancerRunningResponse{} }
+func (m *SetBalancerRunningResponse) String() string            { return proto.CompactTextString(m) }
+func (*SetBalancerRunningResponse) ProtoMessage()               {}
+func (*SetBalancerRunningResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{49} }
 
 func (m *SetBalancerRunningResponse) GetPrevBalanceValue() bool {
 	if m != nil && m.PrevBalanceValue != nil {
@@ -799,20 +1083,108 @@ type IsBalancerEnabledRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *IsBalancerEnabledRequest) Reset()         { *m = IsBalancerEnabledRequest{} }
-func (m *IsBalancerEnabledRequest) String() string { return proto.CompactTextString(m) }
-func (*IsBalancerEnabledRequest) ProtoMessage()    {}
+func (m *IsBalancerEnabledRequest) Reset()                    { *m = IsBalancerEnabledRequest{} }
+func (m *IsBalancerEnabledRequest) String() string            { return proto.CompactTextString(m) }
+func (*IsBalancerEnabledRequest) ProtoMessage()               {}
+func (*IsBalancerEnabledRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{50} }
 
 type IsBalancerEnabledResponse struct {
 	Enabled          *bool  `protobuf:"varint,1,req,name=enabled" json:"enabled,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *IsBalancerEnabledResponse) Reset()         { *m = IsBalancerEnabledResponse{} }
-func (m *IsBalancerEnabledResponse) String() string { return proto.CompactTextString(m) }
-func (*IsBalancerEnabledResponse) ProtoMessage()    {}
+func (m *IsBalancerEnabledResponse) Reset()                    { *m = IsBalancerEnabledResponse{} }
+func (m *IsBalancerEnabledResponse) String() string            { return proto.CompactTextString(m) }
+func (*IsBalancerEnabledResponse) ProtoMessage()               {}
+func (*IsBalancerEnabledResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{51} }
 
 func (m *IsBalancerEnabledResponse) GetEnabled() bool {
+	if m != nil && m.Enabled != nil {
+		return *m.Enabled
+	}
+	return false
+}
+
+type NormalizeRequest struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *NormalizeRequest) Reset()                    { *m = NormalizeRequest{} }
+func (m *NormalizeRequest) String() string            { return proto.CompactTextString(m) }
+func (*NormalizeRequest) ProtoMessage()               {}
+func (*NormalizeRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{52} }
+
+type NormalizeResponse struct {
+	NormalizerRan    *bool  `protobuf:"varint,1,req,name=normalizer_ran,json=normalizerRan" json:"normalizer_ran,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *NormalizeResponse) Reset()                    { *m = NormalizeResponse{} }
+func (m *NormalizeResponse) String() string            { return proto.CompactTextString(m) }
+func (*NormalizeResponse) ProtoMessage()               {}
+func (*NormalizeResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{53} }
+
+func (m *NormalizeResponse) GetNormalizerRan() bool {
+	if m != nil && m.NormalizerRan != nil {
+		return *m.NormalizerRan
+	}
+	return false
+}
+
+type SetNormalizerRunningRequest struct {
+	On               *bool  `protobuf:"varint,1,req,name=on" json:"on,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *SetNormalizerRunningRequest) Reset()                    { *m = SetNormalizerRunningRequest{} }
+func (m *SetNormalizerRunningRequest) String() string            { return proto.CompactTextString(m) }
+func (*SetNormalizerRunningRequest) ProtoMessage()               {}
+func (*SetNormalizerRunningRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{54} }
+
+func (m *SetNormalizerRunningRequest) GetOn() bool {
+	if m != nil && m.On != nil {
+		return *m.On
+	}
+	return false
+}
+
+type SetNormalizerRunningResponse struct {
+	PrevNormalizerValue *bool  `protobuf:"varint,1,opt,name=prev_normalizer_value,json=prevNormalizerValue" json:"prev_normalizer_value,omitempty"`
+	XXX_unrecognized    []byte `json:"-"`
+}
+
+func (m *SetNormalizerRunningResponse) Reset()                    { *m = SetNormalizerRunningResponse{} }
+func (m *SetNormalizerRunningResponse) String() string            { return proto.CompactTextString(m) }
+func (*SetNormalizerRunningResponse) ProtoMessage()               {}
+func (*SetNormalizerRunningResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{55} }
+
+func (m *SetNormalizerRunningResponse) GetPrevNormalizerValue() bool {
+	if m != nil && m.PrevNormalizerValue != nil {
+		return *m.PrevNormalizerValue
+	}
+	return false
+}
+
+type IsNormalizerEnabledRequest struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *IsNormalizerEnabledRequest) Reset()                    { *m = IsNormalizerEnabledRequest{} }
+func (m *IsNormalizerEnabledRequest) String() string            { return proto.CompactTextString(m) }
+func (*IsNormalizerEnabledRequest) ProtoMessage()               {}
+func (*IsNormalizerEnabledRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{56} }
+
+type IsNormalizerEnabledResponse struct {
+	Enabled          *bool  `protobuf:"varint,1,req,name=enabled" json:"enabled,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *IsNormalizerEnabledResponse) Reset()                    { *m = IsNormalizerEnabledResponse{} }
+func (m *IsNormalizerEnabledResponse) String() string            { return proto.CompactTextString(m) }
+func (*IsNormalizerEnabledResponse) ProtoMessage()               {}
+func (*IsNormalizerEnabledResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{57} }
+
+func (m *IsNormalizerEnabledResponse) GetEnabled() bool {
 	if m != nil && m.Enabled != nil {
 		return *m.Enabled
 	}
@@ -823,18 +1195,20 @@ type RunCatalogScanRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RunCatalogScanRequest) Reset()         { *m = RunCatalogScanRequest{} }
-func (m *RunCatalogScanRequest) String() string { return proto.CompactTextString(m) }
-func (*RunCatalogScanRequest) ProtoMessage()    {}
+func (m *RunCatalogScanRequest) Reset()                    { *m = RunCatalogScanRequest{} }
+func (m *RunCatalogScanRequest) String() string            { return proto.CompactTextString(m) }
+func (*RunCatalogScanRequest) ProtoMessage()               {}
+func (*RunCatalogScanRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{58} }
 
 type RunCatalogScanResponse struct {
-	ScanResult       *int32 `protobuf:"varint,1,opt,name=scan_result" json:"scan_result,omitempty"`
+	ScanResult       *int32 `protobuf:"varint,1,opt,name=scan_result,json=scanResult" json:"scan_result,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RunCatalogScanResponse) Reset()         { *m = RunCatalogScanResponse{} }
-func (m *RunCatalogScanResponse) String() string { return proto.CompactTextString(m) }
-func (*RunCatalogScanResponse) ProtoMessage()    {}
+func (m *RunCatalogScanResponse) Reset()                    { *m = RunCatalogScanResponse{} }
+func (m *RunCatalogScanResponse) String() string            { return proto.CompactTextString(m) }
+func (*RunCatalogScanResponse) ProtoMessage()               {}
+func (*RunCatalogScanResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{59} }
 
 func (m *RunCatalogScanResponse) GetScanResult() int32 {
 	if m != nil && m.ScanResult != nil {
@@ -848,9 +1222,10 @@ type EnableCatalogJanitorRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EnableCatalogJanitorRequest) Reset()         { *m = EnableCatalogJanitorRequest{} }
-func (m *EnableCatalogJanitorRequest) String() string { return proto.CompactTextString(m) }
-func (*EnableCatalogJanitorRequest) ProtoMessage()    {}
+func (m *EnableCatalogJanitorRequest) Reset()                    { *m = EnableCatalogJanitorRequest{} }
+func (m *EnableCatalogJanitorRequest) String() string            { return proto.CompactTextString(m) }
+func (*EnableCatalogJanitorRequest) ProtoMessage()               {}
+func (*EnableCatalogJanitorRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{60} }
 
 func (m *EnableCatalogJanitorRequest) GetEnable() bool {
 	if m != nil && m.Enable != nil {
@@ -860,13 +1235,14 @@ func (m *EnableCatalogJanitorRequest) GetEnable() bool {
 }
 
 type EnableCatalogJanitorResponse struct {
-	PrevValue        *bool  `protobuf:"varint,1,opt,name=prev_value" json:"prev_value,omitempty"`
+	PrevValue        *bool  `protobuf:"varint,1,opt,name=prev_value,json=prevValue" json:"prev_value,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EnableCatalogJanitorResponse) Reset()         { *m = EnableCatalogJanitorResponse{} }
-func (m *EnableCatalogJanitorResponse) String() string { return proto.CompactTextString(m) }
-func (*EnableCatalogJanitorResponse) ProtoMessage()    {}
+func (m *EnableCatalogJanitorResponse) Reset()                    { *m = EnableCatalogJanitorResponse{} }
+func (m *EnableCatalogJanitorResponse) String() string            { return proto.CompactTextString(m) }
+func (*EnableCatalogJanitorResponse) ProtoMessage()               {}
+func (*EnableCatalogJanitorResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{61} }
 
 func (m *EnableCatalogJanitorResponse) GetPrevValue() bool {
 	if m != nil && m.PrevValue != nil {
@@ -882,6 +1258,9 @@ type IsCatalogJanitorEnabledRequest struct {
 func (m *IsCatalogJanitorEnabledRequest) Reset()         { *m = IsCatalogJanitorEnabledRequest{} }
 func (m *IsCatalogJanitorEnabledRequest) String() string { return proto.CompactTextString(m) }
 func (*IsCatalogJanitorEnabledRequest) ProtoMessage()    {}
+func (*IsCatalogJanitorEnabledRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{62}
+}
 
 type IsCatalogJanitorEnabledResponse struct {
 	Value            *bool  `protobuf:"varint,1,req,name=value" json:"value,omitempty"`
@@ -891,6 +1270,9 @@ type IsCatalogJanitorEnabledResponse struct {
 func (m *IsCatalogJanitorEnabledResponse) Reset()         { *m = IsCatalogJanitorEnabledResponse{} }
 func (m *IsCatalogJanitorEnabledResponse) String() string { return proto.CompactTextString(m) }
 func (*IsCatalogJanitorEnabledResponse) ProtoMessage()    {}
+func (*IsCatalogJanitorEnabledResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{63}
+}
 
 func (m *IsCatalogJanitorEnabledResponse) GetValue() bool {
 	if m != nil && m.Value != nil {
@@ -904,9 +1286,10 @@ type SnapshotRequest struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *SnapshotRequest) Reset()         { *m = SnapshotRequest{} }
-func (m *SnapshotRequest) String() string { return proto.CompactTextString(m) }
-func (*SnapshotRequest) ProtoMessage()    {}
+func (m *SnapshotRequest) Reset()                    { *m = SnapshotRequest{} }
+func (m *SnapshotRequest) String() string            { return proto.CompactTextString(m) }
+func (*SnapshotRequest) ProtoMessage()               {}
+func (*SnapshotRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{64} }
 
 func (m *SnapshotRequest) GetSnapshot() *SnapshotDescription {
 	if m != nil {
@@ -916,13 +1299,14 @@ func (m *SnapshotRequest) GetSnapshot() *SnapshotDescription {
 }
 
 type SnapshotResponse struct {
-	ExpectedTimeout  *int64 `protobuf:"varint,1,req,name=expected_timeout" json:"expected_timeout,omitempty"`
+	ExpectedTimeout  *int64 `protobuf:"varint,1,req,name=expected_timeout,json=expectedTimeout" json:"expected_timeout,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SnapshotResponse) Reset()         { *m = SnapshotResponse{} }
-func (m *SnapshotResponse) String() string { return proto.CompactTextString(m) }
-func (*SnapshotResponse) ProtoMessage()    {}
+func (m *SnapshotResponse) Reset()                    { *m = SnapshotResponse{} }
+func (m *SnapshotResponse) String() string            { return proto.CompactTextString(m) }
+func (*SnapshotResponse) ProtoMessage()               {}
+func (*SnapshotResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{65} }
 
 func (m *SnapshotResponse) GetExpectedTimeout() int64 {
 	if m != nil && m.ExpectedTimeout != nil {
@@ -935,18 +1319,20 @@ type GetCompletedSnapshotsRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *GetCompletedSnapshotsRequest) Reset()         { *m = GetCompletedSnapshotsRequest{} }
-func (m *GetCompletedSnapshotsRequest) String() string { return proto.CompactTextString(m) }
-func (*GetCompletedSnapshotsRequest) ProtoMessage()    {}
+func (m *GetCompletedSnapshotsRequest) Reset()                    { *m = GetCompletedSnapshotsRequest{} }
+func (m *GetCompletedSnapshotsRequest) String() string            { return proto.CompactTextString(m) }
+func (*GetCompletedSnapshotsRequest) ProtoMessage()               {}
+func (*GetCompletedSnapshotsRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{66} }
 
 type GetCompletedSnapshotsResponse struct {
 	Snapshots        []*SnapshotDescription `protobuf:"bytes,1,rep,name=snapshots" json:"snapshots,omitempty"`
 	XXX_unrecognized []byte                 `json:"-"`
 }
 
-func (m *GetCompletedSnapshotsResponse) Reset()         { *m = GetCompletedSnapshotsResponse{} }
-func (m *GetCompletedSnapshotsResponse) String() string { return proto.CompactTextString(m) }
-func (*GetCompletedSnapshotsResponse) ProtoMessage()    {}
+func (m *GetCompletedSnapshotsResponse) Reset()                    { *m = GetCompletedSnapshotsResponse{} }
+func (m *GetCompletedSnapshotsResponse) String() string            { return proto.CompactTextString(m) }
+func (*GetCompletedSnapshotsResponse) ProtoMessage()               {}
+func (*GetCompletedSnapshotsResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{67} }
 
 func (m *GetCompletedSnapshotsResponse) GetSnapshots() []*SnapshotDescription {
 	if m != nil {
@@ -960,9 +1346,10 @@ type DeleteSnapshotRequest struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *DeleteSnapshotRequest) Reset()         { *m = DeleteSnapshotRequest{} }
-func (m *DeleteSnapshotRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteSnapshotRequest) ProtoMessage()    {}
+func (m *DeleteSnapshotRequest) Reset()                    { *m = DeleteSnapshotRequest{} }
+func (m *DeleteSnapshotRequest) String() string            { return proto.CompactTextString(m) }
+func (*DeleteSnapshotRequest) ProtoMessage()               {}
+func (*DeleteSnapshotRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{68} }
 
 func (m *DeleteSnapshotRequest) GetSnapshot() *SnapshotDescription {
 	if m != nil {
@@ -975,18 +1362,20 @@ type DeleteSnapshotResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DeleteSnapshotResponse) Reset()         { *m = DeleteSnapshotResponse{} }
-func (m *DeleteSnapshotResponse) String() string { return proto.CompactTextString(m) }
-func (*DeleteSnapshotResponse) ProtoMessage()    {}
+func (m *DeleteSnapshotResponse) Reset()                    { *m = DeleteSnapshotResponse{} }
+func (m *DeleteSnapshotResponse) String() string            { return proto.CompactTextString(m) }
+func (*DeleteSnapshotResponse) ProtoMessage()               {}
+func (*DeleteSnapshotResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{69} }
 
 type RestoreSnapshotRequest struct {
 	Snapshot         *SnapshotDescription `protobuf:"bytes,1,req,name=snapshot" json:"snapshot,omitempty"`
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *RestoreSnapshotRequest) Reset()         { *m = RestoreSnapshotRequest{} }
-func (m *RestoreSnapshotRequest) String() string { return proto.CompactTextString(m) }
-func (*RestoreSnapshotRequest) ProtoMessage()    {}
+func (m *RestoreSnapshotRequest) Reset()                    { *m = RestoreSnapshotRequest{} }
+func (m *RestoreSnapshotRequest) String() string            { return proto.CompactTextString(m) }
+func (*RestoreSnapshotRequest) ProtoMessage()               {}
+func (*RestoreSnapshotRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{70} }
 
 func (m *RestoreSnapshotRequest) GetSnapshot() *SnapshotDescription {
 	if m != nil {
@@ -999,9 +1388,10 @@ type RestoreSnapshotResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RestoreSnapshotResponse) Reset()         { *m = RestoreSnapshotResponse{} }
-func (m *RestoreSnapshotResponse) String() string { return proto.CompactTextString(m) }
-func (*RestoreSnapshotResponse) ProtoMessage()    {}
+func (m *RestoreSnapshotResponse) Reset()                    { *m = RestoreSnapshotResponse{} }
+func (m *RestoreSnapshotResponse) String() string            { return proto.CompactTextString(m) }
+func (*RestoreSnapshotResponse) ProtoMessage()               {}
+func (*RestoreSnapshotResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{71} }
 
 // if you don't send the snapshot, then you will get it back
 // in the response (if the snapshot is done) so you can check the snapshot
@@ -1010,9 +1400,10 @@ type IsSnapshotDoneRequest struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *IsSnapshotDoneRequest) Reset()         { *m = IsSnapshotDoneRequest{} }
-func (m *IsSnapshotDoneRequest) String() string { return proto.CompactTextString(m) }
-func (*IsSnapshotDoneRequest) ProtoMessage()    {}
+func (m *IsSnapshotDoneRequest) Reset()                    { *m = IsSnapshotDoneRequest{} }
+func (m *IsSnapshotDoneRequest) String() string            { return proto.CompactTextString(m) }
+func (*IsSnapshotDoneRequest) ProtoMessage()               {}
+func (*IsSnapshotDoneRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{72} }
 
 func (m *IsSnapshotDoneRequest) GetSnapshot() *SnapshotDescription {
 	if m != nil {
@@ -1027,9 +1418,10 @@ type IsSnapshotDoneResponse struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *IsSnapshotDoneResponse) Reset()         { *m = IsSnapshotDoneResponse{} }
-func (m *IsSnapshotDoneResponse) String() string { return proto.CompactTextString(m) }
-func (*IsSnapshotDoneResponse) ProtoMessage()    {}
+func (m *IsSnapshotDoneResponse) Reset()                    { *m = IsSnapshotDoneResponse{} }
+func (m *IsSnapshotDoneResponse) String() string            { return proto.CompactTextString(m) }
+func (*IsSnapshotDoneResponse) ProtoMessage()               {}
+func (*IsSnapshotDoneResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{73} }
 
 const Default_IsSnapshotDoneResponse_Done bool = false
 
@@ -1052,9 +1444,10 @@ type IsRestoreSnapshotDoneRequest struct {
 	XXX_unrecognized []byte               `json:"-"`
 }
 
-func (m *IsRestoreSnapshotDoneRequest) Reset()         { *m = IsRestoreSnapshotDoneRequest{} }
-func (m *IsRestoreSnapshotDoneRequest) String() string { return proto.CompactTextString(m) }
-func (*IsRestoreSnapshotDoneRequest) ProtoMessage()    {}
+func (m *IsRestoreSnapshotDoneRequest) Reset()                    { *m = IsRestoreSnapshotDoneRequest{} }
+func (m *IsRestoreSnapshotDoneRequest) String() string            { return proto.CompactTextString(m) }
+func (*IsRestoreSnapshotDoneRequest) ProtoMessage()               {}
+func (*IsRestoreSnapshotDoneRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{74} }
 
 func (m *IsRestoreSnapshotDoneRequest) GetSnapshot() *SnapshotDescription {
 	if m != nil {
@@ -1068,9 +1461,10 @@ type IsRestoreSnapshotDoneResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *IsRestoreSnapshotDoneResponse) Reset()         { *m = IsRestoreSnapshotDoneResponse{} }
-func (m *IsRestoreSnapshotDoneResponse) String() string { return proto.CompactTextString(m) }
-func (*IsRestoreSnapshotDoneResponse) ProtoMessage()    {}
+func (m *IsRestoreSnapshotDoneResponse) Reset()                    { *m = IsRestoreSnapshotDoneResponse{} }
+func (m *IsRestoreSnapshotDoneResponse) String() string            { return proto.CompactTextString(m) }
+func (*IsRestoreSnapshotDoneResponse) ProtoMessage()               {}
+func (*IsRestoreSnapshotDoneResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{75} }
 
 const Default_IsRestoreSnapshotDoneResponse_Done bool = false
 
@@ -1082,13 +1476,14 @@ func (m *IsRestoreSnapshotDoneResponse) GetDone() bool {
 }
 
 type GetSchemaAlterStatusRequest struct {
-	TableName        *TableName `protobuf:"bytes,1,req,name=table_name" json:"table_name,omitempty"`
+	TableName        *TableName `protobuf:"bytes,1,req,name=table_name,json=tableName" json:"table_name,omitempty"`
 	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (m *GetSchemaAlterStatusRequest) Reset()         { *m = GetSchemaAlterStatusRequest{} }
-func (m *GetSchemaAlterStatusRequest) String() string { return proto.CompactTextString(m) }
-func (*GetSchemaAlterStatusRequest) ProtoMessage()    {}
+func (m *GetSchemaAlterStatusRequest) Reset()                    { *m = GetSchemaAlterStatusRequest{} }
+func (m *GetSchemaAlterStatusRequest) String() string            { return proto.CompactTextString(m) }
+func (*GetSchemaAlterStatusRequest) ProtoMessage()               {}
+func (*GetSchemaAlterStatusRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{76} }
 
 func (m *GetSchemaAlterStatusRequest) GetTableName() *TableName {
 	if m != nil {
@@ -1098,14 +1493,15 @@ func (m *GetSchemaAlterStatusRequest) GetTableName() *TableName {
 }
 
 type GetSchemaAlterStatusResponse struct {
-	YetToUpdateRegions *uint32 `protobuf:"varint,1,opt,name=yet_to_update_regions" json:"yet_to_update_regions,omitempty"`
-	TotalRegions       *uint32 `protobuf:"varint,2,opt,name=total_regions" json:"total_regions,omitempty"`
+	YetToUpdateRegions *uint32 `protobuf:"varint,1,opt,name=yet_to_update_regions,json=yetToUpdateRegions" json:"yet_to_update_regions,omitempty"`
+	TotalRegions       *uint32 `protobuf:"varint,2,opt,name=total_regions,json=totalRegions" json:"total_regions,omitempty"`
 	XXX_unrecognized   []byte  `json:"-"`
 }
 
-func (m *GetSchemaAlterStatusResponse) Reset()         { *m = GetSchemaAlterStatusResponse{} }
-func (m *GetSchemaAlterStatusResponse) String() string { return proto.CompactTextString(m) }
-func (*GetSchemaAlterStatusResponse) ProtoMessage()    {}
+func (m *GetSchemaAlterStatusResponse) Reset()                    { *m = GetSchemaAlterStatusResponse{} }
+func (m *GetSchemaAlterStatusResponse) String() string            { return proto.CompactTextString(m) }
+func (*GetSchemaAlterStatusResponse) ProtoMessage()               {}
+func (*GetSchemaAlterStatusResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{77} }
 
 func (m *GetSchemaAlterStatusResponse) GetYetToUpdateRegions() uint32 {
 	if m != nil && m.YetToUpdateRegions != nil {
@@ -1122,16 +1518,17 @@ func (m *GetSchemaAlterStatusResponse) GetTotalRegions() uint32 {
 }
 
 type GetTableDescriptorsRequest struct {
-	TableNames       []*TableName `protobuf:"bytes,1,rep,name=table_names" json:"table_names,omitempty"`
+	TableNames       []*TableName `protobuf:"bytes,1,rep,name=table_names,json=tableNames" json:"table_names,omitempty"`
 	Regex            *string      `protobuf:"bytes,2,opt,name=regex" json:"regex,omitempty"`
-	IncludeSysTables *bool        `protobuf:"varint,3,opt,name=include_sys_tables,def=0" json:"include_sys_tables,omitempty"`
+	IncludeSysTables *bool        `protobuf:"varint,3,opt,name=include_sys_tables,json=includeSysTables,def=0" json:"include_sys_tables,omitempty"`
 	Namespace        *string      `protobuf:"bytes,4,opt,name=namespace" json:"namespace,omitempty"`
 	XXX_unrecognized []byte       `json:"-"`
 }
 
-func (m *GetTableDescriptorsRequest) Reset()         { *m = GetTableDescriptorsRequest{} }
-func (m *GetTableDescriptorsRequest) String() string { return proto.CompactTextString(m) }
-func (*GetTableDescriptorsRequest) ProtoMessage()    {}
+func (m *GetTableDescriptorsRequest) Reset()                    { *m = GetTableDescriptorsRequest{} }
+func (m *GetTableDescriptorsRequest) String() string            { return proto.CompactTextString(m) }
+func (*GetTableDescriptorsRequest) ProtoMessage()               {}
+func (*GetTableDescriptorsRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{78} }
 
 const Default_GetTableDescriptorsRequest_IncludeSysTables bool = false
 
@@ -1164,13 +1561,14 @@ func (m *GetTableDescriptorsRequest) GetNamespace() string {
 }
 
 type GetTableDescriptorsResponse struct {
-	TableSchema      []*TableSchema `protobuf:"bytes,1,rep,name=table_schema" json:"table_schema,omitempty"`
+	TableSchema      []*TableSchema `protobuf:"bytes,1,rep,name=table_schema,json=tableSchema" json:"table_schema,omitempty"`
 	XXX_unrecognized []byte         `json:"-"`
 }
 
-func (m *GetTableDescriptorsResponse) Reset()         { *m = GetTableDescriptorsResponse{} }
-func (m *GetTableDescriptorsResponse) String() string { return proto.CompactTextString(m) }
-func (*GetTableDescriptorsResponse) ProtoMessage()    {}
+func (m *GetTableDescriptorsResponse) Reset()                    { *m = GetTableDescriptorsResponse{} }
+func (m *GetTableDescriptorsResponse) String() string            { return proto.CompactTextString(m) }
+func (*GetTableDescriptorsResponse) ProtoMessage()               {}
+func (*GetTableDescriptorsResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{79} }
 
 func (m *GetTableDescriptorsResponse) GetTableSchema() []*TableSchema {
 	if m != nil {
@@ -1181,14 +1579,15 @@ func (m *GetTableDescriptorsResponse) GetTableSchema() []*TableSchema {
 
 type GetTableNamesRequest struct {
 	Regex            *string `protobuf:"bytes,1,opt,name=regex" json:"regex,omitempty"`
-	IncludeSysTables *bool   `protobuf:"varint,2,opt,name=include_sys_tables,def=0" json:"include_sys_tables,omitempty"`
+	IncludeSysTables *bool   `protobuf:"varint,2,opt,name=include_sys_tables,json=includeSysTables,def=0" json:"include_sys_tables,omitempty"`
 	Namespace        *string `protobuf:"bytes,3,opt,name=namespace" json:"namespace,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetTableNamesRequest) Reset()         { *m = GetTableNamesRequest{} }
-func (m *GetTableNamesRequest) String() string { return proto.CompactTextString(m) }
-func (*GetTableNamesRequest) ProtoMessage()    {}
+func (m *GetTableNamesRequest) Reset()                    { *m = GetTableNamesRequest{} }
+func (m *GetTableNamesRequest) String() string            { return proto.CompactTextString(m) }
+func (*GetTableNamesRequest) ProtoMessage()               {}
+func (*GetTableNamesRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{80} }
 
 const Default_GetTableNamesRequest_IncludeSysTables bool = false
 
@@ -1214,13 +1613,14 @@ func (m *GetTableNamesRequest) GetNamespace() string {
 }
 
 type GetTableNamesResponse struct {
-	TableNames       []*TableName `protobuf:"bytes,1,rep,name=table_names" json:"table_names,omitempty"`
+	TableNames       []*TableName `protobuf:"bytes,1,rep,name=table_names,json=tableNames" json:"table_names,omitempty"`
 	XXX_unrecognized []byte       `json:"-"`
 }
 
-func (m *GetTableNamesResponse) Reset()         { *m = GetTableNamesResponse{} }
-func (m *GetTableNamesResponse) String() string { return proto.CompactTextString(m) }
-func (*GetTableNamesResponse) ProtoMessage()    {}
+func (m *GetTableNamesResponse) Reset()                    { *m = GetTableNamesResponse{} }
+func (m *GetTableNamesResponse) String() string            { return proto.CompactTextString(m) }
+func (*GetTableNamesResponse) ProtoMessage()               {}
+func (*GetTableNamesResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{81} }
 
 func (m *GetTableNamesResponse) GetTableNames() []*TableName {
 	if m != nil {
@@ -1233,18 +1633,20 @@ type GetClusterStatusRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *GetClusterStatusRequest) Reset()         { *m = GetClusterStatusRequest{} }
-func (m *GetClusterStatusRequest) String() string { return proto.CompactTextString(m) }
-func (*GetClusterStatusRequest) ProtoMessage()    {}
+func (m *GetClusterStatusRequest) Reset()                    { *m = GetClusterStatusRequest{} }
+func (m *GetClusterStatusRequest) String() string            { return proto.CompactTextString(m) }
+func (*GetClusterStatusRequest) ProtoMessage()               {}
+func (*GetClusterStatusRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{82} }
 
 type GetClusterStatusResponse struct {
-	ClusterStatus    *ClusterStatus `protobuf:"bytes,1,req,name=cluster_status" json:"cluster_status,omitempty"`
+	ClusterStatus    *ClusterStatus `protobuf:"bytes,1,req,name=cluster_status,json=clusterStatus" json:"cluster_status,omitempty"`
 	XXX_unrecognized []byte         `json:"-"`
 }
 
-func (m *GetClusterStatusResponse) Reset()         { *m = GetClusterStatusResponse{} }
-func (m *GetClusterStatusResponse) String() string { return proto.CompactTextString(m) }
-func (*GetClusterStatusResponse) ProtoMessage()    {}
+func (m *GetClusterStatusResponse) Reset()                    { *m = GetClusterStatusResponse{} }
+func (m *GetClusterStatusResponse) String() string            { return proto.CompactTextString(m) }
+func (*GetClusterStatusResponse) ProtoMessage()               {}
+func (*GetClusterStatusResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{83} }
 
 func (m *GetClusterStatusResponse) GetClusterStatus() *ClusterStatus {
 	if m != nil {
@@ -1257,18 +1659,20 @@ type IsMasterRunningRequest struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *IsMasterRunningRequest) Reset()         { *m = IsMasterRunningRequest{} }
-func (m *IsMasterRunningRequest) String() string { return proto.CompactTextString(m) }
-func (*IsMasterRunningRequest) ProtoMessage()    {}
+func (m *IsMasterRunningRequest) Reset()                    { *m = IsMasterRunningRequest{} }
+func (m *IsMasterRunningRequest) String() string            { return proto.CompactTextString(m) }
+func (*IsMasterRunningRequest) ProtoMessage()               {}
+func (*IsMasterRunningRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{84} }
 
 type IsMasterRunningResponse struct {
-	IsMasterRunning  *bool  `protobuf:"varint,1,req,name=is_master_running" json:"is_master_running,omitempty"`
+	IsMasterRunning  *bool  `protobuf:"varint,1,req,name=is_master_running,json=isMasterRunning" json:"is_master_running,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *IsMasterRunningResponse) Reset()         { *m = IsMasterRunningResponse{} }
-func (m *IsMasterRunningResponse) String() string { return proto.CompactTextString(m) }
-func (*IsMasterRunningResponse) ProtoMessage()    {}
+func (m *IsMasterRunningResponse) Reset()                    { *m = IsMasterRunningResponse{} }
+func (m *IsMasterRunningResponse) String() string            { return proto.CompactTextString(m) }
+func (*IsMasterRunningResponse) ProtoMessage()               {}
+func (*IsMasterRunningResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{85} }
 
 func (m *IsMasterRunningResponse) GetIsMasterRunning() bool {
 	if m != nil && m.IsMasterRunning != nil {
@@ -1282,9 +1686,10 @@ type ExecProcedureRequest struct {
 	XXX_unrecognized []byte                `json:"-"`
 }
 
-func (m *ExecProcedureRequest) Reset()         { *m = ExecProcedureRequest{} }
-func (m *ExecProcedureRequest) String() string { return proto.CompactTextString(m) }
-func (*ExecProcedureRequest) ProtoMessage()    {}
+func (m *ExecProcedureRequest) Reset()                    { *m = ExecProcedureRequest{} }
+func (m *ExecProcedureRequest) String() string            { return proto.CompactTextString(m) }
+func (*ExecProcedureRequest) ProtoMessage()               {}
+func (*ExecProcedureRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{86} }
 
 func (m *ExecProcedureRequest) GetProcedure() *ProcedureDescription {
 	if m != nil {
@@ -1294,14 +1699,15 @@ func (m *ExecProcedureRequest) GetProcedure() *ProcedureDescription {
 }
 
 type ExecProcedureResponse struct {
-	ExpectedTimeout  *int64 `protobuf:"varint,1,opt,name=expected_timeout" json:"expected_timeout,omitempty"`
-	ReturnData       []byte `protobuf:"bytes,2,opt,name=return_data" json:"return_data,omitempty"`
+	ExpectedTimeout  *int64 `protobuf:"varint,1,opt,name=expected_timeout,json=expectedTimeout" json:"expected_timeout,omitempty"`
+	ReturnData       []byte `protobuf:"bytes,2,opt,name=return_data,json=returnData" json:"return_data,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *ExecProcedureResponse) Reset()         { *m = ExecProcedureResponse{} }
-func (m *ExecProcedureResponse) String() string { return proto.CompactTextString(m) }
-func (*ExecProcedureResponse) ProtoMessage()    {}
+func (m *ExecProcedureResponse) Reset()                    { *m = ExecProcedureResponse{} }
+func (m *ExecProcedureResponse) String() string            { return proto.CompactTextString(m) }
+func (*ExecProcedureResponse) ProtoMessage()               {}
+func (*ExecProcedureResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{87} }
 
 func (m *ExecProcedureResponse) GetExpectedTimeout() int64 {
 	if m != nil && m.ExpectedTimeout != nil {
@@ -1322,9 +1728,10 @@ type IsProcedureDoneRequest struct {
 	XXX_unrecognized []byte                `json:"-"`
 }
 
-func (m *IsProcedureDoneRequest) Reset()         { *m = IsProcedureDoneRequest{} }
-func (m *IsProcedureDoneRequest) String() string { return proto.CompactTextString(m) }
-func (*IsProcedureDoneRequest) ProtoMessage()    {}
+func (m *IsProcedureDoneRequest) Reset()                    { *m = IsProcedureDoneRequest{} }
+func (m *IsProcedureDoneRequest) String() string            { return proto.CompactTextString(m) }
+func (*IsProcedureDoneRequest) ProtoMessage()               {}
+func (*IsProcedureDoneRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{88} }
 
 func (m *IsProcedureDoneRequest) GetProcedure() *ProcedureDescription {
 	if m != nil {
@@ -1339,9 +1746,10 @@ type IsProcedureDoneResponse struct {
 	XXX_unrecognized []byte                `json:"-"`
 }
 
-func (m *IsProcedureDoneResponse) Reset()         { *m = IsProcedureDoneResponse{} }
-func (m *IsProcedureDoneResponse) String() string { return proto.CompactTextString(m) }
-func (*IsProcedureDoneResponse) ProtoMessage()    {}
+func (m *IsProcedureDoneResponse) Reset()                    { *m = IsProcedureDoneResponse{} }
+func (m *IsProcedureDoneResponse) String() string            { return proto.CompactTextString(m) }
+func (*IsProcedureDoneResponse) ProtoMessage()               {}
+func (*IsProcedureDoneResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{89} }
 
 const Default_IsProcedureDoneResponse_Done bool = false
 
@@ -1360,13 +1768,14 @@ func (m *IsProcedureDoneResponse) GetSnapshot() *ProcedureDescription {
 }
 
 type GetProcedureResultRequest struct {
-	ProcId           *uint64 `protobuf:"varint,1,req,name=proc_id" json:"proc_id,omitempty"`
+	ProcId           *uint64 `protobuf:"varint,1,req,name=proc_id,json=procId" json:"proc_id,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *GetProcedureResultRequest) Reset()         { *m = GetProcedureResultRequest{} }
-func (m *GetProcedureResultRequest) String() string { return proto.CompactTextString(m) }
-func (*GetProcedureResultRequest) ProtoMessage()    {}
+func (m *GetProcedureResultRequest) Reset()                    { *m = GetProcedureResultRequest{} }
+func (m *GetProcedureResultRequest) String() string            { return proto.CompactTextString(m) }
+func (*GetProcedureResultRequest) ProtoMessage()               {}
+func (*GetProcedureResultRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{90} }
 
 func (m *GetProcedureResultRequest) GetProcId() uint64 {
 	if m != nil && m.ProcId != nil {
@@ -1377,16 +1786,17 @@ func (m *GetProcedureResultRequest) GetProcId() uint64 {
 
 type GetProcedureResultResponse struct {
 	State            *GetProcedureResultResponse_State `protobuf:"varint,1,req,name=state,enum=pb.GetProcedureResultResponse_State" json:"state,omitempty"`
-	StartTime        *uint64                           `protobuf:"varint,2,opt,name=start_time" json:"start_time,omitempty"`
-	LastUpdate       *uint64                           `protobuf:"varint,3,opt,name=last_update" json:"last_update,omitempty"`
+	StartTime        *uint64                           `protobuf:"varint,2,opt,name=start_time,json=startTime" json:"start_time,omitempty"`
+	LastUpdate       *uint64                           `protobuf:"varint,3,opt,name=last_update,json=lastUpdate" json:"last_update,omitempty"`
 	Result           []byte                            `protobuf:"bytes,4,opt,name=result" json:"result,omitempty"`
 	Exception        *ForeignExceptionMessage          `protobuf:"bytes,5,opt,name=exception" json:"exception,omitempty"`
 	XXX_unrecognized []byte                            `json:"-"`
 }
 
-func (m *GetProcedureResultResponse) Reset()         { *m = GetProcedureResultResponse{} }
-func (m *GetProcedureResultResponse) String() string { return proto.CompactTextString(m) }
-func (*GetProcedureResultResponse) ProtoMessage()    {}
+func (m *GetProcedureResultResponse) Reset()                    { *m = GetProcedureResultResponse{} }
+func (m *GetProcedureResultResponse) String() string            { return proto.CompactTextString(m) }
+func (*GetProcedureResultResponse) ProtoMessage()               {}
+func (*GetProcedureResultResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{91} }
 
 func (m *GetProcedureResultResponse) GetState() GetProcedureResultResponse_State {
 	if m != nil && m.State != nil {
@@ -1423,20 +1833,91 @@ func (m *GetProcedureResultResponse) GetException() *ForeignExceptionMessage {
 	return nil
 }
 
+type AbortProcedureRequest struct {
+	ProcId                *uint64 `protobuf:"varint,1,req,name=proc_id,json=procId" json:"proc_id,omitempty"`
+	MayInterruptIfRunning *bool   `protobuf:"varint,2,opt,name=mayInterruptIfRunning,def=1" json:"mayInterruptIfRunning,omitempty"`
+	XXX_unrecognized      []byte  `json:"-"`
+}
+
+func (m *AbortProcedureRequest) Reset()                    { *m = AbortProcedureRequest{} }
+func (m *AbortProcedureRequest) String() string            { return proto.CompactTextString(m) }
+func (*AbortProcedureRequest) ProtoMessage()               {}
+func (*AbortProcedureRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{92} }
+
+const Default_AbortProcedureRequest_MayInterruptIfRunning bool = true
+
+func (m *AbortProcedureRequest) GetProcId() uint64 {
+	if m != nil && m.ProcId != nil {
+		return *m.ProcId
+	}
+	return 0
+}
+
+func (m *AbortProcedureRequest) GetMayInterruptIfRunning() bool {
+	if m != nil && m.MayInterruptIfRunning != nil {
+		return *m.MayInterruptIfRunning
+	}
+	return Default_AbortProcedureRequest_MayInterruptIfRunning
+}
+
+type AbortProcedureResponse struct {
+	IsProcedureAborted *bool  `protobuf:"varint,1,req,name=is_procedure_aborted,json=isProcedureAborted" json:"is_procedure_aborted,omitempty"`
+	XXX_unrecognized   []byte `json:"-"`
+}
+
+func (m *AbortProcedureResponse) Reset()                    { *m = AbortProcedureResponse{} }
+func (m *AbortProcedureResponse) String() string            { return proto.CompactTextString(m) }
+func (*AbortProcedureResponse) ProtoMessage()               {}
+func (*AbortProcedureResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{93} }
+
+func (m *AbortProcedureResponse) GetIsProcedureAborted() bool {
+	if m != nil && m.IsProcedureAborted != nil {
+		return *m.IsProcedureAborted
+	}
+	return false
+}
+
+type ListProceduresRequest struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *ListProceduresRequest) Reset()                    { *m = ListProceduresRequest{} }
+func (m *ListProceduresRequest) String() string            { return proto.CompactTextString(m) }
+func (*ListProceduresRequest) ProtoMessage()               {}
+func (*ListProceduresRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{94} }
+
+type ListProceduresResponse struct {
+	Procedure        []*Procedure `protobuf:"bytes,1,rep,name=procedure" json:"procedure,omitempty"`
+	XXX_unrecognized []byte       `json:"-"`
+}
+
+func (m *ListProceduresResponse) Reset()                    { *m = ListProceduresResponse{} }
+func (m *ListProceduresResponse) String() string            { return proto.CompactTextString(m) }
+func (*ListProceduresResponse) ProtoMessage()               {}
+func (*ListProceduresResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{95} }
+
+func (m *ListProceduresResponse) GetProcedure() []*Procedure {
+	if m != nil {
+		return m.Procedure
+	}
+	return nil
+}
+
 type SetQuotaRequest struct {
-	UserName         *string          `protobuf:"bytes,1,opt,name=user_name" json:"user_name,omitempty"`
-	UserGroup        *string          `protobuf:"bytes,2,opt,name=user_group" json:"user_group,omitempty"`
+	UserName         *string          `protobuf:"bytes,1,opt,name=user_name,json=userName" json:"user_name,omitempty"`
+	UserGroup        *string          `protobuf:"bytes,2,opt,name=user_group,json=userGroup" json:"user_group,omitempty"`
 	Namespace        *string          `protobuf:"bytes,3,opt,name=namespace" json:"namespace,omitempty"`
-	TableName        *TableName       `protobuf:"bytes,4,opt,name=table_name" json:"table_name,omitempty"`
-	RemoveAll        *bool            `protobuf:"varint,5,opt,name=remove_all" json:"remove_all,omitempty"`
-	BypassGlobals    *bool            `protobuf:"varint,6,opt,name=bypass_globals" json:"bypass_globals,omitempty"`
+	TableName        *TableName       `protobuf:"bytes,4,opt,name=table_name,json=tableName" json:"table_name,omitempty"`
+	RemoveAll        *bool            `protobuf:"varint,5,opt,name=remove_all,json=removeAll" json:"remove_all,omitempty"`
+	BypassGlobals    *bool            `protobuf:"varint,6,opt,name=bypass_globals,json=bypassGlobals" json:"bypass_globals,omitempty"`
 	Throttle         *ThrottleRequest `protobuf:"bytes,7,opt,name=throttle" json:"throttle,omitempty"`
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *SetQuotaRequest) Reset()         { *m = SetQuotaRequest{} }
-func (m *SetQuotaRequest) String() string { return proto.CompactTextString(m) }
-func (*SetQuotaRequest) ProtoMessage()    {}
+func (m *SetQuotaRequest) Reset()                    { *m = SetQuotaRequest{} }
+func (m *SetQuotaRequest) String() string            { return proto.CompactTextString(m) }
+func (*SetQuotaRequest) ProtoMessage()               {}
+func (*SetQuotaRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{96} }
 
 func (m *SetQuotaRequest) GetUserName() string {
 	if m != nil && m.UserName != nil {
@@ -1491,18 +1972,22 @@ type SetQuotaResponse struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *SetQuotaResponse) Reset()         { *m = SetQuotaResponse{} }
-func (m *SetQuotaResponse) String() string { return proto.CompactTextString(m) }
-func (*SetQuotaResponse) ProtoMessage()    {}
+func (m *SetQuotaResponse) Reset()                    { *m = SetQuotaResponse{} }
+func (m *SetQuotaResponse) String() string            { return proto.CompactTextString(m) }
+func (*SetQuotaResponse) ProtoMessage()               {}
+func (*SetQuotaResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{97} }
 
 type MajorCompactionTimestampRequest struct {
-	TableName        *TableName `protobuf:"bytes,1,req,name=table_name" json:"table_name,omitempty"`
+	TableName        *TableName `protobuf:"bytes,1,req,name=table_name,json=tableName" json:"table_name,omitempty"`
 	XXX_unrecognized []byte     `json:"-"`
 }
 
 func (m *MajorCompactionTimestampRequest) Reset()         { *m = MajorCompactionTimestampRequest{} }
 func (m *MajorCompactionTimestampRequest) String() string { return proto.CompactTextString(m) }
 func (*MajorCompactionTimestampRequest) ProtoMessage()    {}
+func (*MajorCompactionTimestampRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{98}
+}
 
 func (m *MajorCompactionTimestampRequest) GetTableName() *TableName {
 	if m != nil {
@@ -1521,6 +2006,9 @@ func (m *MajorCompactionTimestampForRegionRequest) Reset() {
 }
 func (m *MajorCompactionTimestampForRegionRequest) String() string { return proto.CompactTextString(m) }
 func (*MajorCompactionTimestampForRegionRequest) ProtoMessage()    {}
+func (*MajorCompactionTimestampForRegionRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{99}
+}
 
 func (m *MajorCompactionTimestampForRegionRequest) GetRegion() *RegionSpecifier {
 	if m != nil {
@@ -1530,13 +2018,16 @@ func (m *MajorCompactionTimestampForRegionRequest) GetRegion() *RegionSpecifier 
 }
 
 type MajorCompactionTimestampResponse struct {
-	CompactionTimestamp *int64 `protobuf:"varint,1,req,name=compaction_timestamp" json:"compaction_timestamp,omitempty"`
+	CompactionTimestamp *int64 `protobuf:"varint,1,req,name=compaction_timestamp,json=compactionTimestamp" json:"compaction_timestamp,omitempty"`
 	XXX_unrecognized    []byte `json:"-"`
 }
 
 func (m *MajorCompactionTimestampResponse) Reset()         { *m = MajorCompactionTimestampResponse{} }
 func (m *MajorCompactionTimestampResponse) String() string { return proto.CompactTextString(m) }
 func (*MajorCompactionTimestampResponse) ProtoMessage()    {}
+func (*MajorCompactionTimestampResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor18, []int{100}
+}
 
 func (m *MajorCompactionTimestampResponse) GetCompactionTimestamp() int64 {
 	if m != nil && m.CompactionTimestamp != nil {
@@ -1545,6 +2036,342 @@ func (m *MajorCompactionTimestampResponse) GetCompactionTimestamp() int64 {
 	return 0
 }
 
+type SecurityCapabilitiesRequest struct {
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *SecurityCapabilitiesRequest) Reset()                    { *m = SecurityCapabilitiesRequest{} }
+func (m *SecurityCapabilitiesRequest) String() string            { return proto.CompactTextString(m) }
+func (*SecurityCapabilitiesRequest) ProtoMessage()               {}
+func (*SecurityCapabilitiesRequest) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{101} }
+
+type SecurityCapabilitiesResponse struct {
+	Capabilities     []SecurityCapabilitiesResponse_Capability `protobuf:"varint,1,rep,name=capabilities,enum=pb.SecurityCapabilitiesResponse_Capability" json:"capabilities,omitempty"`
+	XXX_unrecognized []byte                                    `json:"-"`
+}
+
+func (m *SecurityCapabilitiesResponse) Reset()                    { *m = SecurityCapabilitiesResponse{} }
+func (m *SecurityCapabilitiesResponse) String() string            { return proto.CompactTextString(m) }
+func (*SecurityCapabilitiesResponse) ProtoMessage()               {}
+func (*SecurityCapabilitiesResponse) Descriptor() ([]byte, []int) { return fileDescriptor18, []int{102} }
+
+func (m *SecurityCapabilitiesResponse) GetCapabilities() []SecurityCapabilitiesResponse_Capability {
+	if m != nil {
+		return m.Capabilities
+	}
+	return nil
+}
+
 func init() {
+	proto.RegisterType((*AddColumnRequest)(nil), "pb.AddColumnRequest")
+	proto.RegisterType((*AddColumnResponse)(nil), "pb.AddColumnResponse")
+	proto.RegisterType((*DeleteColumnRequest)(nil), "pb.DeleteColumnRequest")
+	proto.RegisterType((*DeleteColumnResponse)(nil), "pb.DeleteColumnResponse")
+	proto.RegisterType((*ModifyColumnRequest)(nil), "pb.ModifyColumnRequest")
+	proto.RegisterType((*ModifyColumnResponse)(nil), "pb.ModifyColumnResponse")
+	proto.RegisterType((*MoveRegionRequest)(nil), "pb.MoveRegionRequest")
+	proto.RegisterType((*MoveRegionResponse)(nil), "pb.MoveRegionResponse")
+	proto.RegisterType((*DispatchMergingRegionsRequest)(nil), "pb.DispatchMergingRegionsRequest")
+	proto.RegisterType((*DispatchMergingRegionsResponse)(nil), "pb.DispatchMergingRegionsResponse")
+	proto.RegisterType((*AssignRegionRequest)(nil), "pb.AssignRegionRequest")
+	proto.RegisterType((*AssignRegionResponse)(nil), "pb.AssignRegionResponse")
+	proto.RegisterType((*UnassignRegionRequest)(nil), "pb.UnassignRegionRequest")
+	proto.RegisterType((*UnassignRegionResponse)(nil), "pb.UnassignRegionResponse")
+	proto.RegisterType((*OfflineRegionRequest)(nil), "pb.OfflineRegionRequest")
+	proto.RegisterType((*OfflineRegionResponse)(nil), "pb.OfflineRegionResponse")
+	proto.RegisterType((*CreateTableRequest)(nil), "pb.CreateTableRequest")
+	proto.RegisterType((*CreateTableResponse)(nil), "pb.CreateTableResponse")
+	proto.RegisterType((*DeleteTableRequest)(nil), "pb.DeleteTableRequest")
+	proto.RegisterType((*DeleteTableResponse)(nil), "pb.DeleteTableResponse")
+	proto.RegisterType((*TruncateTableRequest)(nil), "pb.TruncateTableRequest")
+	proto.RegisterType((*TruncateTableResponse)(nil), "pb.TruncateTableResponse")
+	proto.RegisterType((*EnableTableRequest)(nil), "pb.EnableTableRequest")
+	proto.RegisterType((*EnableTableResponse)(nil), "pb.EnableTableResponse")
+	proto.RegisterType((*DisableTableRequest)(nil), "pb.DisableTableRequest")
+	proto.RegisterType((*DisableTableResponse)(nil), "pb.DisableTableResponse")
+	proto.RegisterType((*ModifyTableRequest)(nil), "pb.ModifyTableRequest")
+	proto.RegisterType((*ModifyTableResponse)(nil), "pb.ModifyTableResponse")
+	proto.RegisterType((*CreateNamespaceRequest)(nil), "pb.CreateNamespaceRequest")
+	proto.RegisterType((*CreateNamespaceResponse)(nil), "pb.CreateNamespaceResponse")
+	proto.RegisterType((*DeleteNamespaceRequest)(nil), "pb.DeleteNamespaceRequest")
+	proto.RegisterType((*DeleteNamespaceResponse)(nil), "pb.DeleteNamespaceResponse")
+	proto.RegisterType((*ModifyNamespaceRequest)(nil), "pb.ModifyNamespaceRequest")
+	proto.RegisterType((*ModifyNamespaceResponse)(nil), "pb.ModifyNamespaceResponse")
+	proto.RegisterType((*GetNamespaceDescriptorRequest)(nil), "pb.GetNamespaceDescriptorRequest")
+	proto.RegisterType((*GetNamespaceDescriptorResponse)(nil), "pb.GetNamespaceDescriptorResponse")
+	proto.RegisterType((*ListNamespaceDescriptorsRequest)(nil), "pb.ListNamespaceDescriptorsRequest")
+	proto.RegisterType((*ListNamespaceDescriptorsResponse)(nil), "pb.ListNamespaceDescriptorsResponse")
+	proto.RegisterType((*ListTableDescriptorsByNamespaceRequest)(nil), "pb.ListTableDescriptorsByNamespaceRequest")
+	proto.RegisterType((*ListTableDescriptorsByNamespaceResponse)(nil), "pb.ListTableDescriptorsByNamespaceResponse")
+	proto.RegisterType((*ListTableNamesByNamespaceRequest)(nil), "pb.ListTableNamesByNamespaceRequest")
+	proto.RegisterType((*ListTableNamesByNamespaceResponse)(nil), "pb.ListTableNamesByNamespaceResponse")
+	proto.RegisterType((*ShutdownRequest)(nil), "pb.ShutdownRequest")
+	proto.RegisterType((*ShutdownResponse)(nil), "pb.ShutdownResponse")
+	proto.RegisterType((*StopMasterRequest)(nil), "pb.StopMasterRequest")
+	proto.RegisterType((*StopMasterResponse)(nil), "pb.StopMasterResponse")
+	proto.RegisterType((*BalanceRequest)(nil), "pb.BalanceRequest")
+	proto.RegisterType((*BalanceResponse)(nil), "pb.BalanceResponse")
+	proto.RegisterType((*SetBalancerRunningRequest)(nil), "pb.SetBalancerRunningRequest")
+	proto.RegisterType((*SetBalancerRunningResponse)(nil), "pb.SetBalancerRunningResponse")
+	proto.RegisterType((*IsBalancerEnabledRequest)(nil), "pb.IsBalancerEnabledRequest")
+	proto.RegisterType((*IsBalancerEnabledResponse)(nil), "pb.IsBalancerEnabledResponse")
+	proto.RegisterType((*NormalizeRequest)(nil), "pb.NormalizeRequest")
+	proto.RegisterType((*NormalizeResponse)(nil), "pb.NormalizeResponse")
+	proto.RegisterType((*SetNormalizerRunningRequest)(nil), "pb.SetNormalizerRunningRequest")
+	proto.RegisterType((*SetNormalizerRunningResponse)(nil), "pb.SetNormalizerRunningResponse")
+	proto.RegisterType((*IsNormalizerEnabledRequest)(nil), "pb.IsNormalizerEnabledRequest")
+	proto.RegisterType((*IsNormalizerEnabledResponse)(nil), "pb.IsNormalizerEnabledResponse")
+	proto.RegisterType((*RunCatalogScanRequest)(nil), "pb.RunCatalogScanRequest")
+	proto.RegisterType((*RunCatalogScanResponse)(nil), "pb.RunCatalogScanResponse")
+	proto.RegisterType((*EnableCatalogJanitorRequest)(nil), "pb.EnableCatalogJanitorRequest")
+	proto.RegisterType((*EnableCatalogJanitorResponse)(nil), "pb.EnableCatalogJanitorResponse")
+	proto.RegisterType((*IsCatalogJanitorEnabledRequest)(nil), "pb.IsCatalogJanitorEnabledRequest")
+	proto.RegisterType((*IsCatalogJanitorEnabledResponse)(nil), "pb.IsCatalogJanitorEnabledResponse")
+	proto.RegisterType((*SnapshotRequest)(nil), "pb.SnapshotRequest")
+	proto.RegisterType((*SnapshotResponse)(nil), "pb.SnapshotResponse")
+	proto.RegisterType((*GetCompletedSnapshotsRequest)(nil), "pb.GetCompletedSnapshotsRequest")
+	proto.RegisterType((*GetCompletedSnapshotsResponse)(nil), "pb.GetCompletedSnapshotsResponse")
+	proto.RegisterType((*DeleteSnapshotRequest)(nil), "pb.DeleteSnapshotRequest")
+	proto.RegisterType((*DeleteSnapshotResponse)(nil), "pb.DeleteSnapshotResponse")
+	proto.RegisterType((*RestoreSnapshotRequest)(nil), "pb.RestoreSnapshotRequest")
+	proto.RegisterType((*RestoreSnapshotResponse)(nil), "pb.RestoreSnapshotResponse")
+	proto.RegisterType((*IsSnapshotDoneRequest)(nil), "pb.IsSnapshotDoneRequest")
+	proto.RegisterType((*IsSnapshotDoneResponse)(nil), "pb.IsSnapshotDoneResponse")
+	proto.RegisterType((*IsRestoreSnapshotDoneRequest)(nil), "pb.IsRestoreSnapshotDoneRequest")
+	proto.RegisterType((*IsRestoreSnapshotDoneResponse)(nil), "pb.IsRestoreSnapshotDoneResponse")
+	proto.RegisterType((*GetSchemaAlterStatusRequest)(nil), "pb.GetSchemaAlterStatusRequest")
+	proto.RegisterType((*GetSchemaAlterStatusResponse)(nil), "pb.GetSchemaAlterStatusResponse")
+	proto.RegisterType((*GetTableDescriptorsRequest)(nil), "pb.GetTableDescriptorsRequest")
+	proto.RegisterType((*GetTableDescriptorsResponse)(nil), "pb.GetTableDescriptorsResponse")
+	proto.RegisterType((*GetTableNamesRequest)(nil), "pb.GetTableNamesRequest")
+	proto.RegisterType((*GetTableNamesResponse)(nil), "pb.GetTableNamesResponse")
+	proto.RegisterType((*GetClusterStatusRequest)(nil), "pb.GetClusterStatusRequest")
+	proto.RegisterType((*GetClusterStatusResponse)(nil), "pb.GetClusterStatusResponse")
+	proto.RegisterType((*IsMasterRunningRequest)(nil), "pb.IsMasterRunningRequest")
+	proto.RegisterType((*IsMasterRunningResponse)(nil), "pb.IsMasterRunningResponse")
+	proto.RegisterType((*ExecProcedureRequest)(nil), "pb.ExecProcedureRequest")
+	proto.RegisterType((*ExecProcedureResponse)(nil), "pb.ExecProcedureResponse")
+	proto.RegisterType((*IsProcedureDoneRequest)(nil), "pb.IsProcedureDoneRequest")
+	proto.RegisterType((*IsProcedureDoneResponse)(nil), "pb.IsProcedureDoneResponse")
+	proto.RegisterType((*GetProcedureResultRequest)(nil), "pb.GetProcedureResultRequest")
+	proto.RegisterType((*GetProcedureResultResponse)(nil), "pb.GetProcedureResultResponse")
+	proto.RegisterType((*AbortProcedureRequest)(nil), "pb.AbortProcedureRequest")
+	proto.RegisterType((*AbortProcedureResponse)(nil), "pb.AbortProcedureResponse")
+	proto.RegisterType((*ListProceduresRequest)(nil), "pb.ListProceduresRequest")
+	proto.RegisterType((*ListProceduresResponse)(nil), "pb.ListProceduresResponse")
+	proto.RegisterType((*SetQuotaRequest)(nil), "pb.SetQuotaRequest")
+	proto.RegisterType((*SetQuotaResponse)(nil), "pb.SetQuotaResponse")
+	proto.RegisterType((*MajorCompactionTimestampRequest)(nil), "pb.MajorCompactionTimestampRequest")
+	proto.RegisterType((*MajorCompactionTimestampForRegionRequest)(nil), "pb.MajorCompactionTimestampForRegionRequest")
+	proto.RegisterType((*MajorCompactionTimestampResponse)(nil), "pb.MajorCompactionTimestampResponse")
+	proto.RegisterType((*SecurityCapabilitiesRequest)(nil), "pb.SecurityCapabilitiesRequest")
+	proto.RegisterType((*SecurityCapabilitiesResponse)(nil), "pb.SecurityCapabilitiesResponse")
 	proto.RegisterEnum("pb.GetProcedureResultResponse_State", GetProcedureResultResponse_State_name, GetProcedureResultResponse_State_value)
+	proto.RegisterEnum("pb.SecurityCapabilitiesResponse_Capability", SecurityCapabilitiesResponse_Capability_name, SecurityCapabilitiesResponse_Capability_value)
+}
+
+var fileDescriptor18 = []byte{
+	// 3232 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xd4, 0x5b, 0x5b, 0x53, 0x1c, 0xc7,
+	0xf5, 0xff, 0xef, 0x02, 0x12, 0x1c, 0xee, 0x0d, 0x2c, 0xcb, 0x00, 0x02, 0xc6, 0xf2, 0x3f, 0x8a,
+	0x65, 0x63, 0x5b, 0xb1, 0x13, 0x5b, 0xa9, 0x38, 0xc5, 0x4d, 0xd2, 0xda, 0x5c, 0xe4, 0x59, 0x90,
+	0xcb, 0x29, 0x57, 0x4d, 0x0d, 0xb3, 0x0d, 0x8c, 0xbd, 0xcc, 0x6c, 0x66, 0x66, 0x15, 0xe1, 0x87,
+	0x38, 0x95, 0xa7, 0x3c, 0xe6, 0x13, 0xa4, 0x9c, 0x54, 0xde, 0xf3, 0x90, 0xca, 0x6b, 0xaa, 0xf2,
+	0x9d, 0xf2, 0x01, 0xd2, 0xdd, 0xa7, 0xe7, 0xde, 0x33, 0x2b, 0x81, 0x52, 0xae, 0xbc, 0xb1, 0xa7,
+	0x4f, 0x9f, 0x5b, 0x77, 0x9f, 0x3e, 0xfd, 0x3b, 0x03, 0x4c, 0x1c, 0x58, 0x41, 0x48, 0xfd, 0xcd,
+	0x9e, 0xef, 0x85, 0x1e, 0xa9, 0xf7, 0x4e, 0xb5, 0xf1, 0x27, 0xdb, 0x56, 0x40, 0x91, 0xa0, 0x4d,
+	0xec, 0x74, 0x1d, 0xea, 0x86, 0xf2, 0xd7, 0xdc, 0x4e, 0xb7, 0xcf, 0xb9, 0xdb, 0xa1, 0x15, 0xf6,
+	0x83, 0x88, 0xb8, 0xe7, 0xfb, 0x9e, 0xff, 0xc4, 0x72, 0x3b, 0x5d, 0xc7, 0x3d, 0x97, 0xc4, 0xe9,
+	0xa7, 0xbe, 0x67, 0xd3, 0x4e, 0xdf, 0x8f, 0x04, 0x8d, 0x7f, 0xde, 0xf7, 0x42, 0x0b, 0x7f, 0xe8,
+	0xff, 0xac, 0xc1, 0xcc, 0x56, 0xa7, 0xb3, 0xe3, 0x75, 0xfb, 0x97, 0xae, 0x41, 0x7f, 0xdd, 0xa7,
+	0x41, 0x48, 0xde, 0x06, 0x08, 0xad, 0xd3, 0x2e, 0x35, 0x5d, 0xeb, 0x92, 0x36, 0x6b, 0xeb, 0xf5,
+	0x7b, 0xe3, 0x0f, 0x26, 0x37, 0x7b, 0xa7, 0x9b, 0xc7, 0x9c, 0x7a, 0xc8, 0x88, 0xc6, 0x58, 0x18,
+	0xfd, 0x49, 0x7e, 0x09, 0xd3, 0xb6, 0x98, 0x6e, 0x9e, 0x59, 0x97, 0x0e, 0x33, 0x32, 0x68, 0xd6,
+	0xc5, 0x94, 0x06, 0x9f, 0x82, 0x92, 0x1f, 0xf1, 0x91, 0xab, 0xb6, 0x7d, 0x41, 0x2f, 0x2d, 0x63,
+	0xca, 0x4e, 0x68, 0x8c, 0x9b, 0xe8, 0x30, 0xee, 0x7a, 0xae, 0x4d, 0xcd, 0x73, 0xdf, 0xeb, 0xf7,
+	0x9a, 0x43, 0xeb, 0xb5, 0x7b, 0xc3, 0x0f, 0x6b, 0xef, 0x19, 0x20, 0xa8, 0x8f, 0x39, 0x91, 0x2c,
+	0xc2, 0x88, 0xf8, 0xd5, 0x1c, 0x8e, 0x46, 0xf1, 0xb7, 0x3e, 0x07, 0xb3, 0x29, 0xfb, 0x83, 0x9e,
+	0xe7, 0x06, 0x54, 0xff, 0x73, 0x0d, 0xe6, 0x76, 0x69, 0x97, 0x86, 0xf4, 0x26, 0x8e, 0xad, 0xc1,
+	0xb8, 0x74, 0x4c, 0xb0, 0x73, 0xa7, 0x26, 0x0c, 0x40, 0x92, 0x60, 0xb8, 0x91, 0xe1, 0x0d, 0x98,
+	0xcf, 0x9a, 0x28, 0x6d, 0xff, 0x17, 0xb3, 0xfd, 0xc0, 0xeb, 0x38, 0x67, 0x57, 0xff, 0xbb, 0x8b,
+	0xc2, 0x7c, 0xcb, 0xba, 0x20, 0x7d, 0xfb, 0x16, 0x66, 0x0f, 0xbc, 0xe7, 0xd4, 0xa0, 0xe7, 0x8e,
+	0x17, 0x3b, 0x76, 0x1f, 0x6e, 0xf9, 0x82, 0x20, 0x9d, 0x9a, 0xe3, 0x16, 0x22, 0x4b, 0xbb, 0x47,
+	0x6d, 0xe7, 0xcc, 0xa1, 0xbe, 0x21, 0x59, 0xc8, 0x47, 0x30, 0xd3, 0x61, 0x93, 0xcc, 0x80, 0xfa,
+	0xcf, 0xa9, 0x1f, 0x2d, 0x4c, 0x8d, 0x4d, 0x9b, 0xe2, 0xd3, 0xda, 0x82, 0x2c, 0x82, 0x31, 0xc5,
+	0xf9, 0x92, 0xdf, 0xfa, 0x3c, 0x90, 0xb4, 0x6e, 0x69, 0xd1, 0x5f, 0x6a, 0xb0, 0xba, 0xeb, 0x04,
+	0x3d, 0x2b, 0xb4, 0x2f, 0x0e, 0xa8, 0x7f, 0xce, 0xce, 0x0d, 0x72, 0x04, 0x91, 0x79, 0x9b, 0x30,
+	0x8a, 0xba, 0x4d, 0xab, 0xca, 0xc0, 0xdb, 0xc8, 0xb4, 0x95, 0xe2, 0x3f, 0x95, 0x21, 0xaf, 0xe2,
+	0xdf, 0x26, 0x1b, 0x30, 0x7a, 0xe6, 0xf9, 0xb6, 0xc3, 0x56, 0x4e, 0x44, 0x79, 0xf4, 0xe1, 0xc8,
+	0x99, 0xd5, 0x0d, 0xa8, 0x11, 0x93, 0xf5, 0x75, 0xb8, 0x53, 0x66, 0xa3, 0x74, 0x63, 0x1b, 0xe6,
+	0xb6, 0x82, 0xc0, 0x39, 0x77, 0xaf, 0x1f, 0x5a, 0xbe, 0x68, 0x59, 0x19, 0x52, 0xb6, 0x05, 0x0b,
+	0x27, 0xae, 0x75, 0x43, 0xe9, 0x64, 0x19, 0x46, 0xb8, 0x3f, 0xb8, 0x5a, 0xb1, 0x8f, 0x48, 0xd3,
+	0x9b, 0xd0, 0xc8, 0xab, 0x90, 0xca, 0x77, 0x60, 0xfe, 0xe8, 0xec, 0x8c, 0xa5, 0xb3, 0x1b, 0x6c,
+	0x1a, 0x7d, 0x11, 0x16, 0x72, 0x42, 0xa4, 0xf4, 0xbf, 0xd6, 0x80, 0xec, 0xf8, 0xd4, 0x0a, 0xa9,
+	0x38, 0x44, 0x91, 0xf0, 0x07, 0x30, 0x81, 0x47, 0x2d, 0x10, 0x67, 0x43, 0xaa, 0x98, 0x8e, 0x0f,
+	0x9b, 0x3c, 0x32, 0xe3, 0x61, 0xf2, 0x83, 0xac, 0x02, 0x04, 0xbd, 0xae, 0x13, 0x9a, 0xdf, 0xd0,
+	0x2b, 0x7e, 0xd6, 0x86, 0x58, 0xae, 0x18, 0x13, 0x94, 0xcf, 0x18, 0xe1, 0x66, 0xc7, 0x69, 0x13,
+	0xe6, 0x32, 0x56, 0xa2, 0xf5, 0x8c, 0xff, 0x36, 0x4b, 0xe2, 0xb6, 0xe9, 0x74, 0x98, 0x85, 0x6c,
+	0x86, 0x71, 0x8b, 0xff, 0x6c, 0x75, 0xf4, 0xef, 0x80, 0x60, 0x6a, 0xc9, 0x78, 0xf5, 0x6a, 0x09,
+	0x24, 0x67, 0x70, 0xbd, 0xd2, 0xe0, 0xa1, 0xa2, 0xc1, 0x19, 0x03, 0x06, 0x19, 0xfc, 0xb7, 0x1a,
+	0xcc, 0x1f, 0xfb, 0x7d, 0xd7, 0xce, 0xaf, 0xc4, 0x7d, 0x48, 0x4c, 0x1a, 0x68, 0xf2, 0x3b, 0x30,
+	0xd5, 0xf3, 0xa9, 0xc8, 0x0c, 0x6d, 0x1e, 0xf8, 0x20, 0xbb, 0xd7, 0x72, 0x83, 0x37, 0x5b, 0x12,
+	0xb6, 0xa5, 0x72, 0x06, 0xcb, 0x2d, 0xc5, 0x62, 0xbf, 0xe7, 0x72, 0xca, 0x0f, 0x18, 0xfb, 0x8c,
+	0x01, 0x83, 0x62, 0xff, 0x3b, 0x7e, 0x57, 0x3a, 0xc1, 0x0f, 0x69, 0xf2, 0xbb, 0xec, 0x2a, 0xcc,
+	0x58, 0x30, 0xc8, 0xe6, 0xbf, 0xd7, 0x78, 0x32, 0xe7, 0x17, 0xcc, 0x0d, 0x4c, 0xce, 0x9f, 0xf2,
+	0xfa, 0x4b, 0x9c, 0xf2, 0x1b, 0xed, 0x99, 0x85, 0xe8, 0x62, 0xcf, 0xee, 0x18, 0x1b, 0x1a, 0x78,
+	0xba, 0xb9, 0x55, 0x2c, 0xcb, 0xdb, 0xb1, 0x3f, 0x2d, 0x98, 0x73, 0x23, 0xda, 0x2e, 0x0d, 0x6c,
+	0xdf, 0xe9, 0x85, 0x9e, 0x2f, 0x1d, 0x5b, 0xe4, 0x86, 0x1e, 0x16, 0x87, 0x0d, 0xd5, 0x1c, 0x7d,
+	0x09, 0x16, 0x0b, 0x4a, 0xa4, 0xfe, 0x4f, 0xa0, 0x81, 0x87, 0xb5, 0xa0, 0xff, 0x2e, 0x4c, 0xc6,
+	0xb2, 0xe2, 0x13, 0x38, 0x66, 0x64, 0x89, 0x5c, 0x74, 0x61, 0x7e, 0xe2, 0x1a, 0x7a, 0xfc, 0x5f,
+	0x76, 0xad, 0xa0, 0x44, 0xea, 0xdf, 0x83, 0xd5, 0xc7, 0x34, 0x54, 0x49, 0x7a, 0x25, 0x0f, 0xbf,
+	0x81, 0x3b, 0x65, 0x62, 0xe4, 0x4e, 0x7d, 0x8d, 0xee, 0x6c, 0xc0, 0xda, 0xbe, 0x13, 0xa8, 0xb4,
+	0x45, 0x25, 0x89, 0x7e, 0x09, 0xeb, 0xe5, 0x2c, 0x83, 0x2c, 0x1a, 0x7a, 0x65, 0x8b, 0x0e, 0xe1,
+	0xff, 0xb9, 0x3a, 0xb1, 0x6b, 0x53, 0xaa, 0xb6, 0xaf, 0xae, 0xb9, 0x61, 0xbe, 0x82, 0x1f, 0x0d,
+	0x94, 0x27, 0xbd, 0x78, 0x1f, 0xd2, 0xc7, 0x4f, 0x5a, 0x5f, 0x79, 0x44, 0xf5, 0x27, 0x18, 0x9c,
+	0xf8, 0xc8, 0x5f, 0xdf, 0xce, 0xa7, 0xb0, 0x51, 0x21, 0x49, 0x5a, 0x98, 0xbb, 0xa1, 0x86, 0xaa,
+	0x52, 0x8e, 0x3e, 0x0b, 0xd3, 0xed, 0x8b, 0x7e, 0xd8, 0xf1, 0x7e, 0x13, 0x15, 0x32, 0x3a, 0x81,
+	0x99, 0x84, 0x24, 0xb7, 0x2d, 0x7b, 0xd3, 0xb4, 0x43, 0xaf, 0x87, 0xef, 0xc1, 0x88, 0x91, 0xd5,
+	0xaf, 0x69, 0xa2, 0x64, 0x9d, 0x81, 0xa9, 0x6d, 0xab, 0x6b, 0xb9, 0xb1, 0x6f, 0xfa, 0x07, 0x30,
+	0x1d, 0x53, 0xa4, 0x8d, 0x1b, 0x30, 0x71, 0x8a, 0x24, 0xdf, 0xf4, 0x2d, 0x2c, 0x99, 0x46, 0x8d,
+	0xf1, 0x88, 0x66, 0x58, 0xae, 0x7e, 0x00, 0x4b, 0x6d, 0x1a, 0x6e, 0x47, 0x94, 0xbe, 0xeb, 0x8a,
+	0x2a, 0x13, 0xc3, 0x35, 0x05, 0x75, 0x2f, 0x9a, 0xc5, 0xfe, 0x22, 0xeb, 0x30, 0x1e, 0x5c, 0xb9,
+	0xf6, 0x85, 0xef, 0xb9, 0x5e, 0x5f, 0xde, 0xb2, 0x46, 0x9a, 0xa4, 0x7f, 0x0a, 0x9a, 0x4a, 0x9c,
+	0xb4, 0xe7, 0x6d, 0x20, 0xec, 0x2e, 0x7e, 0x6e, 0x4a, 0x03, 0xcc, 0xe7, 0x56, 0xb7, 0x4f, 0x45,
+	0x8a, 0x1f, 0x35, 0x66, 0xf8, 0x88, 0x9c, 0xf8, 0x8c, 0xd3, 0x75, 0x0d, 0x9a, 0xad, 0x20, 0x12,
+	0x85, 0x57, 0x5b, 0x27, 0x72, 0xf6, 0x43, 0x58, 0x52, 0x8c, 0x49, 0x35, 0x4d, 0xb8, 0x4d, 0x91,
+	0x24, 0x6d, 0x8f, 0x7e, 0xf2, 0xa0, 0x1f, 0x7a, 0xfe, 0xa5, 0xd5, 0x75, 0xbe, 0x8d, 0xe3, 0xf6,
+	0x10, 0x66, 0x53, 0x34, 0x29, 0xe2, 0x4d, 0x98, 0x72, 0x23, 0x62, 0x3a, 0x76, 0x93, 0x09, 0x95,
+	0x47, 0xef, 0x1d, 0x58, 0x66, 0xee, 0x1e, 0x26, 0xb4, 0xca, 0xf8, 0xe9, 0x06, 0xac, 0xa8, 0xd9,
+	0xa5, 0xd6, 0x07, 0xb0, 0x20, 0xe2, 0x93, 0x52, 0x9d, 0x0e, 0xd1, 0x1c, 0x1f, 0x4c, 0x66, 0x63,
+	0x94, 0x56, 0x40, 0x6b, 0x05, 0x09, 0x31, 0x17, 0xa7, 0x9f, 0xc1, 0xb2, 0x72, 0x74, 0x60, 0xa4,
+	0x58, 0x9d, 0xc3, 0xac, 0xdb, 0xb1, 0x42, 0xab, 0xeb, 0x9d, 0xb7, 0x6d, 0x2b, 0xde, 0xb7, 0x1f,
+	0x43, 0x23, 0x3f, 0x20, 0x85, 0xb1, 0x67, 0x73, 0xc0, 0x7e, 0x9b, 0xac, 0xda, 0xea, 0x77, 0x43,
+	0x61, 0xf3, 0x88, 0x01, 0x01, 0xb2, 0x30, 0x0a, 0x5b, 0xb4, 0x65, 0x34, 0x40, 0xce, 0xfe, 0xd4,
+	0x72, 0x9d, 0x54, 0x4e, 0x6e, 0xc0, 0x2d, 0xd4, 0x2e, 0x6d, 0x91, 0xbf, 0xf4, 0x5f, 0xc0, 0x8a,
+	0x7a, 0x9a, 0xd4, 0xcb, 0x2a, 0x70, 0x11, 0xb5, 0x74, 0xa8, 0xc6, 0x38, 0x05, 0x03, 0xc4, 0x1e,
+	0x51, 0xad, 0x20, 0x3b, 0xb5, 0x10, 0xa4, 0xb5, 0x52, 0x0e, 0xa9, 0x63, 0x1e, 0x46, 0x22, 0xf1,
+	0xdc, 0x34, 0xfc, 0xa1, 0x3f, 0x62, 0xc7, 0xda, 0xb5, 0x7a, 0xc1, 0x85, 0x17, 0x46, 0x4e, 0xfc,
+	0x04, 0x46, 0x03, 0x49, 0x4a, 0xdf, 0x02, 0x11, 0x5b, 0x94, 0xf6, 0xf8, 0x63, 0x24, 0x66, 0x64,
+	0x1e, 0xce, 0x24, 0x72, 0xa4, 0xc6, 0x1f, 0xc3, 0x0c, 0x7d, 0xc1, 0x5e, 0x34, 0x21, 0xed, 0x98,
+	0xa1, 0x73, 0x49, 0xbd, 0x3e, 0x0a, 0x1c, 0x32, 0xa6, 0x23, 0xfa, 0x31, 0x92, 0xf5, 0x3b, 0xb0,
+	0xc2, 0xae, 0xa9, 0x1d, 0xef, 0xb2, 0xc7, 0x6f, 0xe3, 0x4e, 0x24, 0x2a, 0xbe, 0x36, 0x9e, 0x89,
+	0xdb, 0x50, 0x35, 0x2e, 0x75, 0x7d, 0x08, 0x63, 0x91, 0x2d, 0x41, 0xfa, 0xa6, 0x50, 0x59, 0x9d,
+	0x70, 0xea, 0xfb, 0xb0, 0x80, 0x05, 0xc0, 0x6b, 0x09, 0x42, 0x33, 0x2a, 0x47, 0xf2, 0xa1, 0x60,
+	0x39, 0xaa, 0xc1, 0xfe, 0x66, 0xab, 0xf2, 0x7a, 0x14, 0xb1, 0xba, 0xa1, 0x20, 0x4e, 0x6a, 0x62,
+	0x1e, 0xb5, 0x82, 0x78, 0xb6, 0xe7, 0x52, 0xb5, 0xa2, 0xda, 0xcb, 0x29, 0xba, 0x80, 0x46, 0x5e,
+	0x9a, 0x0c, 0xf8, 0x12, 0x0c, 0x77, 0xd8, 0x6f, 0xdc, 0xac, 0xd1, 0x3b, 0x45, 0x90, 0x32, 0x9a,
+	0xea, 0x2f, 0xab, 0xa9, 0x0d, 0x2b, 0xad, 0x20, 0xe7, 0xd4, 0x8d, 0xcd, 0x7f, 0x08, 0xab, 0x25,
+	0x42, 0x07, 0x7a, 0xa1, 0x7f, 0x06, 0xcb, 0x6c, 0xcb, 0xe1, 0xcd, 0xbc, 0xd5, 0x8d, 0xf1, 0xca,
+	0x6b, 0x15, 0xec, 0xfa, 0x73, 0xb1, 0xbf, 0x15, 0xc2, 0xe2, 0x62, 0x61, 0xe1, 0x8a, 0x86, 0x66,
+	0xe8, 0x99, 0xfd, 0x5e, 0x87, 0x95, 0xba, 0x26, 0x3e, 0xff, 0x03, 0x61, 0xd8, 0xa4, 0x41, 0xd8,
+	0xe0, 0xb1, 0x77, 0x22, 0x86, 0x24, 0x7e, 0x42, 0xde, 0x80, 0xc9, 0xd0, 0x63, 0x07, 0x3e, 0x66,
+	0xad, 0x0b, 0xd6, 0x09, 0x41, 0x94, 0x4c, 0xfa, 0x3f, 0x6a, 0xa0, 0x31, 0xc5, 0xf9, 0x7a, 0x25,
+	0x01, 0x88, 0xc6, 0x13, 0x27, 0x02, 0x75, 0x0d, 0x00, 0xb1, 0x17, 0x01, 0xcf, 0x21, 0x4c, 0x1b,
+	0x7d, 0x21, 0x74, 0x8d, 0x19, 0xf8, 0x83, 0x2d, 0x0d, 0x71, 0x5c, 0xbb, 0xdb, 0xef, 0xb0, 0xf7,
+	0xc8, 0x55, 0x60, 0x0a, 0xfe, 0x20, 0x0b, 0x08, 0xcd, 0x48, 0x86, 0xf6, 0x55, 0x20, 0x24, 0x07,
+	0x64, 0x05, 0xc6, 0xe2, 0x92, 0x45, 0x3c, 0x37, 0xc6, 0x8c, 0x84, 0xa0, 0x7f, 0x2e, 0x82, 0x5f,
+	0x34, 0x3b, 0xbe, 0x65, 0xf2, 0x28, 0xc7, 0xe0, 0xe2, 0xea, 0x3b, 0x98, 0x8f, 0x44, 0x0a, 0x67,
+	0xa2, 0x18, 0xc4, 0x3e, 0xd5, 0x06, 0xfb, 0x54, 0x7f, 0x05, 0x9f, 0x86, 0xf2, 0x3e, 0x3d, 0x86,
+	0x85, 0x9c, 0x01, 0xd2, 0x9b, 0x57, 0x5c, 0x05, 0x7e, 0xfa, 0x79, 0x32, 0x4c, 0xa3, 0xe8, 0x51,
+	0x9e, 0x3c, 0x86, 0x66, 0x71, 0x48, 0xaa, 0xf9, 0x08, 0xa6, 0x6c, 0x1c, 0x30, 0x03, 0x31, 0x22,
+	0x77, 0xed, 0xac, 0x80, 0x55, 0x33, 0x53, 0x26, 0xed, 0xf4, 0x4f, 0x9e, 0xd7, 0x5a, 0x81, 0xac,
+	0xde, 0x32, 0xe5, 0x01, 0x7b, 0xa5, 0x2c, 0x16, 0x46, 0xa4, 0xba, 0xb7, 0x60, 0xd6, 0x09, 0xcc,
+	0x4b, 0x31, 0x66, 0xfa, 0x38, 0x28, 0xef, 0x9e, 0x69, 0x27, 0x3b, 0x87, 0x95, 0xe9, 0xf3, 0x7b,
+	0x2f, 0xa8, 0x1d, 0xc3, 0xfd, 0xd1, 0xda, 0xfc, 0x14, 0xc6, 0x7a, 0x11, 0x4d, 0x5a, 0xdb, 0xe4,
+	0xd6, 0xc6, 0x8c, 0x99, 0xb4, 0x1e, 0xb3, 0xb2, 0xc7, 0xdb, 0x42, 0x4e, 0x5e, 0xe5, 0x95, 0x54,
+	0x53, 0x5c, 0x49, 0xbc, 0x16, 0xf0, 0x69, 0xd8, 0xf7, 0x5d, 0x93, 0x9d, 0x3a, 0x4b, 0x2c, 0xfd,
+	0x84, 0x01, 0x48, 0xda, 0x65, 0x14, 0x56, 0x63, 0xb3, 0xa8, 0x24, 0x96, 0xa4, 0x72, 0x55, 0xce,
+	0xec, 0xda, 0xcb, 0x9a, 0xfd, 0x35, 0x8f, 0x66, 0x4e, 0xe2, 0xe0, 0x74, 0xfb, 0x41, 0x21, 0xdd,
+	0x96, 0x2b, 0x4b, 0x52, 0xe3, 0x07, 0xb0, 0xc4, 0x76, 0x4a, 0x3a, 0x42, 0xac, 0xbe, 0x89, 0x1c,
+	0xc8, 0xa0, 0x17, 0xf5, 0x14, 0x7a, 0xf1, 0xa7, 0xba, 0xc8, 0x27, 0x85, 0x69, 0xd2, 0xca, 0x87,
+	0x30, 0xc2, 0xb7, 0x16, 0xae, 0xd5, 0xd4, 0x83, 0xbb, 0xdc, 0x8e, 0x72, 0xf6, 0x4d, 0xbe, 0xbd,
+	0xa8, 0x81, 0x53, 0x04, 0x0a, 0x19, 0x5a, 0x7e, 0x28, 0xd6, 0x05, 0x51, 0x18, 0x76, 0x53, 0x73,
+	0x0a, 0x5f, 0x11, 0xbe, 0x1c, 0x5d, 0xb6, 0x67, 0x64, 0x7e, 0x44, 0xf8, 0xc2, 0x00, 0x4e, 0xc2,
+	0xb4, 0xc8, 0x6b, 0x2f, 0x59, 0xb6, 0x0d, 0x8b, 0xa5, 0x92, 0xbf, 0xc8, 0xc7, 0x30, 0x46, 0x5f,
+	0xd8, 0x54, 0xf8, 0xdf, 0x1c, 0x11, 0xf1, 0x59, 0xe6, 0x76, 0x3d, 0x62, 0x77, 0x82, 0x73, 0xee,
+	0xee, 0x45, 0x63, 0x07, 0x34, 0x08, 0xac, 0x73, 0x96, 0xb5, 0x63, 0x6e, 0xfd, 0x7d, 0x18, 0x11,
+	0x26, 0x92, 0x49, 0x18, 0x3b, 0x3c, 0x3a, 0x36, 0x1f, 0x1d, 0x9d, 0x1c, 0xee, 0xce, 0xfc, 0x1f,
+	0x19, 0x87, 0xdb, 0xc6, 0xc9, 0xe1, 0x61, 0xeb, 0xf0, 0xf1, 0x4c, 0x8d, 0x4c, 0xc0, 0xe8, 0xa3,
+	0xd6, 0x61, 0xab, 0xfd, 0x64, 0x6f, 0x77, 0xa6, 0xae, 0x77, 0x61, 0x61, 0xeb, 0xd4, 0xf3, 0xc3,
+	0xc2, 0x56, 0x2e, 0x0b, 0x29, 0x8b, 0xd9, 0xc2, 0xa5, 0x75, 0xd5, 0x72, 0xd9, 0x71, 0xf0, 0xfb,
+	0xbd, 0xb0, 0x75, 0x26, 0x0f, 0x85, 0x4c, 0x36, 0xc3, 0xa1, 0xdf, 0xa7, 0x86, 0x9a, 0x85, 0xbd,
+	0x55, 0x1a, 0x79, 0x6d, 0x72, 0x25, 0xde, 0x83, 0x79, 0x76, 0xfa, 0xe2, 0xad, 0x65, 0x5a, 0x9c,
+	0x2d, 0xae, 0x91, 0x89, 0x93, 0x6c, 0xb3, 0x2d, 0x1c, 0xe1, 0xe5, 0x32, 0x7f, 0x32, 0xc6, 0xf4,
+	0x20, 0x39, 0xe3, 0x8d, 0xfc, 0x40, 0xf2, 0x80, 0x4c, 0xef, 0xf3, 0x38, 0x6d, 0x25, 0xe6, 0xa4,
+	0x36, 0xf7, 0x1f, 0xeb, 0xac, 0xd4, 0xa4, 0xa1, 0xe8, 0xe0, 0x45, 0x41, 0x59, 0x86, 0xb1, 0x7e,
+	0x10, 0xf5, 0x42, 0x30, 0xff, 0x8e, 0x72, 0x82, 0x00, 0xb9, 0xd8, 0x86, 0x10, 0x83, 0x09, 0x2c,
+	0xc7, 0xd2, 0x29, 0xa7, 0x20, 0x56, 0x55, 0x99, 0x6c, 0x73, 0xd7, 0xf3, 0xb0, 0x58, 0xf6, 0x72,
+	0x3c, 0x8d, 0xa9, 0xf2, 0xe9, 0xa5, 0xf7, 0x9c, 0xc5, 0xa9, 0xdb, 0x15, 0x9b, 0x84, 0xd5, 0xdf,
+	0x48, 0xd9, 0xea, 0x76, 0xf9, 0x53, 0xea, 0xf4, 0xaa, 0x67, 0x05, 0x81, 0x79, 0xde, 0xf5, 0xd8,
+	0xcb, 0x2f, 0x68, 0xde, 0x12, 0x2c, 0x93, 0x48, 0x7d, 0x8c, 0x44, 0xf2, 0x2e, 0x8c, 0x86, 0xec,
+	0x15, 0x19, 0x86, 0xac, 0xfe, 0xbf, 0x2d, 0x34, 0x0a, 0x68, 0xff, 0x58, 0xd2, 0xa4, 0xd3, 0x46,
+	0xcc, 0x24, 0x1e, 0xd0, 0x71, 0x44, 0x64, 0xfd, 0x76, 0x04, 0x6b, 0x07, 0xd6, 0xd7, 0x9e, 0xcf,
+	0x6b, 0x5d, 0xcb, 0xe6, 0xdb, 0x90, 0x6f, 0x7f, 0x76, 0x0e, 0x2e, 0x7b, 0xd7, 0x2b, 0x3d, 0xbe,
+	0x80, 0x7b, 0x65, 0x02, 0x1f, 0xf1, 0x27, 0xc8, 0xb5, 0x5b, 0x13, 0x27, 0xb0, 0x5e, 0x6e, 0x69,
+	0x5c, 0xd7, 0xcc, 0xdb, 0xf1, 0xb0, 0x38, 0xd9, 0x62, 0x5c, 0x3e, 0x03, 0xe6, 0xec, 0xe2, 0x54,
+	0x7d, 0x95, 0x3f, 0x48, 0xed, 0xbe, 0xef, 0x84, 0x57, 0x3b, 0x56, 0xcf, 0x3a, 0x75, 0xba, 0x4e,
+	0xe8, 0x24, 0xbb, 0xf1, 0xdf, 0x35, 0xfe, 0x02, 0x55, 0x8d, 0x4b, 0x95, 0x47, 0x30, 0x61, 0xa7,
+	0xe8, 0x62, 0x5f, 0x4e, 0x3d, 0xb8, 0x8f, 0x2d, 0xb6, 0xf2, 0x79, 0x9b, 0x31, 0xf1, 0xca, 0xc8,
+	0x08, 0xd0, 0x7f, 0x5f, 0x03, 0x48, 0x06, 0x59, 0x26, 0x5e, 0x68, 0xb7, 0x0e, 0x9e, 0xee, 0xef,
+	0x99, 0x5b, 0x27, 0xc7, 0x4f, 0xf6, 0x0e, 0x8f, 0x5b, 0x3b, 0x5b, 0xc7, 0xad, 0xa3, 0x43, 0x96,
+	0x17, 0xf8, 0xd0, 0xde, 0xce, 0x89, 0x51, 0x18, 0xaa, 0x91, 0x59, 0x98, 0xe4, 0xb4, 0x23, 0xa3,
+	0xf5, 0x2b, 0x24, 0xd5, 0x59, 0xc2, 0x22, 0x3b, 0x7b, 0xfb, 0xfb, 0x66, 0x96, 0x3e, 0x44, 0xe6,
+	0x60, 0x5a, 0xd0, 0x9f, 0xb5, 0xda, 0xad, 0xed, 0xd6, 0x7e, 0xeb, 0xf8, 0xcb, 0x99, 0xe1, 0x07,
+	0xdf, 0x6f, 0xc0, 0x24, 0xde, 0x99, 0xbc, 0x2f, 0xe8, 0xb0, 0x1d, 0xfe, 0xa5, 0xa8, 0x67, 0x0a,
+	0x25, 0x25, 0x59, 0x93, 0x49, 0xb7, 0xac, 0x72, 0xd5, 0xd6, 0xcb, 0x19, 0x64, 0x08, 0x9f, 0xc1,
+	0x9c, 0xa2, 0xfa, 0x22, 0x77, 0xe4, 0xc4, 0x92, 0x6a, 0x52, 0x5b, 0x2b, 0x1d, 0x97, 0x72, 0x77,
+	0x61, 0x32, 0x53, 0x01, 0x91, 0x66, 0x7a, 0x46, 0xba, 0x2a, 0xd3, 0x96, 0x14, 0x23, 0x52, 0xca,
+	0x01, 0xcc, 0xe4, 0x6b, 0x1c, 0xb2, 0x2c, 0xd9, 0x55, 0x45, 0x91, 0xb6, 0xa2, 0x1e, 0x94, 0xe2,
+	0x3e, 0x85, 0xe9, 0x5c, 0x09, 0x43, 0x34, 0x3e, 0x41, 0x5d, 0xf1, 0x68, 0xcb, 0xca, 0xb1, 0xb8,
+	0xc4, 0x1a, 0x8b, 0x3b, 0xfa, 0x64, 0x9e, 0x73, 0xe6, 0x3f, 0x50, 0xd0, 0x16, 0x72, 0x54, 0x39,
+	0x73, 0x0b, 0x26, 0xd2, 0x2d, 0x75, 0x22, 0x1e, 0x37, 0x8a, 0xef, 0x00, 0xb4, 0x66, 0x71, 0x20,
+	0x11, 0x91, 0xee, 0x5c, 0xa3, 0x08, 0x45, 0x3b, 0x1e, 0x45, 0xa8, 0x9a, 0xdc, 0xe4, 0xe7, 0x00,
+	0x49, 0xa3, 0x99, 0x2c, 0x20, 0x5f, 0xae, 0xe9, 0xad, 0x35, 0xf2, 0x64, 0x39, 0xd9, 0x64, 0xaf,
+	0x5f, 0x65, 0xab, 0x97, 0x6c, 0x08, 0x9b, 0xab, 0x5a, 0xd5, 0x9a, 0x5e, 0xc5, 0x92, 0x38, 0x98,
+	0xee, 0xf2, 0xa2, 0x83, 0x8a, 0xde, 0x31, 0x3a, 0xa8, 0x6a, 0x08, 0x93, 0xc7, 0x30, 0x95, 0xed,
+	0xd6, 0x12, 0xb1, 0xd1, 0x94, 0x4d, 0x62, 0x4d, 0x53, 0x0d, 0x25, 0x5b, 0x39, 0xd3, 0x97, 0xc5,
+	0xad, 0xac, 0xea, 0xf7, 0xe2, 0x56, 0x56, 0x36, 0x71, 0xc9, 0x27, 0x30, 0x9e, 0x6a, 0x36, 0x92,
+	0x46, 0xb2, 0xb6, 0xe9, 0xe6, 0x90, 0xb6, 0x58, 0xa0, 0x27, 0x56, 0x84, 0xe9, 0x56, 0x1e, 0x5a,
+	0xa1, 0x6a, 0x47, 0xa2, 0x15, 0xca, 0xbe, 0x1f, 0xb7, 0x22, 0xd5, 0x76, 0x43, 0x2b, 0x8a, 0x8d,
+	0x40, 0xb4, 0x42, 0xd5, 0x9f, 0xe3, 0x7b, 0x37, 0xd5, 0x03, 0x93, 0x7b, 0xb7, 0xd8, 0x97, 0x93,
+	0x7b, 0x57, 0xd5, 0x2e, 0x63, 0x26, 0xa4, 0xfa, 0x4b, 0xa4, 0x91, 0xec, 0xd0, 0xa2, 0x09, 0x8a,
+	0x46, 0x14, 0x9f, 0x9f, 0x6a, 0x33, 0xe3, 0xfc, 0x62, 0x77, 0x1c, 0xe7, 0xab, 0xfa, 0xd1, 0x1f,
+	0xc2, 0x68, 0x04, 0x65, 0x13, 0x71, 0xe9, 0xe5, 0xb0, 0x6e, 0x6d, 0x3e, 0x4b, 0x4c, 0xce, 0x4b,
+	0x02, 0x6c, 0xe3, 0x79, 0x29, 0xa0, 0xdf, 0x78, 0x5e, 0x8a, 0xf8, 0x37, 0x7b, 0xc4, 0xde, 0x96,
+	0xf0, 0x2f, 0x21, 0x9c, 0x25, 0x0b, 0x86, 0x6b, 0x73, 0x19, 0x9a, 0x9c, 0xd3, 0x06, 0x52, 0x04,
+	0xa7, 0xc9, 0x2a, 0x5e, 0x6e, 0x25, 0x18, 0xb8, 0x76, 0xa7, 0x6c, 0x58, 0x0a, 0x7d, 0x0a, 0xb3,
+	0x05, 0x24, 0x9a, 0xac, 0x60, 0x9e, 0x53, 0x83, 0xd7, 0xda, 0x6a, 0xc9, 0x68, 0x92, 0x07, 0x63,
+	0xc4, 0x16, 0xf3, 0x60, 0x1e, 0xb3, 0xc6, 0x3c, 0x58, 0x44, 0xad, 0xd9, 0xad, 0xa6, 0xc2, 0x97,
+	0xf1, 0x56, 0xab, 0x00, 0xaa, 0xf1, 0x56, 0xab, 0x84, 0xa6, 0xd9, 0xad, 0xa6, 0x00, 0x92, 0xf1,
+	0x56, 0x2b, 0xc7, 0x9f, 0xf1, 0x56, 0xab, 0x42, 0xa0, 0x59, 0x4e, 0xc9, 0xc2, 0xc9, 0x98, 0x53,
+	0x94, 0xd8, 0x33, 0xe6, 0x94, 0x12, 0xf4, 0x99, 0xf9, 0xae, 0x42, 0x89, 0xd1, 0xf7, 0x0a, 0xd8,
+	0x19, 0x7d, 0xaf, 0x04, 0x98, 0x4f, 0xf9, 0xcb, 0x52, 0x89, 0x0f, 0x13, 0x1d, 0xfd, 0xab, 0x82,
+	0x97, 0xb5, 0x37, 0x2a, 0x79, 0xa4, 0x0e, 0x03, 0x66, 0xf9, 0xa3, 0x3b, 0x5b, 0xa5, 0xac, 0xe2,
+	0x37, 0x5b, 0xe2, 0x19, 0x10, 0x04, 0x5e, 0x44, 0xcf, 0x6c, 0x4d, 0xd5, 0x70, 0xea, 0x5c, 0xca,
+	0x17, 0xab, 0x3c, 0x97, 0x59, 0xf8, 0x54, 0x9e, 0xcb, 0x3c, 0xf2, 0xfc, 0x95, 0x80, 0x5a, 0x8a,
+	0x70, 0x31, 0x89, 0x6a, 0x9f, 0x52, 0xa4, 0x59, 0xdb, 0xa8, 0xe0, 0x48, 0x16, 0x3c, 0x0b, 0xf3,
+	0xe2, 0x82, 0x2b, 0x81, 0x64, 0x5c, 0x70, 0x35, 0x2a, 0xcc, 0x05, 0x65, 0xd1, 0x55, 0x14, 0xa4,
+	0xc4, 0x6f, 0x35, 0x4d, 0x35, 0x94, 0xd4, 0x30, 0x39, 0x94, 0x13, 0x6b, 0x18, 0x35, 0xe6, 0x8c,
+	0x35, 0x4c, 0x09, 0x80, 0xcc, 0x63, 0xa7, 0xc4, 0x4c, 0x31, 0x76, 0x55, 0x18, 0x2d, 0xc6, 0xae,
+	0x1a, 0x70, 0x65, 0x37, 0x56, 0x06, 0x99, 0xc1, 0x1b, 0x4b, 0x05, 0xfe, 0xe0, 0x8d, 0xa5, 0x86,
+	0x71, 0x3e, 0xcb, 0xe1, 0x45, 0x5f, 0x38, 0xe1, 0x85, 0x41, 0xc3, 0xeb, 0x09, 0x13, 0x05, 0x60,
+	0x06, 0x75, 0x89, 0x0a, 0x40, 0x15, 0xb8, 0x13, 0x15, 0x80, 0x6a, 0x98, 0x86, 0xc9, 0xca, 0x35,
+	0xf4, 0x51, 0x96, 0xfa, 0x53, 0x02, 0x94, 0x55, 0xf2, 0x05, 0x00, 0x97, 0x95, 0xfb, 0xee, 0x01,
+	0x65, 0xa9, 0xbf, 0xb8, 0x40, 0x59, 0x25, 0x1f, 0x4a, 0x70, 0x59, 0xb9, 0x0f, 0x1d, 0x48, 0x6a,
+	0x63, 0xaa, 0x65, 0x95, 0x7c, 0x19, 0xc1, 0xeb, 0x3c, 0xf5, 0x27, 0x05, 0x24, 0x3a, 0x3b, 0xe5,
+	0x5f, 0x2d, 0x60, 0x9d, 0x37, 0xe0, 0x8b, 0x04, 0x0a, 0xcd, 0xb2, 0x6f, 0x04, 0x88, 0xc8, 0x44,
+	0x03, 0x3e, 0x32, 0xd0, 0xee, 0x56, 0x33, 0x49, 0x35, 0xdf, 0xe2, 0xd7, 0x0a, 0x15, 0xbd, 0x7c,
+	0xf2, 0x56, 0x24, 0x68, 0xf0, 0x07, 0x04, 0xda, 0xfd, 0x97, 0xe2, 0x95, 0xba, 0x2f, 0x60, 0xa9,
+	0xb4, 0x3f, 0x4f, 0xee, 0x66, 0x24, 0x95, 0x7c, 0x08, 0xa0, 0xbd, 0x39, 0x80, 0x2b, 0x95, 0x41,
+	0x25, 0xc6, 0x20, 0x33, 0x68, 0x16, 0x83, 0x91, 0x19, 0x34, 0x07, 0x43, 0x90, 0x2e, 0xac, 0x9d,
+	0xd3, 0x70, 0x9f, 0xe5, 0xf2, 0xb2, 0x37, 0x3e, 0x2e, 0xc5, 0x00, 0xac, 0x02, 0x97, 0x62, 0x20,
+	0x4c, 0xf0, 0x5b, 0xb8, 0x37, 0x40, 0x5b, 0x0c, 0x55, 0x90, 0xb7, 0xab, 0x24, 0xe6, 0x11, 0x8d,
+	0x97, 0xd4, 0xcf, 0xca, 0xaa, 0xf3, 0x02, 0x4c, 0x89, 0x77, 0x57, 0x29, 0x48, 0xaa, 0xdd, 0xa9,
+	0x46, 0x37, 0x59, 0x22, 0x5d, 0x64, 0x42, 0x55, 0x98, 0x43, 0x54, 0xcd, 0x94, 0xa2, 0x1c, 0x51,
+	0x35, 0x53, 0x01, 0x73, 0xb0, 0xbb, 0x23, 0x0b, 0xfd, 0xe1, 0xdd, 0xa1, 0x04, 0x1f, 0xf1, 0xee,
+	0x28, 0x41, 0x0a, 0x99, 0xa0, 0x2c, 0xbc, 0x87, 0x82, 0x94, 0x58, 0x20, 0x0a, 0x52, 0xa3, 0x81,
+	0xdb, 0xdb, 0xf0, 0x96, 0xe7, 0x9f, 0x6f, 0x32, 0x63, 0xed, 0x0b, 0xba, 0x79, 0x61, 0x75, 0x3c,
+	0xaf, 0xb7, 0x79, 0x71, 0x1a, 0xff, 0x1b, 0xc0, 0x69, 0xff, 0x6c, 0xf3, 0x9c, 0xba, 0xd4, 0x67,
+	0x19, 0xaa, 0xb3, 0x2d, 0xff, 0x65, 0xe0, 0x29, 0x1f, 0x09, 0x9e, 0xd4, 0xfe, 0x50, 0xab, 0x7d,
+	0x5f, 0xab, 0xfd, 0x27, 0x00, 0x00, 0xff, 0xff, 0x99, 0x68, 0x21, 0xd3, 0x49, 0x30, 0x00, 0x00,
 }
