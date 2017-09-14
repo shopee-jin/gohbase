@@ -14,10 +14,10 @@ import (
 
 	"github.com/aristanetworks/goarista/test"
 	"github.com/golang/protobuf/proto"
-	"github.com/tsuna/gohbase/filter"
-	"github.com/tsuna/gohbase/hrpc"
-	"github.com/tsuna/gohbase/pb"
-	"github.com/tsuna/gohbase/region"
+	"github.com/jasonzzw/gohbase/filter"
+	"github.com/jasonzzw/gohbase/hrpc"
+	"github.com/jasonzzw/gohbase/pb"
+	"github.com/jasonzzw/gohbase/region"
 )
 
 func TestNewGet(t *testing.T) {

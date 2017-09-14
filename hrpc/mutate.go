@@ -17,7 +17,7 @@ import (
 	"unsafe"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/tsuna/gohbase/pb"
+	"github.com/jasonzzw/gohbase/pb"
 )
 
 var (
