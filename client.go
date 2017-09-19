@@ -42,6 +42,7 @@ var (
 // Client a regular HBase client
 type Client interface {
 	Scan(s *hrpc.Scan) hrpc.Scanner
+	ScanParallel(s *hrpc.Scan) hrpc.Scanner
 	Get(g *hrpc.Get) (*hrpc.Result, error)
 	Put(p *hrpc.Mutate) (*hrpc.Result, error)
 	Delete(d *hrpc.Mutate) (*hrpc.Result, error)
@@ -101,6 +102,8 @@ type client struct {
 
 	// regionReadTimeout is the maximum amount of time to wait for regionserver reply
 	regionReadTimeout time.Duration
+
+	options []Option
 }
 
 // NewClient creates a new HBase client.
@@ -134,6 +137,9 @@ func newClient(zkquorum string, options ...Option) *client {
 		regionLookupTimeout: region.DefaultLookupTimeout,
 		regionReadTimeout:   region.DefaultReadTimeout,
 	}
+
+	c.options = options
+
 	for _, option := range options {
 		option(c)
 	}
@@ -213,6 +219,10 @@ func (c *client) Close() {
 
 func (c *client) Scan(s *hrpc.Scan) hrpc.Scanner {
 	return newScanner(c, s)
+}
+
+func (c *client) ScanParallel(s *hrpc.Scan) hrpc.Scanner {
+	return NewParallelScanner(c, s)
 }
 
 func (c *client) Get(g *hrpc.Get) (*hrpc.Result, error) {

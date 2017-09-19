@@ -17,8 +17,8 @@ import (
 	log "github.com/Sirupsen/logrus"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/samuel/go-zookeeper/zk"
 	"github.com/jasonzzw/gohbase/pb"
+	"github.com/samuel/go-zookeeper/zk"
 )
 
 type logger struct{}
@@ -53,6 +53,7 @@ const (
 // Client is an interface of client that retrieves meta infomation from zookeeper
 type Client interface {
 	LocateResource(ResourceName) (string, error)
+	GetQuorum() string
 }
 
 type client struct {
@@ -66,6 +67,10 @@ func NewClient(zkquorum string, st time.Duration) Client {
 		zks:            strings.Split(zkquorum, ","),
 		sessionTimeout: st,
 	}
+}
+
+func (c *client) GetQuorum() string {
+	return strings.Join(c.zks, ",")
 }
 
 // LocateResource returns address of the server for the specified resource.
