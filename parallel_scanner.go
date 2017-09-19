@@ -34,7 +34,7 @@ func NewParallelScanner(c *client, rpc *hrpc.Scan) hrpc.Scanner {
 	scanRequest, err = hrpc.NewScanStr(context.Background(), "hbase:meta",
 		hrpc.Filters(filter.NewPrefixFilter([]byte(rpc.Table()))))
 	if err != nil {
-		log.Errorf("error with scanning hbase:meta table, err=%s\n", err)
+		log.Errorf("Error with scanning hbase:meta table, err=%s", err)
 		return nil
 	}
 	//else, we scan the table info
@@ -49,6 +49,8 @@ func NewParallelScanner(c *client, rpc *hrpc.Scan) hrpc.Scanner {
 			}
 		}
 	}
+	log.Infof("Retrieve %d regions for table=%s", len(regs), rpc.Table())
+
 	return &parallelScanner{
 		regions:    regs,
 		rootClient: c,
@@ -62,15 +64,15 @@ func (p *parallelScanner) fetch() {
 	for _, region := range p.regions {
 		scanObj, err := hrpc.NewScanRange(p.rootScan.Context(), p.rootScan.Table(), region.StartKey(), region.StopKey(), hrpc.Families(p.rootScan.Families()), hrpc.Filters(p.rootScan.Filter()))
 		if err != nil {
-			log.Warnf("create scan object err=%s\n", err)
+			log.Warnf("Create scan object err=%s", err)
 			continue
 		}
 		cli := NewClient(p.rootClient.zkClient.GetQuorum(), p.rootClient.options...)
 		sc := cli.Scan(scanObj)
 		//save the scanner object for canceling
 		p.subScanner = append(p.subScanner, sc)
+		wg.Add(1)
 		go func(sc hrpc.Scanner) {
-			wg.Add(1)
 			for {
 				//scan one row
 				if scanRsp, err := sc.Next(); err != nil {
