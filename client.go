@@ -42,7 +42,7 @@ var (
 // Client a regular HBase client
 type Client interface {
 	Scan(s *hrpc.Scan) hrpc.Scanner
-	ScanParallel(s *hrpc.Scan) hrpc.Scanner
+	ScanParallel(s *hrpc.Scan, parallel int) hrpc.Scanner
 	Get(g *hrpc.Get) (*hrpc.Result, error)
 	Put(p *hrpc.Mutate) (*hrpc.Result, error)
 	Delete(d *hrpc.Mutate) (*hrpc.Result, error)
@@ -221,8 +221,8 @@ func (c *client) Scan(s *hrpc.Scan) hrpc.Scanner {
 	return newScanner(c, s)
 }
 
-func (c *client) ScanParallel(s *hrpc.Scan) hrpc.Scanner {
-	return NewParallelScanner(c, s)
+func (c *client) ScanParallel(s *hrpc.Scan, parallel int) hrpc.Scanner {
+	return NewParallelScanner(c, s, parallel)
 }
 
 func (c *client) Get(g *hrpc.Get) (*hrpc.Result, error) {

@@ -73,6 +73,9 @@ type Scan struct {
 
 	closeScanner        bool
 	allowPartialResults bool
+
+	caching    uint32
+	blockCache bool
 }
 
 // baseScan returns a Scan struct with default values set.
@@ -87,6 +90,8 @@ func baseScan(ctx context.Context, table []byte,
 		scannerID:     math.MaxUint64,
 		maxResultSize: DefaultMaxResultSize,
 		numberOfRows:  DefaultNumberOfRows,
+		caching:       uint32(10000),
+		blockCache:    false,
 	}
 	err := applyOptions(s, options...)
 	if err != nil {
@@ -217,6 +222,8 @@ func (s *Scan) ToProto() (proto.Message, error) {
 		StopRow:       s.stopRow,
 		TimeRange:     &pb.TimeRange{},
 		MaxResultSize: &s.maxResultSize,
+		Caching:       proto.Uint32(s.caching),
+		CacheBlocks:   proto.Bool(s.blockCache),
 	}
 	if s.maxVersions != DefaultMaxVersions {
 		scan.Scan.MaxVersions = &s.maxVersions
@@ -304,6 +311,31 @@ func NumberOfRows(n uint32) func(Call) error {
 			return errors.New("'NumberOfRows' option must be greater than 0")
 		}
 		scan.numberOfRows = n
+		return nil
+	}
+}
+
+func SetCaching(n uint32) func(Call) error {
+	return func(g Call) error {
+		scan, ok := g.(*Scan)
+		if !ok {
+			return errors.New("'SetCaching' option can only be used with Scan queries")
+		}
+		if n == 0 {
+			return errors.New("'SetCaching' option must be greater than 0")
+		}
+		scan.caching = n
+		return nil
+	}
+}
+
+func SetBlockCache(bc bool) func(Call) error {
+	return func(g Call) error {
+		scan, ok := g.(*Scan)
+		if !ok {
+			return errors.New("'SetBlockCache' option can only be used with Scan queries")
+		}
+		scan.blockCache = bc
 		return nil
 	}
 }
