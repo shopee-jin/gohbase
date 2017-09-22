@@ -3,7 +3,6 @@ package gohbase
 import (
 	"context"
 	"io"
-	"math/rand"
 	"sync"
 
 	log "github.com/Sirupsen/logrus"
@@ -57,17 +56,10 @@ func NewParallelScanner(c *client, rpc *hrpc.Scan, parallel int) hrpc.Scanner {
 }
 
 func (p *parallelScanner) fetch() {
-	//we permutate the region first to avoid sychronous behavior
-	dest := make([]hrpc.RegionInfo, len(p.regions))
-	perm := rand.Perm(len(p.regions))
-	for i, v := range perm {
-		dest[v] = p.regions[i]
-	}
-
 	ch := make(chan hrpc.RegionInfo, 500)
 	//put regions into the channel
 	go func() {
-		for _, region := range dest {
+		for _, region := range p.regions {
 			ch <- region
 		}
 		close(ch)
