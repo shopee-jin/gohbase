@@ -22,7 +22,7 @@ import (
 
 	"math"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/jasonzzw/gohbase"
 	"github.com/jasonzzw/gohbase/filter"
 	"github.com/jasonzzw/gohbase/hrpc"

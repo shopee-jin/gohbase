@@ -5,7 +5,7 @@ import (
 	"io"
 	"sync"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/jasonzzw/gohbase/filter"
 	"github.com/jasonzzw/gohbase/hrpc"
 	"github.com/jasonzzw/gohbase/region"

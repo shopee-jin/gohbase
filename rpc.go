@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/golang/protobuf/proto"
 	"github.com/jasonzzw/gohbase/hrpc"
 	"github.com/jasonzzw/gohbase/region"
