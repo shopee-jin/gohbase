@@ -10,6 +10,7 @@ package gohbase_test
 import (
 	"bytes"
 	"context"
+	"encoding/binary"
 	"flag"
 	"fmt"
 	"io"
@@ -22,10 +23,10 @@ import (
 
 	"math"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/jasonzzw/gohbase"
 	"github.com/jasonzzw/gohbase/filter"
 	"github.com/jasonzzw/gohbase/hrpc"
+	log "github.com/sirupsen/logrus"
 )
 
 var host = flag.String("host", "localhost", "The location where HBase is running")
@@ -961,6 +962,60 @@ func TestIncrement(t *testing.T) {
 
 	if result != 6 {
 		t.Fatalf("Increment's result is %d, want 6", result)
+	}
+}
+
+func TestIncrementMulti(t *testing.T) {
+	c := gohbase.NewClient(*host)
+	defer c.Close()
+	key := "row102.1"
+
+	buf1 := new(bytes.Buffer)
+	err := binary.Write(buf1, binary.BigEndian, 1)
+	if err != nil {
+		t.Fatalf("binary.Write failed: %s", err)
+	}
+	buf2 := new(bytes.Buffer)
+	err = binary.Write(buf2, binary.BigEndian, 2)
+	if err != nil {
+		t.Fatalf("binary.Write failed: %s", err)
+	}
+
+	incRequest, err := hrpc.NewIncStr(
+		context.Background(), table, key,
+		map[string]map[string][]byte{
+			"cf": map[string][]byte{
+				"a": buf1.Bytes(),
+				"b": buf2.Bytes(),
+			},
+		},
+	)
+	result, err := c.IncrementMulti(incRequest)
+	if err != nil {
+		t.Fatalf("IncrementMulti returned an error: %v", err)
+	}
+	if len(result) != 1 || len(result["cf"]) != 2 {
+		t.Fatalf("IncrementMulti's result len is [%d][%d], want [1][2]", len(result), len(result["cf"]))
+	}
+	if result["cf"]["a"] != 1 {
+		t.Fatalf("IncrementMulti's result for a is %d, want 1", result["cf"]["a"])
+	}
+	if result["cf"]["b"] != 2 {
+		t.Fatalf("IncrementMulti's result for b is %d, want 2", result["cf"]["b"])
+	}
+
+	result, err = c.IncrementMulti(incRequest)
+	if err != nil {
+		t.Fatalf("IncrementMulti returned an error: %v", err)
+	}
+	if len(result) != 1 || len(result["cf"]) != 2 {
+		t.Fatalf("IncrementMulti's result len is [%d][%d], want [1][2]", len(result), len(result["cf"]))
+	}
+	if result["cf"]["a"] != 2 {
+		t.Fatalf("IncrementMulti's result for a is %d, want 2", result["cf"]["a"])
+	}
+	if result["cf"]["b"] != 4 {
+		t.Fatalf("IncrementMulti's result for b is %d, want 4", result["cf"]["b"])
 	}
 }
 
