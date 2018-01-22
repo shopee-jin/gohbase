@@ -12,13 +12,13 @@ import (
 
 	"golang.org/x/time/rate"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/cznic/b"
 	"github.com/golang/protobuf/proto"
 	"github.com/jasonzzw/gohbase/hrpc"
 	"github.com/jasonzzw/gohbase/pb"
 	"github.com/jasonzzw/gohbase/region"
 	"github.com/jasonzzw/gohbase/zk"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -48,6 +48,7 @@ type Client interface {
 	Delete(d *hrpc.Mutate) (*hrpc.Result, error)
 	Append(a *hrpc.Mutate) (*hrpc.Result, error)
 	Increment(i *hrpc.Mutate) (int64, error)
+	IncrementMulti(i *hrpc.Mutate) (map[string]map[string]int64, error)
 	CheckAndPut(p *hrpc.Mutate, family string, qualifier string,
 		expectedValue []byte) (bool, error)
 	Close()
@@ -264,6 +265,24 @@ func (c *client) Increment(i *hrpc.Mutate) (int64, error) {
 
 	val := binary.BigEndian.Uint64(r.Cells[0].Value)
 	return int64(val), nil
+}
+
+func (c *client) IncrementMulti(i *hrpc.Mutate) (map[string]map[string]int64, error) {
+	r, err := c.mutate(i)
+	if err != nil {
+		return nil, err
+	}
+	values := make(map[string]map[string]int64)
+	for _, cell := range r.Cells {
+		cf := string(cell.Family)
+		col := string(cell.Qualifier)
+		if _, exist := values[cf]; !exist {
+			values[cf] = make(map[string]int64)
+		}
+		val := binary.BigEndian.Uint64(cell.Value)
+		values[cf][col] = int64(val)
+	}
+	return values, nil
 }
 
 func (c *client) mutate(m *hrpc.Mutate) (*hrpc.Result, error) {
