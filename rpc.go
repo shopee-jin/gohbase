@@ -13,11 +13,11 @@ import (
 	"strconv"
 	"time"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/golang/protobuf/proto"
 	"github.com/jasonzzw/gohbase/hrpc"
 	"github.com/jasonzzw/gohbase/region"
 	"github.com/jasonzzw/gohbase/zk"
+	log "github.com/sirupsen/logrus"
 )
 
 // Constants

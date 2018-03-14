@@ -5,10 +5,10 @@ import (
 	"io"
 	"sync"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/jasonzzw/gohbase/filter"
 	"github.com/jasonzzw/gohbase/hrpc"
 	"github.com/jasonzzw/gohbase/region"
+	log "github.com/sirupsen/logrus"
 )
 
 type parallelScanner struct {
@@ -89,6 +89,7 @@ func (p *parallelScanner) fetch() {
 					}
 				}
 				sc.Close()
+				cli.Close()
 			}
 			wg.Done()
 		}()

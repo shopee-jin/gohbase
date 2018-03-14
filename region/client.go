@@ -210,7 +210,7 @@ func (c *client) fail(err error) {
 		log.WithFields(log.Fields{
 			"client": c,
 			"err":    err,
-		}).Error("error occured, closing region client")
+		}).Info("error occured, closing region client")
 
 		// we don't close c.rpcs channel to make it block in select of QueueRPC
 		// and avoid dealing with synchronization of closing it while someone
@@ -336,6 +336,7 @@ func (c *client) trySend(rpc hrpc.Call) error {
 		if err := c.send(id, rpc); err != nil {
 			if _, ok := err.(UnrecoverableError); ok {
 				c.fail(err)
+
 			}
 			if r := c.unregisterRPC(id); r != nil {
 				// we are the ones to unregister the rpc,
