@@ -142,6 +142,15 @@ func NewScanRangeStr(ctx context.Context, table, startRow, stopRow string,
 	return NewScanRange(ctx, []byte(table), []byte(startRow), []byte(stopRow), options...)
 }
 
+func NewPrefixScanStr(ctx context.Context, table, startRow string,
+	options ...func(Call) error) (*Scan, error) {
+	stop := []byte(startRow)
+	if len(stop) > 0 {
+		stop[len(stop)-1]++
+	}
+	return NewScanRange(ctx, []byte(table), []byte(startRow), stop, options...)
+}
+
 // NewScanFromID creates a new Scan request that will return additional
 // results from the given scanner ID.  This is an internal method, users
 // are not expected to deal with scanner IDs.
