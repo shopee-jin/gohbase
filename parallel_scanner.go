@@ -5,9 +5,9 @@ import (
 	"io"
 	"sync"
 
-	"github.com/jasonzzw/gohbase/filter"
-	"github.com/jasonzzw/gohbase/hrpc"
-	"github.com/jasonzzw/gohbase/region"
+	"github.com/ZengKunLi/gohbase/filter"
+	"github.com/ZengKunLi/gohbase/hrpc"
+	"github.com/ZengKunLi/gohbase/region"
 	log "github.com/sirupsen/logrus"
 )
 

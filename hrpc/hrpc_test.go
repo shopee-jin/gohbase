@@ -12,12 +12,12 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/ZengKunLi/gohbase/filter"
+	"github.com/ZengKunLi/gohbase/hrpc"
+	"github.com/ZengKunLi/gohbase/pb"
+	"github.com/ZengKunLi/gohbase/region"
 	"github.com/aristanetworks/goarista/test"
 	"github.com/golang/protobuf/proto"
-	"github.com/jasonzzw/gohbase/filter"
-	"github.com/jasonzzw/gohbase/hrpc"
-	"github.com/jasonzzw/gohbase/pb"
-	"github.com/jasonzzw/gohbase/region"
 )
 
 func TestNewGet(t *testing.T) {

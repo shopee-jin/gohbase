@@ -14,13 +14,13 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/ZengKunLi/gohbase/hrpc"
+	"github.com/ZengKunLi/gohbase/pb"
+	"github.com/ZengKunLi/gohbase/region"
+	"github.com/ZengKunLi/gohbase/test"
+	"github.com/ZengKunLi/gohbase/test/mock"
 	atest "github.com/aristanetworks/goarista/test"
 	"github.com/golang/protobuf/proto"
-	"github.com/jasonzzw/gohbase/hrpc"
-	"github.com/jasonzzw/gohbase/pb"
-	"github.com/jasonzzw/gohbase/region"
-	"github.com/jasonzzw/gohbase/test"
-	"github.com/jasonzzw/gohbase/test/mock"
 )
 
 func cp(i uint64) *uint64 {

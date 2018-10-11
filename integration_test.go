@@ -23,9 +23,9 @@ import (
 
 	"math"
 
-	"github.com/jasonzzw/gohbase"
-	"github.com/jasonzzw/gohbase/filter"
-	"github.com/jasonzzw/gohbase/hrpc"
+	"github.com/ZengKunLi/gohbase"
+	"github.com/ZengKunLi/gohbase/filter"
+	"github.com/ZengKunLi/gohbase/hrpc"
 	log "github.com/sirupsen/logrus"
 )
 

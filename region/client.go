@@ -17,9 +17,9 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/ZengKunLi/gohbase/hrpc"
+	"github.com/ZengKunLi/gohbase/pb"
 	"github.com/golang/protobuf/proto"
-	"github.com/jasonzzw/gohbase/hrpc"
-	"github.com/jasonzzw/gohbase/pb"
 )
 
 // ClientType is a type alias to represent the type of this region client
@@ -179,6 +179,15 @@ func (c *client) Close() {
 // Addr returns address of the region server the client is connected to
 func (c *client) Addr() string {
 	return c.addr
+}
+
+func (c *client) IsDone() bool {
+	select {
+	case <-c.done:
+		return true
+	default:
+		return false
+	}
 }
 
 // String returns a string represintation of the current region client

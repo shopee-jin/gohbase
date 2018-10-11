@@ -16,8 +16,8 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/ZengKunLi/gohbase/pb"
 	"github.com/golang/protobuf/proto"
-	"github.com/jasonzzw/gohbase/pb"
 )
 
 var (

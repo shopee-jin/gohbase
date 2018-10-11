@@ -12,11 +12,11 @@ import (
 	"sort"
 	"testing"
 
+	"github.com/ZengKunLi/gohbase/hrpc"
+	"github.com/ZengKunLi/gohbase/region"
+	mockRegion "github.com/ZengKunLi/gohbase/test/mock/region"
 	"github.com/aristanetworks/goarista/test"
 	"github.com/golang/mock/gomock"
-	"github.com/jasonzzw/gohbase/hrpc"
-	"github.com/jasonzzw/gohbase/region"
-	mockRegion "github.com/jasonzzw/gohbase/test/mock/region"
 )
 
 func TestMetaCache(t *testing.T) {

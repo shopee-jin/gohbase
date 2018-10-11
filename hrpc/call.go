@@ -13,9 +13,9 @@ import (
 	"sync"
 	"unsafe"
 
+	"github.com/ZengKunLi/gohbase/filter"
+	"github.com/ZengKunLi/gohbase/pb"
 	"github.com/golang/protobuf/proto"
-	"github.com/jasonzzw/gohbase/filter"
-	"github.com/jasonzzw/gohbase/pb"
 )
 
 // RegionInfo represents HBase region.
@@ -43,6 +43,7 @@ type RegionClient interface {
 	Addr() string
 	QueueRPC(Call)
 	String() string
+	IsDone() bool
 }
 
 // Call represents an HBase RPC call.

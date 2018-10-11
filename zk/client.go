@@ -16,8 +16,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/ZengKunLi/gohbase/pb"
 	"github.com/golang/protobuf/proto"
-	"github.com/jasonzzw/gohbase/pb"
 	"github.com/samuel/go-zookeeper/zk"
 )
 
